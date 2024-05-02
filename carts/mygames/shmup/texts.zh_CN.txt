@@ -1,0 +1,4 @@
+texts["wave"]="波次"
+texts["score:"]="分数："
+texts["♥hello shmup♥"]="！疯狂战机！"
+texts["press any key to start"]="按任意键开始"
