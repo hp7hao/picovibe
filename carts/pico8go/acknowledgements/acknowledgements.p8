@@ -305,6 +305,7 @@ function draw_txt()
  _t("t3",x,y,14);y=y+glbs.lh
  _t("t4",x,y,14);y=y+glbs.lh
  _t("t5",x,y,14);y=y+glbs.lh
+ _t("t6",x,y,14);y=y+glbs.lh
 end
 
 function draw_game()
