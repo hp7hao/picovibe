@@ -6,17 +6,18 @@ import sys
 
 # 新增: 从命令行参数获取语言和输入文件路径
 if len(sys.argv) != 3:
-    print("Usage: python gen_tpl.py <lang> <input>")
+    print("Usage: python gen_tpl.py <lang> <cart_name>")
     sys.exit(1)
 
 lang = sys.argv[1]
-input_file = sys.argv[2]
-translation_file = os.path.join(os.path.dirname(input_file), 'texts.{}.txt'.format(lang))
+cart_name = sys.argv[2]
+cart_file = "carts/pico8pixelbomb/{}/{}.{}.p8".format(cart_name, cart_name, lang)
+translation_file = os.path.join(os.path.dirname(cart_file), '{}.texts.{}.txt'.format(cart_name, lang))
 
 texts = set()
 dictionary = {}
 # read lua file
-with open(input_file, 'r') as inf:
+with open(cart_file, 'r') as inf:
     lines = inf.readlines()
     flag = False
     for line in lines:
@@ -32,7 +33,7 @@ with open(input_file, 'r') as inf:
                 for m in matched:
                     texts.add(m)
 
-# generate texts.zh_CN.txt
+# generate texts.zh.txt
 # delete output file first
 translations = {}
 if os.path.exists(translation_file):

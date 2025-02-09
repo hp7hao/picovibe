@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: gen_tpl.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tools/pico8i18n/gen_tpl.py",
+            "console": "integratedTerminal",
+            "args": [
+                "zhcn",
+                "i18ndemo",
+            ]
+        },
+        {
+            "name": "Python Debugger: gen_lua.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tools/pico8i18n/gen_lua.py",
+            "console": "integratedTerminal",
+            "args": [
+                "zhcn",
+                "i18ndemo",
+            ]
+        }
+    ]
+}

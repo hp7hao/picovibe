@@ -24,93 +24,104 @@ class PILFont():
         img_draw.text(offset, text, fill=0, font=self.__font, spacing=0)
         return img
     
-    def tohex(self, character: str, offset: Tuple[int, int] = (0, 0)) -> str:
+    def to_bin_str(self, character: str, offset: Tuple[int, int] = (0, 0)) -> str:
         '''
             character: single chinese character
         '''
         print(character)
         __left, __top, right, bottom = self.__font.getbbox(character)
-        if right <= 4:
-            width = 4
-        else:
-            width = 8
-        # 确保字符的高度不低于9
-        bottom = 8
+        if not is_ascii(character) and bottom < 8:
+            bottom = 8
         img = Image.new("1", (right, bottom), color=255)
         img_draw = ImageDraw.Draw(img)
         img_draw.text(offset, character, fill=0, font=self.__font, spacing=0)
-        hexstr = ''
-        for y in range(0, bottom):
-            line = ''
-            for x in range(0, right):
-                pix = img.getpixel((x, y))
-                if pix == 0:
-                    line += '1'
-                else:
-                    line += '0'
-            for x in range(len(line), width):
-                line += '0'
-            print(line)
-            if width == 8:
-                hexstr += str(hex(int(line, 2)))[2:].zfill(2)
-            else:
-                hexstr += str(hex(int(line, 2)))[2:]
-
-        if width == 8:
-            hexstr = hexstr[::-1].zfill(16)[::-1]
-            hexstr = self.cut(hexstr)
+        # img.show()
+        binstr = ''
+        if is_ascii(character):
+            binstr += '0000'
+            # use next six bits to save width and height
+            binstr += bin(right)[2:].zfill(4)
+            binstr += bin(bottom)[2:].zfill(4)
+            # build pixel map with bbox, if have dot, pupulate
+            for y in range(0, bottom):
+                for x in range(0, right):
+                    pix = img.getpixel((x, y))
+                    if pix == 0:
+                        binstr += '1'
+                    else:
+                        binstr += '0'
         else:
-            hexstr = hexstr[::-1].zfill(8)[::-1]
-        print(hexstr)
-        return hexstr
+            binstr += '0001'
+            # a chinese character fits in a 4x8 bbox
+            for y in range(0, 8):
+                for x in range(0, 8):
+                    pix = img.getpixel((x, y))
+                    if pix == 0:
+                        binstr += '1'
+                    else:
+                        binstr += '0'
+        return binstr
     
-    def cut(self, hexstr):
-        ret = ""
-        for i in range(0, 16, 2):
-            ret += hexstr[i]
-        for i in range(1, 16, 2):
-            ret += hexstr[i]
-        return ret
-
 # 获取脚本所在目录的绝对路径
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 def is_ascii(s):
     return all(ord(c) < 128 for c in s)
 
-def to_hex(text):
-    hexstr = ''
-    for ch in text:
+def build_bin_str(text):
+    binstr = ''
+    i = 0
+    while i < len(text):
+        ch = text[i]
         if is_ascii(ch):
+            if text[i] == '\\':
+                if text[i+1] == 'n':
+                    binstr += '0010'
+                    i += 2
+                    continue
             font_path = os.path.join(script_dir, "3x7-font.ttf")
-            if ch == 'g':
-                offset = (0, -2)
-            else:
-                offset = (0, -1)
+            offset = (0, -1)
         else:
             font_path = os.path.join(script_dir, "BoutiqueBitmap7x7_1.7.ttf")
             offset = (0, 0)
         f = PILFont(font_path, 8)
-        # f.render_text(ch, offset).show()
-        hexstr += f.tohex(ch, offset) 
-    return hexstr
+        binstr += f.to_bin_str(ch, offset) 
+        i += 1
+    print(binstr)
+    return binstr
+
+def convert_bin_to_hex(bin_str):
+    # 如果长度不是4的倍数，则在末尾补'0'
+    while len(bin_str) % 4 != 0:
+        bin_str += '0'
+    
+    # 将二进制字符串转换为16进制字符串
+    hex_str = ''
+    for i in range(0, len(bin_str), 4):
+        hex_str += hex(int(bin_str[i:i+4], 2))[2:].zfill(1)
+    print(hex_str)
+    return hex_str
+
+def build_hex_str(text):
+    return convert_bin_to_hex(build_bin_str(text))
 
 # read all texts
-lang = 'zh_CN'
-translation_path = sys.argv[1]  # 使用命令行参数获取翻译文件路径
+lang = sys.argv[1]
+cart_name = sys.argv[2]
+translation_path = "carts/pico8pixelbomb/{}/{}.texts.{}.txt".format(cart_name, cart_name, lang)
 translations = {}
 with open(translation_path, 'r') as inf:  # 使用传入的路径
   lines = inf.readlines()
   for line in lines:
     if line:
       kv = re.findall('"(.+?)"', line)
-      translations[kv[0]] = to_hex(kv[1])
+      translations[kv[0]] = build_hex_str(kv[1])
       print(translations[kv[0]])
 
 # save lua files
 # 获取翻译文件所在的目录
 translation_dir = os.path.dirname(translation_path)
-lua_file = os.path.join(translation_dir, 'texts.lua')
+lua_file = os.path.join(translation_dir, '{}.texts.{}.lua'.format(cart_name, lang))
 lines = [
    'lang="{}"'.format(lang),
    'texts={}'

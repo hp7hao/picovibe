@@ -1,3 +1,3 @@
 texts["OS:"]="系统：PICO8GO"
 texts["Version:"]="版本：v0.1"
-texts["Author:"]="作者：@icegeek"
+texts["Author:"]="作者：icegeek"

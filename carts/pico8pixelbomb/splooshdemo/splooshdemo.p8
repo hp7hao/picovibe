@@ -1,6 +1,9 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
+--sploosh demo
+--by hp7hao
+
 function _init()
 	level=0
 	levels=2
