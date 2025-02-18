@@ -5,7 +5,7 @@ __lua__
 --by randc0degen & icegeek
 -- support lowercase only
 
-#include ../../../libs/i18n.lua
+#include ../../../libs/pico8/i18n.lua
 #include ./pico8go-thanks.texts.zhcn.lua
 
 csts={

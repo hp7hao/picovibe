@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
-#include ../../../libs/i18n.lua
+#include ../../../libs/pico8/i18n.lua
 #include ./i18ndemo.texts.zhcn.lua
 
 function _draw()

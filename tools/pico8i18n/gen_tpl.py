@@ -9,9 +9,10 @@ if len(sys.argv) != 3:
     print("Usage: python gen_tpl.py <lang> <cart_name>")
     sys.exit(1)
 
-lang = sys.argv[1]
+folder = sys.argv[1]
 cart_name = sys.argv[2]
-cart_file = "carts/pico8pixelbomb/{}/{}.{}.p8".format(cart_name, cart_name, lang)
+lang = sys.argv[3]
+cart_file = "carts/pico8pixelbomb/{}/{}.{}.p8".format(folder, cart_name, lang)
 translation_file = os.path.join(os.path.dirname(cart_file), '{}.texts.{}.txt'.format(cart_name, lang))
 
 texts = set()

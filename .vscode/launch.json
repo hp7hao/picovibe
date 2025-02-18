@@ -11,8 +11,9 @@
             "program": "tools/pico8i18n/gen_tpl.py",
             "console": "integratedTerminal",
             "args": [
-                "zhcn",
                 "i18ndemo",
+                "i18ndemo",
+                "zhcn",
             ]
         },
         {
@@ -22,8 +23,22 @@
             "program": "tools/pico8i18n/gen_lua.py",
             "console": "integratedTerminal",
             "args": [
+                "pico8go-systeminfo",
+                "pico8go-systeminfo",
                 "zhcn",
+            ]
+        },
+        {
+            "name": "Python Debugger: gen_cartimage.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tools/customcart/gen_cartimage.py",
+            "console": "integratedTerminal",
+            "args": [
+                "carts/pico8pixelbomb/i18ndemo",
                 "i18ndemo",
+                "zhcn",
+                "default"
             ]
         }
     ]

@@ -79,10 +79,12 @@ def build_bin_str(text):
                     binstr += '0010'
                     i += 2
                     continue
-            font_path = os.path.join(script_dir, "3x7-font.ttf")
-            offset = (0, -1)
+            # font_path = os.path.join(os.path.dirname(script_dir), "resources", "3x7-font.ttf")
+            # offset = (0, -1)
+            font_path = os.path.join(os.path.dirname(script_dir), "resources", "fonts", "BoutiqueBitmap7x7_1.7.ttf")
+            offset = (0, 0)
         else:
-            font_path = os.path.join(script_dir, "BoutiqueBitmap7x7_1.7.ttf")
+            font_path = os.path.join(os.path.dirname(script_dir), "resources", "fonts", "BoutiqueBitmap7x7_1.7.ttf")
             offset = (0, 0)
         f = PILFont(font_path, 8)
         binstr += f.to_bin_str(ch, offset) 
@@ -106,9 +108,10 @@ def build_hex_str(text):
     return convert_bin_to_hex(build_bin_str(text))
 
 # read all texts
-lang = sys.argv[1]
+folder = sys.argv[1]
 cart_name = sys.argv[2]
-translation_path = "carts/pico8pixelbomb/{}/{}.texts.{}.txt".format(cart_name, cart_name, lang)
+lang = sys.argv[3]
+translation_path = "carts/pico8pixelbomb/{}/{}.texts.{}.txt".format(folder, cart_name, lang)
 translations = {}
 with open(translation_path, 'r') as inf:  # 使用传入的路径
   lines = inf.readlines()

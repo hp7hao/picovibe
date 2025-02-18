@@ -1,0 +1,2 @@
+name="PICO8GO 系统信息"
+author="hp7hao"

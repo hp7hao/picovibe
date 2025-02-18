@@ -1,0 +1,3 @@
+[submodule "deps/picotool"]
+	path = deps/picotool
+	url = https://github.com/dansanderson/picotool.git

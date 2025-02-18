@@ -1,3 +1,6 @@
 carts/demos
 /**/venv
 /**/tests
+/**/*.orig.p8.png
+/**/*.preview.p8.png
+.environment_ready

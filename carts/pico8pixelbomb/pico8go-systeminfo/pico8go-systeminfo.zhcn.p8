@@ -3,7 +3,7 @@ version 42
 __lua__
 --pico8go systeminfo
 --by hp7hao 
-#include ../../../libs/i18n.lua
+#include ../../../libs/pico8/i18n.lua
 #include ./pico8go-systeminfo.texts.zhcn.lua
 
 function vibrate()
