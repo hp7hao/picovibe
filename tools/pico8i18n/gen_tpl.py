@@ -3,12 +3,6 @@ import re
 import os
 import sys
 
-
-# 新增: 从命令行参数获取语言和输入文件路径
-if len(sys.argv) != 3:
-    print("Usage: python gen_tpl.py <lang> <cart_name>")
-    sys.exit(1)
-
 folder = sys.argv[1]
 cart_name = sys.argv[2]
 lang = sys.argv[3]
