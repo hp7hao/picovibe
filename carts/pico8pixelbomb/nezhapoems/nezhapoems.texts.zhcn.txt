@@ -1,0 +1,6 @@
+texts["poem2"]="第二首"
+texts["title1"]="《小爷集》"
+texts["title2"]="陈塘关大诗人哪吒全集"
+texts["poem1"]="第一首"
+texts["poem3"]="第三首"
+texts["poem4"]="第四首"

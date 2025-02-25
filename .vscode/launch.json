@@ -40,6 +40,17 @@
                 "zhcn",
                 "default"
             ]
+        },
+        {
+            "name": "Python Debugger: img2p8.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tools/img2p8/img2p8.py",
+            "console": "integratedTerminal",
+            "args": [
+                "carts/pico8pixelbomb/nezhapoems/test.png",
+                "carts/pico8pixelbomb/nezhapoems/test_out.png"
+            ]
         }
     ]
 }
