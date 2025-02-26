@@ -1,0 +1,2244 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)https://www.lexaloffle.com/dl/docs/pico-8_manual.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+	<title>PICO-8 Manual</title>
+
+	<style type="text/css">
+
+		@font-face {
+		  font-family: 'proggyvec';
+		  src: url('https://www.lexaloffle.com/dl/docs/proggyvec.woff') format('woff');
+		}
+
+		body{
+			font-size:10pt;
+			font-family : "proggyvec", "Courier New";
+			line-height: 1.6;	
+		}
+
+		h1{
+			font-size:30pt;
+			margin-top: 50px;
+			color:#444;
+		}
+		h2{
+			font-size:18pt;
+			margin-top: 30px;
+			color:#444;
+		}
+		h3{
+			font-size:16pt;
+			margin-top: 20px;
+			color:#444;
+		}
+		h4{
+			font-size:14pt;
+			margin-top: 20px;
+			color:#444;
+		}
+		h5{
+			font-size:12pt;
+			margin-top: 4px;
+			margin-bottom: 4px;
+			color:#444;
+		}
+
+		a{
+			text-decoration:none;
+			color:#222;
+			font-weight:bold;
+		}
+
+		p{
+			break-inside: avoid; 
+		}
+
+		.codebox{
+			display:block;
+			break-inside: avoid;
+			width:90%%;
+			padding:16px;
+			margin-top:16px;
+			margin-bottom:24px;
+
+			border-width:2px;
+			border-radius:15px;
+			border-style:solid;
+			border-color:#444;
+			overflow-x:auto;-webkit-overflow-scrolling:touch;
+		}
+
+		.dark-mode {
+		  -webkit-filter: invert(100%);
+			filter: invert(100%);
+			background-color:#000;
+		}
+
+	</style>
+
+	<script>
+	function toggle_dark_mode() {
+	  var element = document.body;
+	  element.classList.toggle("dark-mode");
+
+	  if (element.classList.contains("dark-mode"))
+		localStorage.setItem("dark-mode", "true");
+	  else
+		localStorage.removeItem("dark-mode");
+
+	}
+
+	document.addEventListener('DOMContentLoaded', function() {
+	   // set initial dark mode state
+		if (localStorage.getItem("dark-mode"))
+			document.body.classList.toggle("dark-mode");
+	}, false);
+	</script>
+
+</head>
+
+<body>
+
+
+
+<div style="cursor:pointer; display:table; padding:20px" onclick="toggle_dark_mode();"> 
+<img style="display:none" alt="Dark Mode" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAACCklEQVR4Ae2dwZGjMBBFNVN7hwxgI1BnMCICyxFYRGA5ApTBQATIGWgy0EbgVgYQwYoI2JqDq7yYNcIFrC99pGjq0f3/7+tb3/fkFer9JShuQbz30UuAxHHchTQYY3ZSys+lwYNW472PlFJFHMe/9/u94ZybUPDQ+jH1AiJSzrlp2zYlhJDD4aAZY7+WXs1DEK31Ic9zfftMKaU2dc0YBKUU0zRtNwNBRDqE+J4f59xsmiNCiDuIbxLGmN0MpCzLo3MO/nuyriXGWSDGmF3XdfErgPBHLzdNk24CgogPtWGtZZuATIl0amKr35prdV0Xa60Pa4BM3poxV61x9GZNhBBC2rZNpZTlqquhlGJI0/l8FlLKz9VWAwAYmqpVVcnrqp5ZEyJSAHCjE5l71Kqqkowxa639CO2x1n4AwGWYSUOQryiK/BwY5xxkWWYB4FKW5RER6djfl2V5BIBLlmXWex9zzr8eukYppU6n02wxOucgtG/sut+5RkpZhYr2mUqSpBlz3ah9tdZiLRBjDB8T9ygIALi6rheHqeta3DolKFmFEGdCCMnz/G6fz0Jcvzk74oUQZwBAzrlp2/Yvu83RhDGG/2sSwREPAA4RoSgKNcfaSZI0RVGopml+TkEQQshb3/dzxbYzxnBEhGEKU0rxOsFhTiwOsmR576Org2Zf3wVtvGOM2ZeYyG39AfiA/dXUMa3sAAAAEHRFWHRMb2RlUE5HADIwMTEwMjIx41m2wQAAAABJRU5ErkJggg==">
+<span style="font-size:32pt">&#9790;</span>
+</div>
+
+
+<div style="max-width:99vw; width:820px; margin:auto; padding:12px;">
+
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PICO_8_User_Manual"><h1 id="PICO_8_User_Manual">PICO-8 User Manual</h1></a>
+<p>PICO-8 v0.2.6c<br>
+https://www.pico-8.com<br>
+(c) Copyright 2014-2024 Lexaloffle Games LLP<br>
+Author: Joseph White // hey@lexaloffle.com<br>
+</p>
+<p>PICO-8 is built with:<br>
+&nbsp;<br>
+&nbsp; SDL2 http://www.libsdl.org<br>
+&nbsp; Lua 5.2 http://www.lua.org &nbsp;// see license.txt<br>
+&nbsp; ws281x by jgarff &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// see license.txt<br>
+&nbsp; GIFLIB http://giflib.sourceforge.net/<br>
+&nbsp; WiringPi http://wiringpi.com/<br>
+&nbsp; libb64 by Chris Venter<br>
+&nbsp; miniz by Rich Geldreich<br>
+&nbsp; z8lua by Sam Hocevar https://github.com/samhocevar/z8lua<br>
+</p>
+<p>Latest version of this manual (as html, txt) and other resources:</p>
+<p>https://www.lexaloffle.com/pico-8.php?page=resources</p>
+<p> </p><hr><div onclick="el = document.getElementById(&#39;contents&#39;); el.style.display = el.style.display == &#39;none&#39; ? &#39;&#39;: &#39;none&#39;;" style="display:inline;cursor:pointer;">[+] </div><b>Contents</b>: <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Editing_Tools"><b>Editing Tools</b></a> | <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Lua_Syntax_Primer"><b>Lua Syntax Primer</b></a> | <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#API_Reference"><b>API Reference</b></a> | <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Appendix"><b>Appendix</b></a><div id="contents" style="display:none"><p></p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Getting_Started">1. Getting Started</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Keys">1.1  Keys</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Hello_World">1.2  Hello World</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Example_Cartridges">1.3  Example Cartridges</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_File_System">1.4  File System</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Loading_and_Saving">1.5  Loading and Saving</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Using_an_External_Text_Editor">1.6  Using an External Text Editor</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Backups">1.7  Backups</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Configuration">1.8  Configuration</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Screenshots_and_GIFS">1.9  Screenshots and GIFS</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Sharing_Cartridges">1.10  Sharing Cartridges</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_SPLORE">1.11  SPLORE</a><br>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Editing_Tools">2. Editing Tools</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Code_Editor">2.1 Code Editor</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Sprite_Editor">2.2 Sprite Editor</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Map_Editor">2.3 Map Editor</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SFX_Editor">2.4 SFX Editor</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Music_Editor">2.5 Music Editor</a><br>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Exporters_">3.  Exporters / Importers</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Web_Applications_">3.1 Web Applications (.html)</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Binary_Applications_">3.2 Binary Applications (.bin)</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Uploading_to_itch">3.3 Uploading to itch.io</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Exporting_Multiple_Cartridges">3.4 Exporting Multiple Cartridges</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Running_EXPORT_from_the_host_operating_system">3.5 Running EXPORT from the host operating system</a><br>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Lua_Syntax_Primer">4. Lua Syntax Primer</a><br>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PICO_8_Program_Structure">5. PICO-8 Program Structure</a><br>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#API_Reference">6. API Reference</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#System">6.1 System</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Graphics">6.2 Graphics</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Table_Functions">6.3 Table Functions</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Input">6.4 Input</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Audio">6.5 Audio</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Map">6.6 Map</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Memory">6.7 Memory</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Math">6.8 Math</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Custom_Menu_Items">6.9 Custom Menu Items</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Strings_and_Type_Conversion">6.10 Strings and Type Conversion</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Cartridge_Data">6.11 Cartridge Data</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#GPIO">6.12 GPIO</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Mouse_and_Keyboard_Input">6.13 Mouse and Keyboard Input</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Additional_Lua_Features">6.14 Additional Lua Features</a><br>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Appendix">7. Appendix</a><br>
+&nbsp;&nbsp;<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Appendix_A__P8SCII_Control_Codes">7.1 Appendix A: P8SCII Control Codes</a><br>
+
+</div><hr>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Welcome_to_PICO_8"><h3 id="Welcome_to_PICO_8">&#9640; Welcome to PICO-8!</h3>
+</a><p>PICO-8 is a fantasy console for making, sharing and playing tiny games and other computer  programs. When you turn it on, the machine greets you with a shell for typing in Lua programs  and provides simple built-in tools for creating sprites, maps and sound.</p>
+<p>The harsh limitations of PICO-8 are carefully chosen to be fun to work with, encourage small but expressive designs and hopefully to give PICO-8 cartridges their own particular look and  feel.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Specifications"><h3 id="Specifications">&#9640; Specifications</h3>
+</a>
+<p class="codebox">
+Display: 128x128, fixed 16 colour palette<br>
+Input: &nbsp; 6-button controllers<br>
+Carts: &nbsp; 32k data encoded as png files<br>
+Sound: &nbsp; 4 channel, 64 definable chip blerps<br>
+Code: &nbsp; &nbsp;P8 Lua (max 8192 tokens of code) <br>
+CPU: &nbsp; &nbsp; 4M vm insts/sec<br>
+Sprites: Single bank of 128 8x8 sprites (+128 shared)<br>
+Map: &nbsp; &nbsp; 128 x 32 Tilemap (+ 128 x 32 shared)<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Getting_Started"><h1 id="Getting_Started"><span style="font-size:48pt">&#10102;</span> Getting Started</h1></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Keys"><h2 id="_Keys">1.1  Keys</h2></a>
+
+<p class="codebox">
+ALT+ENTER: &nbsp;Toggle Fullscreen<br>
+ALT+F4: &nbsp; &nbsp; Fast Quit (Windows)<br>
+CTRL-Q: &nbsp; &nbsp; Fast Quit (Mac, Linux)<br>
+CTRL-R: &nbsp; &nbsp; Reload / Run / Restart cartridge<br>
+CTRL-S: &nbsp; &nbsp; Quick-Save working cartridge<br>
+CTRL-M: &nbsp; &nbsp; Mute / Unmute Sound<br>
+ENTER / P: &nbsp;Pause Menu (while running cart)<br>
+</p>
+
+<p class="codebox">
+Player 1 default keys: Cursors + ZX / NM / CV<br>
+Player 2 default keys: SDFE + tab,Q / shift A<br>
+</p>
+<p>To change the default keys use the KEYCONFIG utility from inside PICO-8:</p>
+
+<p class="codebox">
+&gt; KEYCONFIG<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Hello_World"><h2 id="_Hello_World">1.2  Hello World</h2></a>
+<p>After PICO-8 boots, try typing some of these commands followed by enter:</p>
+
+<p class="codebox">
+&gt; PRINT("HELLO WORLD")<br>
+&gt; RECTFILL(80,80,120,100,12)<br>
+&gt; CIRCFILL(70,90,20,14)<br>
+&gt; FOR I=1,4 DO PRINT(I) END<br>
+</p>
+<p>(Note: PICO-8 only displays upper-case characters -- just type normally without capslock!)</p>
+<p>You can build up an interactive program by using commands like this in the code editing mode along with two special callback functions <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_UPDATE"><b>_UPDATE</b></a> and <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_DRAW"><b>_DRAW</b></a>. For example, the following program allows you to move a circle around with the cursor keys. Press Esc to switch to the code editor and type or copy &amp; paste the following code:</p>
+
+<p class="codebox">
+X = 64 &nbsp;Y = 64<br>
+FUNCTION _UPDATE()<br>
+&nbsp; IF (BTN(0)) THEN X=X-1 END<br>
+&nbsp; IF (BTN(1)) THEN X=X+1 END<br>
+&nbsp; IF (BTN(2)) THEN Y=Y-1 END<br>
+&nbsp; IF (BTN(3)) THEN Y=Y+1 END<br>
+END<br>
+&nbsp;<br>
+FUNCTION _DRAW()<br>
+&nbsp; CLS(5)<br>
+&nbsp; CIRCFILL(X,Y,7,14)<br>
+END<br>
+</p>
+<p>Now press Esc to return to the console and type RUN (or press CTRL-R) to see it in action. Please refer to the demo cartridges for more complex programs (type INSTALL_DEMOS).</p>
+<p>If you want to store your program for later, use the SAVE command:</p>
+
+<p class="codebox">
+&gt; SAVE PINKCIRC<br>
+</p>
+<p>And to load it again:</p>
+
+<p class="codebox">
+&gt; LOAD PINKCIRC<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Example_Cartridges"><h2 id="_Example_Cartridges">1.3  Example Cartridges</h2></a>
+<p>These cartridges are included with PICO-8 and can be installed by typing:</p>
+
+<p class="codebox">
+&gt; INSTALL_DEMOS<br>
+&gt; CD DEMOS<br>
+&gt; LS	<br>
+&nbsp;<br>
+HELLO &nbsp; &nbsp; &nbsp;Greetings from PICO-8<br>
+API &nbsp; &nbsp; &nbsp; &nbsp;Demonstrates most PICO-8 functions<br>
+JELPI &nbsp; &nbsp; &nbsp;Platform game demo w/ 2p support <br>
+CAST &nbsp; &nbsp; &nbsp; 2.5D Raycaster demo<br>
+DRIPPY &nbsp; &nbsp; Draw a drippy squiggle<br>
+WANDER &nbsp; &nbsp; Simple walking simulator<br>
+COLLIDE &nbsp; &nbsp;Example wall and actor collisions<br>
+</p>
+<p>To run a cartridge, open PICO-8 and type:</p>
+
+<p class="codebox">
+&gt; LOAD JELPI<br>
+&gt; RUN<br>
+</p>
+<p>Press escape to stop the program, and once more to enter editing mode.</p>
+<p>A small collection of BBS carts can also be installed to /GAMES with: </p>
+
+<p class="codebox">
+&gt; INSTALL_GAMES<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_File_System"><h2 id="_File_System">1.4  File System</h2></a>
+<p>These commands can be used to manage files and directories (folders):</p>
+
+<p class="codebox">
+LS &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;list the current directory<br>
+CD BLAH &nbsp; &nbsp; change directory<br>
+CD .. &nbsp; &nbsp; &nbsp; go up a directory<br>
+CD / &nbsp; &nbsp; &nbsp; &nbsp;change back to top directory (on PICO-8's virtual drive)<br>
+MKDIR BLAH &nbsp;make a directory<br>
+FOLDER &nbsp; &nbsp; &nbsp;open the current directory in the host operating system's file browser<br>
+</p>
+<p>LOAD BLAH  load a cart from the current directory SAVE BLAH  save a cart to the current directory</p>
+<p>If you want to move files around, duplicate them or delete them, use the FOLDER  command and do it in the host operating system.</p>
+<p>The default location for PICO-8's drive is:</p>
+<p>Windows: C:/Users/Yourname/AppData/Roaming/pico-8/carts<br>
+OSX: /Users/Yourname/Library/Application Support/pico-8/carts<br>
+Linux: ~/.lexaloffle/pico-8/carts<br>
+</p>
+<p>You can change this and other settings in pico-8/config.txt</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:26pt; background-color:#fff">&#9734;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+Tip: The drive directory can be mapped to a cloud drive (provided by Dropbox, Google Drive or similar) in order to create a single disk shared between PICO-8 machines spread  across different host machines.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Loading_and_Saving"><h2 id="_Loading_and_Saving">1.5  Loading and Saving</h2></a>
+<p>When using LOAD and SAVE, the .P8 extension can be omitted and is added automatically.</p>
+
+<p class="codebox">
+&gt; SAVE FOO<br>
+SAVED FOO.P8<br>
+</p>
+<p>Cartridge files can also be dragged and dropped into PICO-8's window to load them.</p>
+<p>Using .p8.png filename extension will write the cartridge in a special image format that looks like a cartridge. Using .p8.rom" writes in a raw 32k binary format.</p>
+<p>Use a filename of "@clip" to load or save to the clipboard.</p>
+<p>Use a filename of "@url" to save to clipboard as a pico-8-edu.com url if it can be encoded in 2040 characters (code and gfx only).</p>
+<p>Once a cartridge has been loaded or saved, it can also be quick-saved with CTRL-S</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Saving_"><h4 id="Saving_">&#9632; Saving .p8.png carts with a text label and preview image</h4>
+</a><p>To generate a label image saved with the cart, run the program first and press CTRL-7 to grab whatever is on the screen. The first two lines of the program starting with '--' are also  drawn to the cart's label.</p>
+
+<p class="codebox">
+-- OCEAN DIVER LEGENDS<br>
+-- BY LOOPY<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Code_size_restrictions_for_"><h4 id="Code_size_restrictions_for_">&#9632; Code size restrictions for .p8.png / .p8.rom formats</h4>
+</a><p>When saving in .png or .rom format, the compressed size of the code must be less than 15360 bytes so that the total data is &lt;= 32k.</p>
+<p>To find out the current size of your code, use the INFO command. The compressed size limit  is not enforced for saving in .p8 format.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Using_an_External_Text_Editor"><h2 id="_Using_an_External_Text_Editor">1.6  Using an External Text Editor</h2></a>
+<p>It is possible to edit .p8 files directly with a separate text editor. Using CTRL-R to run a cartridge will automatically re-load the file if:</p>
+<p>1. There are no unsaved changes in the PICO-8 editors, AND<br> 2. The file differs in content from the last loaded version.</p>
+<p>If there are changes to both the cart on disk and in the editor, a notification is displayed:</p>
+
+<p class="codebox">
+DIDN'T RELOAD; UNSAVED CHANGES<br>
+</p>
+<p>Alternatively, .lua text files can be modified in a separate editor and then included into the  cartridge's code each time it is run using <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_INCLUDE"><b>#INCLUDE</b></a> (in the desired code location):</p>
+
+<p class="codebox">
+#INCLUDE YOURFILE.LUA<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Backups"><h2 id="_Backups">1.7  Backups</h2></a>
+<p>When quitting without saving changes, or overwriting an existing file, a backup of the cartridge  is saved to {appdata}/pico-8/backup. An extra copy of the current cartridge can also be saved to the same folder by typing BACKUP.</p>
+<p>To open the backups folder in the host operating system's file browser, use:</p>
+
+<p class="codebox">
+&gt; FOLDER BACKUPS<br>
+</p>
+<p>It is then possible to drag and drop files into the PICO-8 window to load them.</p>
+<p>From 0.2.4c, periodic backups are also saved every 20 minutes when not idle in the editor, which  means the backups folder will grow by about 1MB every 5 hours. This can be disabled or adjusted in config.txt</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Configuration"><h2 id="_Configuration">1.8  Configuration</h2></a>
+<p>PICO-8 reads configuration settings from config.txt at the start of each session, and saves it on exit (so you should edit config.txt when PICO-8 is not running).</p>
+<p>The location of the config.txt file depends on the host operating system:</p>
+<p>Windows: C:/Users/Yourname/AppData/Roaming/pico-8/config.txt<br>
+OSX: /Users/Yourname/Library/Application Support/pico-8/config.txt<br>
+Linux: ~/.lexaloffle/pico-8/config.txt<br>
+</p>
+<p>Use the -home switch (below) to use a different path to store config.txt and other data.</p>
+<p>Some settings can be changed while running PICO-8 by typing CONFIG SETTING VALUE. (type CONFIG by itself for a list)</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Commandline_parameters"><h4 id="Commandline_parameters">&#9632; Commandline parameters</h4>
+</a><p>// note: these override settings found in config.txt</p>
+<p>pico8 [switches] [filename.p8]</p>
+<p>-width n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;set the window width <br>
+-height n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set the window height <br>
+-windowed n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set windowed mode off (0) or on (1)<br>
+-volume n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set audio volume 0..256<br>
+-joystick n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; joystick controls starts at player n (0..7)<br>
+-pixel_perfect n &nbsp; &nbsp; &nbsp; &nbsp;1 for unfiltered screen stretching at integer scales (on by default)<br>
+-preblit_scale n &nbsp; &nbsp; &nbsp; &nbsp;scale the display by n before blitting to screen (useful with -pixel_perfect 0)<br>
+-draw_rect x,y,w,h &nbsp; &nbsp; &nbsp;absolute window coordinates and size to draw pico-8's screen <br>
+-run filename &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; load and run a cartridge<br>
+-x filename &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; execute a PICO-8 cart headless and then quit (experimental!)<br>
+-export param_str &nbsp; &nbsp; &nbsp; run EXPORT command in headless mode and exit (see notes under export)<br>
+-p param_str &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;pass a parameter string to the specified cartridge<br>
+-splore &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; boot in splore mode<br>
+-home path &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;set the path to store config.txt and other user data files<br>
+-root_path path &nbsp; &nbsp; &nbsp; &nbsp; set the path to store cartridge files<br>
+-desktop path &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set a location for screenshots and gifs to be saved<br>
+-screenshot_scale n &nbsp; &nbsp; scale of screenshots. &nbsp;default: 3 (368x368 pixels)<br>
+-gif_scale n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;scale of gif captures. default: 2 (256x256 pixels)<br>
+-gif_len n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;set the maximum gif length in seconds (1..120)<br>
+-gui_theme n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;use 1 for a higher contrast editor colour scheme<br>
+-timeout n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;how many seconds to wait before downloads timeout (default: 30)<br>
+-software_blit n &nbsp; &nbsp; &nbsp; &nbsp;use software blitting mode off (0) or on (1)<br>
+-foreground_sleep_ms n &nbsp;how many milliseconds to sleep between frames.<br>
+-background_sleep_ms n &nbsp;how many milliseconds to sleep between frames when running in background<br>
+-accept_future n &nbsp; &nbsp; &nbsp; &nbsp;1 to allow loading cartridges made with future versions of PICO-8<br>
+-global_api n &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1 to leave api functions in global scope (useful for debugging)<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Controller_Setup"><h3 id="Controller_Setup">&#9640; Controller Setup</h3>
+</a><p>PICO-8 uses the SDL2 controller configuration scheme. It will detect common controllers on startup and also looks for custom mappings in sdl_controllers.txt in the same directory  as config.txt. sdl_controllers.txt has one mapping per line.</p>
+<p>To generate a custom mapping string for your controller, use either the controllermap program that comes with SDL2, or try http://www.generalarcade.com/gamepadtool/</p>
+<p>To find out the id of your controller as it is detected by SDL2, search for "joysticks" or "Mapping" in log.txt after running PICO-8. This id may vary under different operating systems. See: https://www.lexaloffle.com/bbs/?tid=32130</p>
+<p>To set up which keyboard keys trigger joystick buttons presses, use KEYCONFIG.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Screenshots_and_GIFS"><h2 id="_Screenshots_and_GIFS">1.9  Screenshots and GIFS</h2></a>
+<p>While a cartridge is running use:</p>
+
+<p class="codebox">
+CTRL-6 Save a screenshot to desktop<br>
+CTRL-7 Capture cartridge label image<br>
+CTRL-8 Start recording a video<br>
+CTRL-9 Save GIF video to desktop (8 seconds by default)<br>
+</p>
+<p>You can save a video at any time (it is always recording); CTRL-8 simply resets the video starting point. To record more than 8 seconds, use the CONFIG command (maximum: 120)</p>
+
+<p class="codebox">
+CONFIG GIF_LEN 60<br>
+</p>
+<p>If you would like the recording to reset every time (to create a non-overlapping sequence), use:</p>
+
+<p class="codebox">
+CONFIG GIF_RESET_MODE 1<br>
+</p>
+<p>The gif format can not match 30fps exactly, so PICO-8 instead uses the closest match: 33.3fps.</p>
+<p>If you have trouble saving to the desktop, try configuring an alternative desktop path in config.txt</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Sharing_Cartridges"><h2 id="_Sharing_Cartridges">1.10  Sharing Cartridges</h2></a>
+<p>There are three ways to share carts made in PICO-8:</p>
+<p>1. Share the .p8 or .p8.png file directly with other PICO-8 users</p>
+<p>Type FOLDER to open the current folder in your host operating system.</p>
+<p>2. Post the cart on the Lexaloffe BBS to get a web-playable version</p>
+<p>http://www.lexaloffle.com/pico-8.php?page=submit</p>
+<p>3. Export the cartridge to a stand-alone html/js or native binary player (see the exporters section for details)</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_SPLORE"><h2 id="_SPLORE">1.11  SPLORE</h2></a>
+<p>SPLORE is a built-in utility for browsing and organising both local and bbs (online) cartridges. Type SPLORE [enter] to launch it, or launch PICO-8 with -splore. </p>
+<p>It is possible to control SPLORE entirely with a joystick:</p>
+
+<p class="codebox">
+LEFT and RIGHT to navigate lists of cartridges<br>
+UP AND DOWN to select items in each list<br>
+X,O or MENU to launch the cartridge<br>
+</p>
+<p>While inside a cart, press MENU to favourite a cartridge or exit to splore. If you're using a keyboard, it's also possible to press F to favourite an item while it is selected in the cartridge list view.</p>
+<p>When viewing a list of BBS carts, use the top list item to re-download a list of cartridges. If you are offline, the last downloaded list is displayed, and it is still possible to play any cartridges you have downloaded.</p>
+<p>If you have installed PICO-8 on a machine with no internet access, you can also use INSTALL_GAMES to add a small selection of pre-installed BBS carts to /games</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Editing_Tools"><h1 id="Editing_Tools"><span style="font-size:48pt">&#10103;</span> Editing Tools</h1></a>
+<p>Press ESC to toggle between console and editor.<br> Click editing mode tabs at top right to switch or press ALT+LEFT/RIGHT.	</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Code_Editor"><h2 id="Code_Editor">2.1 Code Editor</h2></a>
+
+<p class="codebox">
+Hold shift to select (or click and drag with mouse)<br>
+CTRL-X, C, V to cut copy or paste selected<br>
+CTRL-Z, Y to undo, redo<br>
+CTRL-F to search for text in the current tab<br>
+CTRL-G to repeat the last search again<br>
+CTRL-L to jump to a line number<br>
+CTRL-UP, DOWN to jump to start or end<br>
+ALT-UP, DOWN to navigate to the previous, next function<br>
+CTRL-LEFT, RIGHT to jump by word<br>
+CTRL-W,E to jump to start or end of current line<br>
+CTRL-D to duplicate current line<br>
+TAB to indent a selection (shift to un-indent)<br>
+CTRL-B to comment / uncomment selected block<br>
+CTRL-U to get help on the keyword under the cursor<br>
+</p>
+<p>To enter special characters that represent buttons (and other glyphs), use SHIFT-L,R,U,D,O,X There are 3 additional font entry modes that can be toggled:</p>
+
+<p class="codebox">
+CTRL_J Hiragana &nbsp; // type romaji equivalents (ka, ki, ku..)<br>
+CTRL-K Katakana &nbsp; // + shift-0..9 for extra symbols<br>
+CTRL-P Puny font &nbsp;// hold shift for the standard font<br>
+</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+By default, puny font characters are encoded as unicode replacements when copying/pasting, and both upper and lower case ASCII characters are pasted as regular PICO-8 characters. To copy/paste puny characters as uppercase ASCII, make sure puny mode (CTRL-P) is on.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Code_Tabs"><h4 id="Code_Tabs">&#9632; Code Tabs</h4>
+</a><p>Click the [+] button at the top to add a new tab. Navigate tabs by left-clicking, or with CTRL-TAB, SHIFT-CTRL-TAB. To remove the last tab, delete any contents and then moving off it (CTRL-A, DEL, CTRL-TAB)</p>
+<p>When running a cart, a single program is generated by concatenating all tabs in order.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Code_Limits"><h4 id="Code_Limits">&#9632; Code Limits</h4>
+</a><p>The number of code tokens is shown at the bottom right. One program can have a maximum of 8192 tokens. Each token is a word (e.g. variable name) or operator. Pairs of brackets, and strings each count as 1 token. commas, periods, LOCALs, semi-colons, ENDs, and comments are not counted.</p>
+<p>Right click to toggle through other stats (character count, compressed size). If a limit is reached, a warning light will flash. This can be disabled by right-clicking.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Sprite_Editor"><h2 id="Sprite_Editor">2.2 Sprite Editor</h2></a>
+<p>The sprite editor is designed to be used both for sprite-wise editing and for freeform  pixel-level editing. The sprite navigator at the bottom of the screen provides an 8x8 sprite-wise  view into the sprite sheet, but it is possible to use freeform tools (pan, select) when dealing with larger or oddly sized areas.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Draw_Tool"><h4 id="Draw_Tool">&#9632; Draw Tool</h4>
+</a><p>Click and drag on the sprite to plot pixels, or use RMB to select the colour under the cursor.</p>
+<p>All operations apply only to the visible area, or the section if there is one.</p>
+<p>Hold CTRL to search and replace a colour.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Stamp_Tool"><h4 id="Stamp_Tool">&#9632; Stamp Tool</h4>
+</a><p>Click to stamp whatever is in the copy buffer. Hold CTRL to treat colour 0 (black) as transparent.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Select_Tool_"><h4 id="Select_Tool_">&#9632; Select Tool (shortcut: SHIFT or S)</h4>
+</a><p>Click and drag to create a rectangular selection. To remove the selection, press ENTER or click anywhere.</p>
+<p>If a pixel-wise selection is not present, many operations are instead applied to a sprite-wise selection, or the visible view. To select sprites, shift-drag in the sprite navigator. To select the sprite sheet press CTRL-A (repeat to toggle off the bottom half shared with map data)</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Pan_Tool_"><h4 id="Pan_Tool_">&#9632; Pan Tool (shortcut: SPACE)</h4>
+</a><p>Click and drag to move around the sprite sheet.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Fill_Tool"><h4 id="Fill_Tool">&#9632; Fill Tool</h4>
+</a><p>Fill with the current colour. This applies only to the current selection, or the visible area if there is  no selection.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Shape_Tools"><h4 id="Shape_Tools">&#9632; Shape Tools</h4>
+</a><p>Click the tool button to cycle through: oval, rectangle, line options.</p>
+<p>Hold CTRL to get a filled oval or rectangle.<br> Hold SHIFT to snap to circle, square, or low-integer-ratio line.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Extra_keys"><h4 id="Extra_keys">&#9632; Extra keys</h4>
+</a><p>CTRL-Z: &nbsp; Undo<br>
+CTRL-C/X: Copy/Cut selected area or selected sprites<br>
+CTRL-V: &nbsp; Paste to current sprite location<br>
+Q/A,W/Z: &nbsp;Switch to previous/next sprite<br>
+1,2: &nbsp; &nbsp; &nbsp;Switch to previous/next colour<br>
+TAB: &nbsp; &nbsp; &nbsp;Toggle fullscreen view<br>
+Mousewheel or &lt; and &gt; to zoom (centered in fullscreen)<br>
+CTRL-H to toggle hex view (shows sprite index in hexadecimal)<br>
+CTRL-G to toggle black grid lines when zoomed in<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Operations_on_selected_area_or_selected_sprites"><h4 id="Operations_on_selected_area_or_selected_sprites">&#9632; Operations on selected area or selected sprites</h4>
+</a><p>F: Flip sprite horizontally<br>
+V: Flip sprite vertically<br>
+R: Rotate (requires a square selection)<br>
+Cursor keys to shift (loops if sprite selection)<br>
+DEL/BACKSPACE to clear selected area<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Sprite_Flags"><h4 id="Sprite_Flags">&#9632; Sprite Flags</h4>
+</a><p>The 8 coloured circles are sprite flags for the current sprite. These  have no particular meaning, but can be accessed using the <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FGET"><b>FGET</b></a>() / <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FSET"><b>FSET</b></a>() functions. They are indexed from 0 starting from the left.</p>
+<p>See <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FSET"><b>FSET</b></a>() for more information.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Loading_"><h4 id="Loading_">&#9632; Loading .png files into the sprite sheet</h4>
+</a><p>To load a png file of any size into the sprite sheet, first select the sprite that should be the top-left corner destination, and then either type "IMPORT IMAGE_FILE.PNG" or drag and drop the image file into the PICO-8 window. In both cases, the image is colour-fitted to the current display palette.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Map_Editor"><h2 id="Map_Editor">2.3 Map Editor</h2></a>
+<p>The PICO-8 map is a 128x32 (or 128x64 using shared space) block of 8-bit values. Each value is shown in the editor as a reference to a sprite (0..255), but you can of course use the data to represent whatever you like.</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+WARNING: The second half of the sprite sheet (banks 2 and 3), and the bottom half of the map share the same cartridge space. It's up to you how you use the data, but be aware that drawing on the second half of the sprite sheet could clobber data on the map and vice versa.</p>
+<p>The tools are similar to the ones used in sprite editing mode. Select a sprite and click and drag to paint values into the map.	</p>
+<p>To draw multiple sprites, select from sprite navigator with shift+drag To copy a block of values, use the selection tool and then stamp tool to paste To pan around the map, use the pan tool or hold space Q,W to switch to previous/next sprite Mousewheel or &lt; and &gt; to zoom (centered in fullscreen) CTRL-H to toggle hex view (shows tile values and sprite index in hexadecimal)</p>
+<p>Moving sprites in the sprite sheet without breaking reference to them in the map is a little tricky, but possible:</p>
+<p>1. Press ENTER to clear any map selection<br>
+&nbsp; &nbsp; &nbsp; &nbsp; 2. Select the sprites you would like to move (while still in map view), and press Ctrl-X<br>
+&nbsp; &nbsp; &nbsp; &nbsp; 3. Select the area of the map you would like to alter (defaults to the top half of the map)<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // press ctrl-A twice to select the full map including shared memory<br>
+&nbsp; &nbsp; &nbsp; &nbsp; 4. Select the destination sprite (also while still in map view) and press Ctrl-V<br>
+&nbsp;<br>
+// Note: this operation modifies the undo history for both the map and sprite editors, but<br>
+// PICO-8 will try to keep them in sync where possible. Otherwise, changes caused by moving<br>
+// map sprites can be reverted by also manually undoing in the sprite editor.<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SFX_Editor"><h2 id="SFX_Editor">2.4 SFX Editor</h2></a>
+<p>There are 64 SFX ("sound effects") in a cartridge, used for both sound and music.</p>
+<p>Each SFX has 32 notes, and each note has:<br>
+&nbsp; A frequency &nbsp; (C0..C5)<br>
+&nbsp; An instrument (0..7)<br>
+&nbsp; A volume &nbsp; &nbsp; &nbsp;(0..7)<br>
+&nbsp; An effect &nbsp; &nbsp; (0..7)<br>
+</p>
+<p>Each SFX also has these properties:</p>
+<p>&nbsp; A play speed (SPD) : the number of 'ticks' to play each note for.<br>
+&nbsp; &nbsp; // This means that 1 is fastest, 3 is 3x as slow, etc.<br>
+&nbsp;<br>
+&nbsp; Loop start and end : this is the note index to loop back and to<br>
+&nbsp; &nbsp; // Looping is turned off when the start index &gt;= end index<br>
+</p>
+<p>When only the first of the 2 numbers is used (and the second one is 0), it is taken to mean the number of notes to be played. This is normally not needed for sound effects (you can just leave the remaining notes empty), but is useful for controlling music playback.</p>
+<p>There are 2 modes for editing/viewing a SFX: Pitch mode (more suitable for sound effects) and tracker mode (more suitable for music). The mode can be changed using the top-left buttons, or toggled with TAB.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Pitch_Mode"><h3 id="Pitch_Mode">&#9640; Pitch Mode</h3>
+</a><p>Click and drag on the pitch area to set the frequency for each note, using the currently selected instrument (indicated by colour).</p>
+<p>Hold shift to apply only the selected instrument.<br>
+Hold CTRL to snap entered notes to the C minor pentatonic scale.<br>
+Right click to grab the instrument of that note.<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Tracker_Mode"><h3 id="Tracker_Mode">&#9640; Tracker Mode</h3>
+</a><p>Each note shows: frequency octave instrument volume effect<br>
+To enter a note, use q2w3er5t6y7ui zsxdcvgbhnjm (piano-like layout)<br>
+Hold shift when entering a note to transpose -1 octave .. +1 octave<br>
+New notes are given the selected instrument/effect values<br>
+To delete a note, use backspace or set the volume to 0<br>
+</p>
+<p>Click and then shift-click to select a range that can be copied (CTRL-C) and pasted (CTRL-V). Note that only the selected attributes are copied. Double-click to select all attributes of a single note.</p>
+<p>Navigation:<br>
+&nbsp; PAGEUP/DOWN or CTRL-UP/DOWN to skip up or down 4 notes<br>
+&nbsp; HOME/END to jump to the first or last note<br>
+&nbsp; CTRL-LEFT/RIGHT to jump across columns<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Controls_for_both_modes"><h3 id="Controls_for_both_modes">&#9640; Controls for both modes</h3>
+</a><p>- + to navigate the current SFX<br>
+&lt; &gt; to change the speed.
+SPACE to play/stop<br>
+SHIFT-SPACE to play from the current SFX quarter (group of 8 notes)<br>
+A to release a looping sample<br>
+Left click or right click to increase / decrease the SPD or LOOP values<br>
+&nbsp; // Hold shift when clicking to increase / decrease by 4<br>
+&nbsp; // Alternatively, click and drag left/right or up/down<br>
+Shift-click an instrument, effect, or volume to apply to all notes.<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Effects"><h3 id="Effects">&#9640; Effects</h3>
+</a><p>0 none<br>
+1 slide &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// &nbsp;Slide to the next note and volume<br>
+2 vibrato &nbsp; &nbsp; &nbsp; &nbsp;// &nbsp;Rapidly vary the pitch within one quarter-tone<br>
+3 drop &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // &nbsp;Rapidly drop the frequency to very low values<br>
+4 fade in &nbsp; &nbsp; &nbsp; &nbsp;// &nbsp;Ramp the volume up from 0<br>
+5 fade out &nbsp; &nbsp; &nbsp; // &nbsp;Ramp the volume down to 0<br>
+6 arpeggio fast &nbsp;// &nbsp;Iterate over groups of 4 notes at speed of 4<br>
+7 arpeggio slow &nbsp;// &nbsp;Iterate over groups of 4 notes at speed of 8<br>
+</p>
+<p>If the SFX speed is &lt;= 8, arpeggio speeds are halved to 2, 4</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Filters"><h3 id="Filters">&#9640; Filters</h3>
+</a><p>Each SFX has 5 filter switches that can be accessed while in tracker mode:</p>
+<p>NOIZ: &nbsp; &nbsp; &nbsp;Generate pure white noise (applies only to instrument 6)<br>
+BUZZ: &nbsp; &nbsp; &nbsp;Various alterations to the waveform to make it sound more buzzy<br>
+DETUNE-1: &nbsp;Detunes a second voice to create a flange-like effect<br>
+DETUNE-2: &nbsp;Various second voice tunings, mostly up or down an octave<br>
+REVERB: &nbsp; &nbsp;Apply an echo with a delay of 2 or 4 ticks<br>
+DAMPEN: &nbsp; &nbsp;Low pass filter at 2 different levels<br>
+</p>
+<p>When BUZZ is used with instrument 6, and NOIZ is off, pure brown noise is generated.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Music_Editor"><h2 id="Music_Editor">2.5 Music Editor</h2></a>
+<p>Music in PICO-8 is controlled by a sequence of 'patterns'. Each pattern is a list of 4 numbers indicating which SFX will be played on that channel.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Flow_control"><h3 id="Flow_control">&#9640; Flow control</h3>
+</a><p>Playback flow can be controlled using the 3 buttons at the top right.</p>
+<p>When a pattern has finished playing, the next pattern is played unless:</p>
+<p>- there is no data left to play (music stops)<br>
+- a STOP command is set on that pattern (the third button)<br>
+- a LOOP BACK command is set (the 2nd button), in which case the music player searches<br>
+&nbsp; back for a pattern with the LOOP START command set (the first button) or returns to<br>
+&nbsp; pattern 0 if none is found.<br>
+</p>
+<p>When a pattern has SFXes with different speeds, the pattern finishes playing when the left-most non-looping channel has finished playing. This can be used to set up double-time drum beats or unusual polyrhythms.</p>
+<p>For time signatures like 3/4 where less than 32 rows should be played before jumping to the next pattern, the length of a SFX can be set by adjusting only the first loop position and leaving the second one as zero. This will show up in the sfx editor as "LEN" (for "Length") instead of "LOOP".</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Copying_and_Pasting_Music"><h3 id="Copying_and_Pasting_Music">&#9640; Copying and Pasting Music</h3>
+</a><p>To select a range of patterns: click once on the first pattern in the pattern  navigator, then shift-click on the last pattern. Selected patterns can be copied  and pasted with CTRL-C and CTRL-V. When pasting into another cartridge, the SFX  that each pattern points to will also be pasted (possibly with a different index)  if it does not already exist.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SFX_Instruments"><h3 id="SFX_Instruments">&#9640; SFX Instruments</h3>
+</a><p>In addition to the 8 built-in instruments, custom instruments can be defined using  the first 8 SFX. Use the toggle button to the right of the instruments to select an  index, which will show up in the instrument channel as green instead of pink.</p>
+<p>When an SFX instrument note is played, it essentially triggers that SFX, but alters  the note's attributes:</p>
+<p>&nbsp; Pitch is added relative to C2<br>
+&nbsp; Volume is multiplied<br>
+&nbsp; Effects are applied on top of the SFX instrument's effects<br>
+&nbsp; Any filters that are on in the SFX instrument are enabled for that note<br>
+</p>
+<p>For example, a simple tremolo effect could be implemented by defining an instrument  in SFX 0 that rapidly alternates between volume 5 and 2. When using this instrument to play a note, the volume can further be altered as usual (via the volume channel or using the fade in/out effects). In this way, SFX instruments can be used to control  combinations of detailed changes in volume, pitch and texture.</p>
+<p>SFX instruments are only retriggered when the pitch changes, or the previous note has zero volume. This is useful for instruments that change more slowly over time. For example: a bell that gradually fades out. To invert this behaviour, effect 3 (normally 'drop') can be used when triggering the note. All other effect values	have  their usual meaning when triggering SFX instruments.	</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Waveform_Instruments"><h3 id="Waveform_Instruments">&#9640; Waveform Instruments</h3>
+</a><p>Waveform instruments function the same way as SFX instruments, but consist of a custom 64-byte looping waveform. Click on the waveform toggle button in the SFX  editor to use SFX 0..7 as a waveform instrument. In this mode, samples can be  drawn with the mouse.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Scale_Snapping"><h3 id="Scale_Snapping">&#9640; Scale Snapping</h3>
+</a><p>When drawing notes in pitch mode, hold CTRL to snap to the currently defined scale. This is the C minor pentatonic scale by default, but can be customised using the scale editor mode. There is a little keyboard icon on the bottom right to toggle this. There are 2 tranpose buttons, 1 invert button, and 3 scale preset  buttons:</p>
+
+<p class="codebox">
+Dim &nbsp; Diminished 7th scale // invert to get a whole-half scale<br>
+Maj &nbsp; Major scale &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// invert to get pentatonic<br>
+Who &nbsp; Whole tone scale &nbsp; &nbsp; // invert to get.. the other whole tone scale<br>
+</p>
+<p>Changing the scale does not alter the current SFX, it is only when drawing new notes with CTRL held down that the scale is applied.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_Exporters_"><h1 id="_Exporters_"><span style="font-size:48pt">&#10104;</span>  Exporters / Importers</h1></a>
+<p>The EXPORT command can be used to generate png, wav files and stand-alone html and native binary cartridge applications. The output format is inferred from the filename extension (e.g. .png).</p>
+<p>You are free to distribute and use exported cartridges and data as you please, provided  that you have permission from the cartridge author and contributors.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Sprite_Sheet_"><h3 id="Sprite_Sheet_">&#9640; Sprite Sheet / Label (.png)</h3>
+</a>
+<p class="codebox">
+&gt; IMPORT BLAH.PNG &nbsp; -- EXPECTS 128X128 PNG AND COLOUR-FITS TO THE PICO-8 PALETTE<br>
+&gt; EXPORT BLAH.PNG &nbsp; -- USE THE "FOLDER" COMMAND TO LOCATE THE EXPORTED PNG<br>
+</p>
+<p>When importing, -x and -y switches can be used to specify the target location in pixels: -s can be used to shrink the image (3 means scale from 384x384 -&gt; 128x128)</p>
+
+<p class="codebox">
+&gt; IMPORT BLAH.PNG -X 16 -Y 16 -S 3<br>
+</p>
+<p>Use the -l switch with IMPORT and EXPORT to instead read and write from the cartridge's label:</p>
+
+<p class="codebox">
+&gt; IMPORT -L BLAH.PNG<br>
+</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+When importing spritesheets or labels, the palette is colour-fitted to the current draw state palette.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SFX_and_Music_"><h3 id="SFX_and_Music_">&#9640; SFX and Music (.wav)</h3>
+</a><p>To export music from the current pattern (when editor mode is MUSIC), or the current SFX:</p>
+
+<p class="codebox">
+&gt; EXPORT FOO.WAV &nbsp;<br>
+</p>
+<p>To export all SFXs as foo0.wav, foo1.wav .. foo63.wav:</p>
+
+<p class="codebox">
+&gt; EXPORT FOO%D.WAV<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MAP_and_CODE"><h3 id="MAP_and_CODE">&#9640; MAP and CODE</h3>
+</a><p>A cartridges map or source code can be exported as a single image named .map.png or .lua.png:</p>
+
+<p class="codebox">
+&gt; EXPORT FOO.MAP.PNG<br>
+&gt; EXPORT FOO.LUA.PNG <br>
+</p>
+<p>Map images are 1024x512 (128x32 8x8 sprites). Lua images are sized to fit, but each line is fixed (and cropped) at 192 pixels wide.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Cartridges_"><h3 id="Cartridges_">&#9640; Cartridges (.p8, .p8.png, .p8.rom)</h3>
+</a><p>Using EXPORT to save a cartridge is the same as using SAVE, but without changing the current working cartridge. This can be useful for example, to save a copy in .p8.png format for distribution without accidentally continuing to make changes to that file instead of the original .p8 file.</p>
+<p>EXPORT can also be used to perform cartridge file format conversions from commandline. For example, from a Linux shell:</p>
+
+<p class="codebox">
+&gt; pico8 foo.p8 -export foo.p8.png<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Web_Applications_"><h2 id="Web_Applications_">3.1 Web Applications (.html)</h2></a>
+<p>To generate a stand-alone html player (mygame.html, mygame.js):</p>
+
+<p class="codebox">
+&gt; EXPORT MYGAME.HTML<br>
+</p>
+<p>Or just the .js file:</p>
+
+<p class="codebox">
+&gt; EXPORT MYGAME.JS<br>
+</p>
+<p>Use -f to write the files to a folder called mygame_html, using index.html instead of mygame.html</p>
+
+<p class="codebox">
+&gt; EXPORT -F MYGAME.HTML<br>
+</p>
+<p>Optionally provide a custom html template with the -p switch:</p>
+
+<p class="codebox">
+&gt; EXPORT MYGAME.HTML -P ONE_BUTTON<br>
+</p>
+<p>This will use the file {application data}/pico-8/plates/one_button.html as the html shell,  replacing a special string "##js_file##" (without quotes), with the .js filename, and optionally replacing the string "##label_file##" with the cart's label image as a data url.</p>
+<p>Use -w to export as .wasm + .js:</p>
+
+<p class="codebox">
+&gt; EXPORT -W MYGAME.HTML<br>
+</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+When exported as .wasm, the page needs to be served by a webserver, rather than just opening it directly from the local file system in a browser. For most purposes, the default .js export is fine, but .wasm is slightly smaller and faster.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Binary_Applications_"><h2 id="Binary_Applications_">3.2 Binary Applications (.bin)</h2></a>
+<p>To generate stand-alone executables for Windows, Linux (64-bit), Mac and Raspberry Pi:</p>
+
+<p class="codebox">
+&gt; EXPORT MYGAME.BIN<br>
+</p>
+<p>By default, the cartridge label is used as an icon with no transparency.  To specify an icon from the sprite sheet, use -i and optionally -s and/or -c  to control the size and transparency.</p>
+
+<p class="codebox">
+-I N &nbsp;Icon index N with a default transparent colour of 0 (black).<br>
+-S N &nbsp;Size NxN sprites. Size 3 would be produce a 24x24 icon.<br>
+-C N &nbsp;Treat colour N as transparent. Use 16 for no transparency.<br>
+</p>
+<p>For example, to use a 2x2 sprite starting at index 32 in the sprite sheet,  using colour 12 as transparent:</p>
+
+<p class="codebox">
+&gt; EXPORT -I 32 -S 2 -C 12 MYGAME.BIN<br>
+</p>
+<p>To include an extra file in the output folders and archives, use the -E switch:</p>
+
+<p class="codebox">
+&gt; EXPORT -E README.TXT MYGAME.BIN <br>
+</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+Windows file systems do not support the file metadata needed to create a Linux or Mac executable. PICO-8 works around this by exporting zip files in a way that preserves the file attributes. It is therefore recommended that you distribute the outputted zip files as-is to ensure users on other operating systems can run them. Otherwise, a Linux user who then downloads the binaries may need to "chmod +x mygame"  the file to run it, and Mac user would need to "chmod +x mygame.app/Contents/MacOS/mygame"</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Uploading_to_itch"><h2 id="Uploading_to_itch">3.3 Uploading to itch.io</h2></a>
+<p>If you would like to upload your exported cartridge to itch.io as playable html:</p>
+<p>1. From inside PICO-8: EXPORT -F MYGAME.HTML<br>
+2. Create a new project from your itch dashboard.<br>
+3. Zip up the folder and upload it (set "This file will be played in the browser")<br>
+4. Embed in page, with a size of 750px x 680px.<br>
+5. Set "Mobile Friendly" on (default orientation) and "Automatically start on page load" on.<br>
+&nbsp; // no need for the fullscreen button as the default PICO-8 template has its own.<br>
+6. Set the background (BG2) to something dark (e.g. #232323) and the text to something light (#cccccc)<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Exporting_Multiple_Cartridges"><h2 id="Exporting_Multiple_Cartridges">3.4 Exporting Multiple Cartridges</h2></a>
+<p>Up to 32 cartridges can be bundled together by passing them to EXPORT, when generating stand-alone html or native binary players.</p>
+
+<p class="codebox">
+&gt; EXPORT MYGAME.HTML DAT1.P8 DAT2.P8 GAME2.P8<br>
+</p>
+<p>During runtime, the extra carts can be accessed as if they were local files:</p>
+
+<p class="codebox">
+RELOAD(0,0,0X2000, "DAT1.P8") -- LOAD SPRITESHEET FROM DAT1.P8<br>
+LOAD("GAME2.P8") &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- LOAD AND RUN ANOTHER CART<br>
+</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+Exported cartridges are unable to load and run BBS cartridges e.g. via LOAD("#FOO")</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Running_EXPORT_from_the_host_operating_system"><h2 id="Running_EXPORT_from_the_host_operating_system">3.5 Running EXPORT from the host operating system</h2></a>
+<p>Use the -export switch when launching PICO-8 to run the exporter in headless mode. File paths are relative to the current directory rather than the PICO-8 file system.</p>
+<p>Parameters to the EXPORT command are passed along as a single (lowercase) string:</p>
+<p>pico8 mygame.p8 -export "-i 32 -s 2 -c 12 mygame.bin dat0.p8 dat1.p8"</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Lua_Syntax_Primer"><h1 id="Lua_Syntax_Primer"><span style="font-size:48pt">&#10105;</span> Lua Syntax Primer</h1></a>
+<p>PICO-8 programs are written using Lua syntax, but do not use the standard Lua library. The following is a brief summary of essential Lua syntax.</p>
+<p>For more details, or to find out about proper Lua, see www.lua.org.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Comments"><h3 id="Comments">&#9640; Comments</h3>
+</a>
+<p class="codebox">
+-- USE TWO DASHES LIKE THIS TO WRITE A COMMENT<br>
+--[[ MULTI-LINE<br>
+COMMENTS ]]<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Types_and_assignment"><h3 id="Types_and_assignment">&#9640; Types and assignment</h3>
+</a><p>Types in Lua are numbers, strings, booleans and tables:</p>
+
+<p class="codebox">
+NUM = 12/100<br>
+S = "THIS IS A STRING"<br>
+B = FALSE<br>
+T = {1,2,3}<br>
+</p>
+<p>Numbers in PICO-8 are all 16:16 fixed point. They range from -32768.0 to 32767.99999</p>
+<p>Hexadecimal notation with optional fractional parts can be used:</p>
+
+<p class="codebox">
+?0x11 &nbsp; &nbsp; &nbsp; &nbsp;-- 17<br>
+?0x11.4000 &nbsp; -- 17.25<br>
+</p>
+<p>Numbers written in decimal are rounded to the closest fixed point value. To see the 32-bit hexadecimal representation, use PRINT(TOSTR(VAL,TRUE)):</p>
+
+<p class="codebox">
+?TOSTR(-32768,TRUE) &nbsp; &nbsp; &nbsp;-- 0x8000.0000 <br>
+?TOSTR(32767.99999,TRUE) -- 0X7FFF.FFFF<br>
+</p>
+<p>Dividing by zero evaluates to 0x7fff.ffff if positive, or -0x7fff.ffff if negative. </p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Conditionals"><h3 id="Conditionals">&#9640; Conditionals</h3>
+</a>
+<p class="codebox">
+IF NOT B THEN<br>
+&nbsp; PRINT("B IS FALSE")<br>
+ELSE<br>
+&nbsp; PRINT("B IS NOT FALSE")<br>
+END<br>
+</p>
+<p>-- with ELSEIF</p>
+
+<p class="codebox">
+IF X == 0 THEN<br>
+&nbsp; PRINT("X IS 0")<br>
+ELSEIF X &lt; 0 THEN<br>
+&nbsp; PRINT("X IS NEGATIVE")<br>
+ELSE<br>
+&nbsp; PRINT("X IS POSITIVE")<br>
+END<br>
+</p>
+
+<p class="codebox">
+IF (4 == 4) THEN PRINT("EQUAL") END<br>
+IF (4 ~= 3) THEN PRINT("NOT EQUAL") END<br>
+IF (4 &lt;= 4) THEN PRINT("LESS THAN OR EQUAL") END<br>
+IF (4 &gt; 3) THEN PRINT("MORE THAN") END<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Loops"><h3 id="Loops">&#9640; Loops</h3>
+</a><p>Loop ranges are inclusive:</p>
+
+<p class="codebox">
+FOR X=1,5 DO<br>
+&nbsp; PRINT(X)<br>
+END<br>
+-- PRINTS 1,2,3,4,5<br>
+</p>
+
+<p class="codebox">
+X = 1<br>
+WHILE(X &lt;= 5) DO<br>
+&nbsp; PRINT(X)<br>
+&nbsp; X = X + 1<br>
+END<br>
+</p>
+
+<p class="codebox">
+FOR X=1,10,3 DO PRINT(X) END &nbsp; -- 1,4,7,10<br>
+</p>
+
+<p class="codebox">
+FOR X=5,1,-2 DO PRINT(X) END &nbsp;-- 5,3,1<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Functions_and_Local_Variables"><h3 id="Functions_and_Local_Variables">&#9640; Functions and Local Variables</h3>
+</a><p>Variables declared as LOCAL are scoped to their containing block of code (for example, inside a FUNCTION, a FOR loop, or IF THEN END statement).</p>
+
+<p class="codebox">
+Y=0 <br>
+FUNCTION PLUSONE(X)<br>
+&nbsp; LOCAL Y = X+1<br>
+&nbsp; RETURN Y<br>
+END<br>
+PRINT(PLUSONE(2)) -- 3<br>
+PRINT(Y) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- 0<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Tables"><h3 id="Tables">&#9640; Tables</h3>
+</a><p>In Lua, tables are a collection of key-value pairs where the key and value types can both  be mixed. They can be used as arrays by indexing them with integers.</p>
+
+<p class="codebox">
+A={} -- CREATE AN EMPTY TABLE<br>
+A[1] = "BLAH"<br>
+A[2] = 42<br>
+A["FOO"] = {1,2,3}<br>
+</p>
+<p>Arrays use 1-based indexing by default:</p>
+
+<p class="codebox">
+&gt; A = {11,12,13,14}<br>
+&gt; PRINT(A[2]) -- 12<br>
+</p>
+<p>But if you prefer 0-based arrays, just write something the zeroth slot:</p>
+
+<p class="codebox">
+&gt; A = {[0]=10,11,12,13,14}<br>
+</p>
+<p>Tables with 1-based integer indexes are special though. The length of such an array can be found with the # operator, and PICO-8 uses such arrays to implement ADD, DEL, DELI, ALL and FOREACH functions.</p>
+
+<p class="codebox">
+&gt; PRINT(#A) &nbsp; -- 4<br>
+&gt; ADD(A, 15)<br>
+&gt; PRINT(#A) &nbsp; -- 5<br>
+</p>
+<p>Indexes that are strings can be written using dot notation</p>
+
+<p class="codebox">
+PLAYER = {}<br>
+PLAYER.X = 2 -- is equivalent to PLAYER["X"]<br>
+PLAYER.Y = 3<br>
+</p>
+<p>See the <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Table_Functions"><b>Table_Functions</b></a> section for more details.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PICO_8_Shorthand"><h3 id="PICO_8_Shorthand">&#9640; PICO-8 Shorthand</h3>
+</a><p>PICO-8 also allows several non-standard, shorter ways to write common patterns.</p>
+<p>1. IF THEN END statements, and WHILE THEN END can be written on a single line with:</p>
+
+<p class="codebox">
+IF (NOT B) I=1 J=2<br>
+</p>
+<p>Is equivalent to:</p>
+
+<p class="codebox">
+IF NOT B THEN I=1 J=2 END<br>
+</p>
+<p>Note that brackets around the short-hand condition are required.</p>
+<p>2. Assignment operators</p>
+<p>Shorthand assignment operators can also be used if the whole statement is on one line. They can be constructed by appending a '=' to any binary operator, including arithmetic (+=, -= ..), bitwise (&amp;=, |= ..) or the string concatenation operator (..=)</p>
+
+<p class="codebox">
+A += 2 &nbsp; -- EQUIVALENT TO: A = A + 2<br>
+</p>
+<p>3. != operator</p>
+<p>Not shorthand, but pico-8 also accepts != instead of ~= for "not equal to"</p>
+
+<p class="codebox">
+PRINT(1 != 2) -- TRUE<br>
+PRINT("FOO" == "FOO") -- TRUE (STRING ARE INTERNED)<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PICO_8_Program_Structure"><h1 id="PICO_8_Program_Structure"><span style="font-size:48pt">&#10106;</span> PICO-8 Program Structure</h1></a>
+<p>When a PICO-8 programs runs, all of the code from tabs is concatenated (from left to right) and executed. It is possible to provide your own main loop manually, but typically PICO-8 programs use 3 special functions that, if defined by the author, are called during program execution:</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_UPDATE"><h5 id="_UPDATE"> _UPDATE() -- Called once per update at 30fps.</h5></a>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_DRAW"><h5 id="_DRAW"> _DRAW()   -- Called once per visible frame</h5></a>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_INIT"><h5 id="_INIT"> _INIT()   -- Called once on program startup.</h5></a>
+<p>A simple program that uses all three might look this:</p>
+
+<p class="codebox">
+FUNCTION _INIT()<br>
+&nbsp; -- ALWAYS START ON WHITE<br>
+&nbsp; COL = 7<br>
+END<br>
+&nbsp;<br>
+FUNCTION _UPDATE()<br>
+&nbsp; -- PRESS X FOR A RANDOM COLOUR <br>
+&nbsp; IF (BTNP(5)) COL = 8 + RND(8) <br>
+END<br>
+&nbsp;<br>
+FUNCTION _DRAW()<br>
+&nbsp; CLS(1)<br>
+&nbsp; CIRCFILL(64,64,32,COL)<br>
+END<br>
+</p>
+<p>_DRAW() is normally called at 30fps, but if it can not complete in time, PICO-8 will attempt to run at 15fps and call _UPDATE() twice per visible frame to compensate.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Running_PICO_8_at_60fps"><h3 id="Running_PICO_8_at_60fps">&#9640; Running PICO-8 at 60fps</h3>
+</a><br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_UPDATE60"><h5 id="_UPDATE60"> _UPDATE60() </h5></a>
+<p>When _UPDATE60() Is defined instead of _UPDATE(), PICO-8 will run in 60fps mode:</p>
+<p>- both _UPDATE60() and _DRAW() are called at 60fps<br> - half the PICO-8 CPU is available per frame before dropping down to 30fps</p>
+<p>Note that not all host machines are capable of running at 60fps. Older machines, and / or web versions might also request PICO-8 to run at 30 fps (or 15 fps), even when the PICO-8 CPU is not over capacity. In this case, multiple _UPDATE60 calls are made for every _DRAW call in the same way.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_INCLUDE"><h3 id="_INCLUDE">&#9640; #INCLUDE</h3>
+</a><p>Source code can be injected into a program at cartridge boot (but not during runtime), using "#INCLUDE FILENAME", where FILENAME is either a plaintext file (containing Lua code), a tab from another cartridge, or all tabs from another cartridge:</p>
+
+<p class="codebox">
+#INCLUDE SOMECODE.LUA<br>
+#INCLUDE ONETAB.P8:1<br>
+#INCLUDE ALLTABS.P8<br>
+</p>
+<p>When the cartridge is run, the contents of each included file is treated as if it had been pasted into the editor in place of that line.</p>
+<p>- Filenames are relative to the current cartridge (so, need to save first)<br> - Includes are not performed recursively.<br> - Normal character count and token limits apply.</p>
+<p>When a cartridge is saved as .P8.PNG, or exported to a binary, any included files are  flattened and saved with the cartridge so that there are no external dependencies.</p>
+<p>#INCLUDE can be used for things like:</p>
+<p>- Sharing code between cartridge (libraries or common multi-cart code)<br> - Using an external code editor without needing to edit the .p8 file directly.<br> - Treating a cartridge as a data file that loads a PICO-8 editing tool to modify it.<br> - Loading and storing data generated by an external (non-PICO-8) tool.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Quirks_of_PICO_8"><h3 id="Quirks_of_PICO_8">&#9640; Quirks of PICO-8</h3>
+</a><p>Common gotchas to watch out for:</p>
+<p>- The bottom half of the sprite sheet and bottom half of the map occupy the same memory. // Best use only one or the other if you're unsure how this works.</p>
+<p>- PICO-8 numbers have limited accuracy and range; the minimum step between numbers is approximately 0.00002 (0x0.0001), with a range of -32768 (-0x8000) to approximately 32767.99999 (0x7fff.ffff)<br> // If you add 1 to a counter each frame, it will overflow after around 18 minutes!</p>
+<p>- Lua arrays are 1-based by default, not 0-based. FOREACH starts at TBL[1], not TBL[0].</p>
+<p>- <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#COS"><b>COS</b></a>() and <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SIN"><b>SIN</b></a>() take 0..1 instead of 0..PI*2, and <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SIN"><b>SIN</b></a>() is inverted.</p>
+<p>- <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SGN"><b>SGN</b></a>(0) returns 1.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CPU"><h3 id="CPU">&#9640; CPU</h3>
+</a><p>Although PICO-8 does not have a clearly defined CPU, there is a virtual CPU speed of 8MHz, where each lua vm instruction costs around 2 cycles. Built-in operations like drawing sprites also have a CPU cost. This means that a PICO-8 cartridge made on a host machine with a powerful CPU can still be guaranteed to run (reasonably) well on much slower machines, and to not drain too much battery on phones / when running on the web.</p>
+<p>To view the CPU load while a cartridge is running, press CTRL-P to toggle a CPU meter, or print  out <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#STAT"><b>STAT</b></a>(1) at the end of each frame.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#API_Reference"><h1 id="API_Reference"><span style="font-size:48pt">&#10107;</span> API Reference</h1></a>
+<p>PICO-8 is built on the Lua programming language, but does not include the Lua standard library. Instead, a small api is offered in keeping with PICO-8's minimal design and limited screen space. For an example program that uses most of the api functions, see /DEMOS/API.P8 </p>
+<p>Functions are written here as:</p>
+<p>FUNCTION_NAME(PARAMETER, [OPTIONAL_PARAMETER])</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+Note that PICO-8 does not have upper or lower case characters -- if you are editing a .p8 or .lua file directly, function names should all be in lower case.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#System"><h2 id="System">6.1 System</h2></a>
+<p>System functions called from commandline can omit the usual brackets and string quotes. For example, instead of LOAD("BLAH.P8"), it is possible to write:</p>
+
+<p class="codebox">
+&gt;LOAD BLAH.P8 <br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#LOAD"><h5 id="LOAD"> LOAD(FILENAME, [BREADCRUMB], [PARAM_STR])</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SAVE"><h5 id="SAVE"> SAVE(FILENAME)</h5></a>
+<p>Load or save a cartridge</p>
+<p>When loading from a running cartridge, the loaded cartridge is immediately run with parameter string PARAM_STR (accessible with STAT(6)), and a menu item is inserted and named BREADCRUMB, that returns the user to the previous cartridge.</p>
+<p>Filenames that start with '#' are taken to be a BBS cart id, that is immediately downloaded and run:</p>
+
+<p class="codebox">
+&gt; LOAD("#MYGAME_LEVEL2", "BACK TO MAP", "LIVES="..LIVES)<br>
+</p>
+<p>If the id is the cart's parent post, or a revision number is not specified, then the latest version is fetched. BBS carts can be loaded from other BBS carts or local carts, but not from  exported carts. </p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FOLDER"><h5 id="FOLDER"> FOLDER</h5></a>
+<p>Open the carts folder in the host operating system.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#LS"><h5 id="LS"> LS([DIRECTORY])</h5></a>
+<p>List .p8 and .p8.png files in given directory (folder), relative to the current directory. Items that are directories end in a slash (e.g. "foo/"). </p>
+<p>When called from a running cartridge, LS can only be used locally and returns a table of the results. When called from a BBS cart, LS returns nil.</p>
+<p>Directories can only resolve inside of PICO-8's virtual drive; LS("..") from the root directory will resolve to the root directory.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RUN"><h5 id="RUN"> RUN([PARAM_STR])</h5></a>
+<p>Run from the start of the program.</p>
+<p>RUN() Can be called from inside a running program to reset.</p>
+<p>When PARAM_STR is supplied, it can be accessed during runtime with STAT(6)</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#STOP"><h5 id="STOP"> STOP([MESSAGE])</h5></a>
+<p>Stop the cart and optionally print a message.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RESUME"><h5 id="RESUME"> RESUME</h5></a>
+<p>Resume the program. Use R for short.</p>
+<p>Use a single "." from the commandline to advance a single frame. This enters frame-by-frame mode, that can be read with stat(110). While frame-by-frame mode is active, entering an empty command (by pressing enter) advances one frames.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#ASSERT"><h5 id="ASSERT"> ASSERT(CONDITION, [MESSAGE])</h5></a>
+<p>If CONDITION is false, stop the program and print MESSAGE if it is given. This can be useful for debugging cartridges, by ASSERT()'ing that things that you expect to be true are indeed true.</p>
+
+<p class="codebox">
+ASSERT(ADDR &gt;= 0 AND ADDR &lt;= 0x7FFF, "OUT OF RANGE")<br>
+POKE(ADDR, 42) -- THE MEMORY ADDRESS IS OK, FOR SURE!<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#REBOOT"><h5 id="REBOOT"> REBOOT</h5></a>
+<p>Reboot the machine Useful for starting a new project</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RESET"><h5 id="RESET"> RESET()</h5></a>
+<p>Reset the values in RAM from 0x5f00..0x5f7f to their default values.  This includes the palette, camera position, clipping and fill pattern. If you get lost at the command prompt because the draw state makes viewing text  impossible, try typing RESET! It can also be called from a running program.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#INFO"><h5 id="INFO"> INFO()</h5></a>
+<p>Print out some information about the cartridge: Code size, tokens, compressed size</p>
+<p>Also displayed:</p>
+<p>UNSAVED CHANGES &nbsp; When the cartridge in memory differs to the one on disk<br>
+EXTERNAL CHANGES &nbsp;When the cartridge on disk has changed since it was loaded<br>
+&nbsp; (e.g. by editing the program using a separate text editor)<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FLIP"><h5 id="FLIP"> FLIP()</h5></a>
+<p>Flip the back buffer to screen and wait for next frame. This call is not needed when there is a <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_DRAW"><b>_DRAW</b></a>() or <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_UPDATE"><b>_UPDATE</b></a>() callback defined, as the flip is performed automatically. But when using a custom main loop, a call to FLIP is normally needed:</p>
+
+<p class="codebox">
+::_::<br>
+CLS()<br>
+FOR I=1,100 DO<br>
+&nbsp; A=I/50 - T()<br>
+&nbsp; X=64+COS(A)*I<br>
+&nbsp; Y=64+SIN(A)*I<br>
+&nbsp; CIRCFILL(X,Y,1,8+(I/4)%8)<br>
+END<br>
+FLIP()GOTO _<br>
+</p>
+<p>If your program does not call FLIP before a frame is up, and a <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_DRAW"><b>_DRAW</b></a>() callback is not in progress, the current contents of the back buffer are copied to screen.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PRINTH"><h5 id="PRINTH"> PRINTH(STR, [FILENAME], [OVERWRITE], [SAVE_TO_DESKTOP])</h5></a>
+<p>Print a string to the host operating system's console for debugging.</p>
+<p>If filename is set, append the string to a file on the host operating system (in the current directory by default -- use FOLDER to view).</p>
+<p>Setting OVERWRITE to true causes that file to be overwritten rather than appended.</p>
+<p>Setting SAVE_TO_DESKTOP to true saves to the desktop instead of the current path.</p>
+<p>Use a filename of "@clip" to write to the host's clipboard.</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+Use stat(4) to read the clipboard, but the contents of the clipboard are only available after pressing CTRL-V during runtime (for security).</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#TIME"><h5 id="TIME"> TIME()</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#T"><h5 id="T"> T()</h5></a>
+<p>Returns the number of seconds elapsed since the cartridge was run.</p>
+<p>This is not the real-world time, but is calculated by counting the number of times</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_UPDATE"><h5 id="_UPDATE"> _UPDATE or @_UPDATE60 is called. Multiple calls of TIME() from the same frame return</h5></a>
+<p>the same result.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#STAT"><h5 id="STAT"> STAT(X)</h5></a>
+<p>Get system status where X is:</p>
+
+<p class="codebox">
+0 &nbsp;Memory usage (0..2048)<br>
+1 &nbsp;CPU used since last flip (1.0 == 100% CPU)<br>
+4 &nbsp;Clipboard contents (after user has pressed CTRL-V)<br>
+6 &nbsp;Parameter string<br>
+7 &nbsp;Current framerate<br>
+&nbsp;<br>
+46..49 &nbsp;Index of currently playing SFX on channels 0..3<br>
+50..53 &nbsp;Note number (0..31) on channel 0..3<br>
+54 &nbsp; &nbsp; &nbsp;Currently playing pattern index<br>
+55 &nbsp; &nbsp; &nbsp;Total patterns played<br>
+56 &nbsp; &nbsp; &nbsp;Ticks played on current pattern<br>
+57 &nbsp; &nbsp; &nbsp;(Boolean) TRUE when music is playing<br>
+&nbsp;<br>
+80..85 &nbsp;UTC time: year, month, day, hour, minute, second<br>
+90..95 &nbsp;Local time<br>
+&nbsp;<br>
+100 &nbsp; &nbsp; Current breadcrumb label, or nil<br>
+110 &nbsp; &nbsp; Returns true when in frame-by-frame mode<br>
+</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+Audio values 16..26 are the legacy version of audio state queries 46..56. They only report on the current state of the audio mixer, which changes only ~20 times a second (depending on the host sound driver and other factors). 46..56 instead stores a history of mixer state at each tick to give a higher resolution estimate of the currently audible state.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#EXTCMD"><h5 id="EXTCMD"> EXTCMD(CMD_STR, [P1, P2])</h5></a>
+<p>Special system command, where CMD_STR is a string:</p>
+<p>"pause" &nbsp; &nbsp; &nbsp; &nbsp; request the pause menu be opened<br>
+"reset" &nbsp; &nbsp; &nbsp; &nbsp; request a cart reset<br>
+"go_back" &nbsp; &nbsp; &nbsp; return to the previous cart if there is one<br>
+"label" &nbsp; &nbsp; &nbsp; &nbsp; set cart label<br>
+"screen" &nbsp; &nbsp; &nbsp; &nbsp;save a screenshot<br>
+"rec" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; set video start point<br>
+"rec_frames" &nbsp; &nbsp;set video start point in frames mode<br>
+"video" &nbsp; &nbsp; &nbsp; &nbsp; save a .gif to desktop<br>
+"audio_rec" &nbsp; &nbsp; start recording audio<br>
+"audio_end" &nbsp; &nbsp; save recorded audio to desktop (no supported from web)<br>
+"shutdown" &nbsp; &nbsp; &nbsp;quit cartridge (from exported binary)<br>
+"folder" &nbsp; &nbsp; &nbsp; &nbsp;open current working folder on the host operating system<br>
+"set_filename" &nbsp;set the filename for screenshots / gifs / audio recordings<br>
+"set_title" &nbsp; &nbsp; set the host window title<br>
+</p>
+<p>Some commands have optional number parameters:</p>
+<p>"video" and "screen": P1: an integer scaling factor that overrides the system setting. P2: when &gt; 0, save to the current folder instead of to desktop</p>
+<p>"audio_end" P1: when &gt; 0, save to the current folder instead of to desktop</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Recording_GIFs"><h4 id="Recording_GIFs">&#9632; Recording GIFs</h4>
+</a><p>EXTCMD("REC"), EXTCMD("VIDEO") is the same as using ctrl-8, ctrl-9 and saves a gif to the desktop using the current GIF_SCALE setting (use CONFIG GIF_SCALE to change).</p>
+<p>The two additional parameters can be used to override these defaults:</p>
+
+<p class="codebox">
+EXTCMD("VIDEO", 4) &nbsp; &nbsp;-- SCALE *4 (512 X 512)<br>
+EXTCMD("VIDEO", 0, 1) -- DEFAULT SCALING, SAVE TO USER DATA FOLDER<br>
+</p>
+<p>The user data folder can be opened with EXTCMD("FOLDER") and defaults to the same path as the cartridge, or {pico-8 appdata}/appdata/appname for exported binaries.</p>
+<p>Due to the nature of the gif format, all gifs are recorded at 33.3fps, and frames produced by PICO-8 are skipped or duplicated in the gif to match roughly what the user is seeing. To record exactly one frame each time <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FLIP"><b>FLIP</b></a>() is called, regardless of the runtime framerate or how long it took to generate the frame, use:</p>
+
+<p class="codebox">
+EXTCMD("REC_FRAMES")<br>
+</p>
+<p>The default filename for gifs (and screenshots, audio) is foo_%d, where foo is the name of the cartridge, and %d is a number starting at 0 and automatically incremented until a file of that name does not exist. Use EXTCMD("SET_FILENAME","FOO") to override that default. If the custom filename includes "%d", then the auto- incrementing number behaviour is used, but otherwise files are written even if  there is an existing file with the same name.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Graphics"><h2 id="Graphics">6.2 Graphics</h2></a>
+<p>PICO-8 has a fixed capacity of 128 8x8 sprites, plus another 128 that overlap with the bottom half of the map data ("shared data"). These 256 sprites are collectively called the sprite sheet, and can be thought of as a 128x128 pixel image.</p>
+<p>All of PICO-8's drawing operations are subject to the current draw state. The draw state includes a camera position (for adding an offset to all coordinates), palette mapping  (for recolouring sprites), clipping rectangle, a drawing colour, and a fill pattern.</p>
+<p>The draw state is reset each time a program is run, or by calling <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RESET"><b>RESET</b></a>().</p>
+<p>Colour indexes:<br>
+&nbsp;<br>
+&nbsp; &nbsp;0 &nbsp;black &nbsp; 1 &nbsp;dark_blue &nbsp; 2 &nbsp;dark_purple &nbsp; 3 &nbsp;dark_green &nbsp;<br>
+&nbsp; &nbsp;4 &nbsp;brown &nbsp; 5 &nbsp;dark_gray &nbsp; 6 &nbsp;light_gray &nbsp; &nbsp;7 &nbsp;white<br>
+&nbsp; &nbsp;8 &nbsp;red &nbsp; &nbsp; 9 &nbsp;orange &nbsp; &nbsp; 10 &nbsp;yellow &nbsp; &nbsp; &nbsp; 11 &nbsp;green &nbsp; &nbsp; &nbsp; <br>
+&nbsp; 12 &nbsp;blue &nbsp; 13 &nbsp;indigo &nbsp; &nbsp; 14 &nbsp;pink &nbsp; &nbsp; &nbsp; &nbsp; 15 &nbsp;peach<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CLIP"><h5 id="CLIP"> CLIP(X, Y, W, H, [CLIP_PREVIOUS])</h5></a>
+<p>Sets the clipping rectangle in pixels. All drawing operations will be clipped to the rectangle at x, y with a width and height of w,h.</p>
+<p>CLIP() to reset.</p>
+<p>When CLIP_PREVIOUS is true, clip the new clipping region by the old one.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PSET"><h5 id="PSET"> PSET(X, Y, [COL])</h5></a>
+<p>Sets the pixel at x, y to colour index COL (0..15).</p>
+<p>When COL is not specified, the current draw colour is used.</p>
+
+<p class="codebox">
+FOR Y=0,127 DO<br>
+&nbsp; FOR X=0,127 DO<br>
+&nbsp; &nbsp; PSET(X, Y, X*Y/8)<br>
+&nbsp; END<br>
+END<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PGET"><h5 id="PGET"> PGET(X, Y)</h5></a>
+<p>Returns the colour of a pixel on the screen at (X, Y).</p>
+
+<p class="codebox">
+WHILE (TRUE) DO<br>
+&nbsp; X, Y = RND(128), RND(128)<br>
+&nbsp; DX, DY = RND(4)-2, RND(4)-2<br>
+&nbsp; PSET(X, Y, PGET(DX+X, DY+Y))<br>
+END<br>
+</p>
+<p>When X and Y are out of bounds, PGET returns 0. A custom return value can be specified with:</p>
+
+<p class="codebox">
+POKE(0x5f36, 0x10)<br>
+POKE(0x5f5B, NEWVAL)<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SGET"><h5 id="SGET"> SGET(X, Y)</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SSET"><h5 id="SSET"> SSET(X, Y, [COL])</h5></a>
+<p>Get or set the colour (COL) of a sprite sheet pixel.</p>
+<p>When X and Y are out of bounds, SGET returns 0. A custom value can be specified with:</p>
+
+<p class="codebox">
+POKE(0x5f36, 0x10)<br>
+POKE(0x5f59, NEWVAL)<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FGET"><h5 id="FGET"> FGET(N, [F])</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FSET"><h5 id="FSET"> FSET(N, [F], VAL)</h5></a>
+<p>Get or set the value (VAL) of sprite N's flag F.</p>
+<p>F is the flag index 0..7.</p>
+<p>VAL is TRUE or FALSE.</p>
+<p>The initial state of flags 0..7 are settable in the sprite editor, so can be used to create custom sprite attributes. It is also possible to draw only a subset of map tiles by providing a mask in <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MAP"><b>MAP</b></a>().</p>
+<p>When F is omitted, all flags are retrieved/set as a single bitfield.</p>
+
+<p class="codebox">
+FSET(2, 1 | 2 | 8) &nbsp; -- SETS BITS 0,1 AND 3<br>
+FSET(2, 4, TRUE) &nbsp; &nbsp; -- SETS BIT 4<br>
+PRINT(FGET(2)) &nbsp; &nbsp; &nbsp; -- 27 (1 | 2 | 8 | 16)<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PRINT"><h5 id="PRINT"> PRINT(STR, X, Y, [COL])</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PRINT"><h5 id="PRINT"> PRINT(STR, [COL])</h5></a>
+<p>Print a string STR and optionally set the draw colour to COL.</p>
+<p>Shortcut: written on a single line, ? can be used to call print without brackets: </p>
+
+<p class="codebox">
+?"HI"<br>
+</p>
+<p>When X, Y are not specified, a newline is automatically appended. This can be omitted by ending the string with an explicit termination control character:</p>
+
+<p class="codebox">
+?"THE QUICK BROWN FOX\0"<br>
+</p>
+<p>Additionally, when X, Y are not specified, printing text below 122 causes  the console to scroll. This can be disabled during runtime with POKE(0x5f36,0x40).</p>
+<p>PRINT returns the right-most x position that occurred while printing. This can be used to find out the width of some text by printing it off-screen:</p>
+
+<p class="codebox">
+W = PRINT("HOGE", 0, -20) -- returns 16<br>
+</p>
+<p>See <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Appendix_A"><b>Appendix A</b></a> (P8SCII) for information about control codes and custom fonts.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CURSOR"><h5 id="CURSOR"> CURSOR(X, Y, [COL])</h5></a>
+<p>Set the cursor position.</p>
+<p>If COL is specified, also set the current colour.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#COLOR"><h5 id="COLOR"> COLOR([COL])</h5></a>
+<p>Set the current colour to be used by drawing functions.</p>
+<p>If COL is not specified, the current colour is set to 6</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CLS"><h5 id="CLS"> CLS([COL])</h5></a>
+<p>Clear the screen and reset the clipping rectangle.</p>
+<p>COL defaults to 0 (black)</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CAMERA"><h5 id="CAMERA"> CAMERA([X, Y])</h5></a>
+<p>Set a screen offset of -x, -y for all drawing operations</p>
+<p>CAMERA() to reset</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CIRC"><h5 id="CIRC"> CIRC(X, Y, R, [COL])</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CIRCFILL"><h5 id="CIRCFILL"> CIRCFILL(X, Y, R, [COL])</h5></a>
+<p>Draw a circle or filled circle at x,y with radius r</p>
+<p>If r is negative, the circle is not drawn.</p>
+<p>When bits 0x1800.0000 are set in COL, and <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#0x5F34"><b>0x5F34</b></a> &amp; 2 == 2, the circle is drawn inverted.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#OVAL"><h5 id="OVAL"> OVAL(X0, Y0, X1, Y1, [COL])</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#OVALFILL"><h5 id="OVALFILL"> OVALFILL(X0, Y0, X1, Y1, [COL])</h5></a>
+<p>Draw an oval that is symmetrical in x and y (an ellipse), with the given bounding rectangle.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#LINE"><h5 id="LINE"> LINE(X0, Y0, [X1, Y1, [COL]])</h5></a>
+<p>Draw a line from (X0, Y0) to (X1, Y1)</p>
+<p>If (X1, Y1) are not given, the end of the last drawn line is used.</p>
+<p>LINE() with no parameters means that the next call to LINE(X1, Y1) will only set the end points without drawing.</p>
+
+<p class="codebox">
+CLS()<br>
+LINE()<br>
+FOR I=0,6 DO<br>
+&nbsp; LINE(64+COS(I/6)*20, 64+SIN(I/6)*20, 8+I)<br>
+END	<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RECT"><h5 id="RECT"> RECT(X0, Y0, X1, Y1, [COL])</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RECTFILL"><h5 id="RECTFILL"> RECTFILL(X0, Y0, X1, Y1, [COL])</h5></a>
+<p>Draw a rectangle or filled rectangle with corners at (X0, Y0), (X1, Y1).</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PAL"><h5 id="PAL"> PAL(C0, C1, [P])</h5></a>
+<p>PAL() swaps colour c0 for c1 for one of three palette re-mappings (p defaults to 0):</p>
+<p>0: Draw Palette</p>
+<p>The draw palette re-maps colours when they are drawn. For example, an orange flower sprite can be drawn as a red flower by setting the 9th palette value to 8:</p>
+
+<p class="codebox">
+PAL(9,8) &nbsp; &nbsp; -- draw subsequent orange (colour 9) pixels as red (colour 8)<br>
+SPR(1,70,60) -- any orange pixels in the sprite will be drawn with red instead<br>
+</p>
+<p>Changing the draw palette does not affect anything that was already drawn to the screen.</p>
+<p>1: Display Palette</p>
+<p>The display palette re-maps the whole screen when it is displayed at the end of a frame. For example, if you boot PICO-8 and then type PAL(6,14,1), you can see all of the gray (colour 6) text immediate change to pink (colour 14) even though it has already been drawn. This is useful for screen-wide effects such as fading in/out.</p>
+<p>2: Secondary Palette</p>
+<p>Used by <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FILLP"><b>FILLP</b></a>() for drawing sprites. This provides a mapping from a single 4-bit colour index to two 4-bit colour indexes.</p>
+<p>PAL() &nbsp;resets all palettes to system defaults (including transparency values)<br>
+PAL(P) resets a particular palette (0..2) to system defaults<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PAL"><h5 id="PAL"> PAL(TBL, [P])</h5></a>
+<p>When the first parameter of pal is a table, colours are assigned for each entry. For example, to re-map colour 12 and 14 to red:</p>
+
+<p class="codebox">
+PAL({[12]=9, [14]=8})<br>
+</p>
+<p>Or to re-colour the whole screen shades of gray (including everything that is already drawn):</p>
+
+<p class="codebox">
+PAL({1,1,5,5,5,6,7,13,6,7,7,6,13,6,7,1}, 1)<br>
+</p>
+<p>Because table indexes start at 1, colour 0 is given at the end in this case.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PALT"><h5 id="PALT"> PALT(C, [T])</h5></a>
+<p>Set transparency for colour index to T (boolean) Transparency is observed by <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SPR"><b>SPR</b></a>(), <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SSPR"><b>SSPR</b></a>(), <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MAP"><b>MAP</b></a>() AND <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#TLINE"><b>TLINE</b></a>()</p>
+
+<p class="codebox">
+PALT(8, TRUE) -- RED PIXELS NOT DRAWN IN SUBSEQUENT SPRITE/TLINE DRAW CALLS<br>
+</p>
+<p>PALT() resets to default: all colours opaque except colour 0</p>
+<p>When C is the only parameter, it is treated as a bitfield used to set all 16 values. For example: to set colours 0 and 1 as transparent:</p>
+
+<p class="codebox">
+PALT(0B1100000000000000)<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SPR"><h5 id="SPR"> SPR(N, X, Y, [W, H], [FLIP_X], [FLIP_Y])</h5></a>
+<p>Draw sprite N (0..255) at position X,Y</p>
+<p>W (width) and H (height) are 1, 1 by default and specify how many sprites wide to blit.</p>
+<p>Colour 0 drawn as transparent by default (see <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PALT"><b>PALT</b></a>())</p>
+<p>When FLIP_X is TRUE, flip horizontally.</p>
+<p>When FLIP_Y is TRUE, flip vertically.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SSPR"><h5 id="SSPR"> SSPR(SX, SY, SW, SH, DX, DY, [DW, DH], [FLIP_X], [FLIP_Y]]</h5></a>
+<p>Stretch a rectangle of the sprite sheet (sx, sy, sw, sh) to a destination rectangle on the screen (dx, dy, dw, dh). In both cases, the x and y values are coordinates (in pixels) of the rectangle's top left corner, with a width of w, h.</p>
+<p>Colour 0 drawn as transparent by default (see <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PALT"><b>PALT</b></a>())</p>
+<p>dw, dh defaults to sw, sh</p>
+<p>When FLIP_X is TRUE, flip horizontally.</p>
+<p>When FLIP_Y is TRUE, flip vertically.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FILLP"><h5 id="FILLP"> FILLP(P)</h5></a>
+<p>The PICO-8 fill pattern is a 4x4 2-colour tiled pattern observed by: <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CIRC"><b>CIRC</b></a>() <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CIRCFILL"><b>CIRCFILL</b></a>() <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RECT"><b>RECT</b></a>() <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RECTFILL"><b>RECTFILL</b></a>() <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#OVAL"><b>OVAL</b></a>() <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#OVALFILL"><b>OVALFILL</b></a>() <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PSET"><b>PSET</b></a>() <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#LINE"><b>LINE</b></a>()</p>
+<p>P is a bitfield in reading order starting from the highest bit. To calculate the value of P for a desired pattern, add the bit values together:</p>
+<p>&nbsp; .-----------------------.<br>
+&nbsp; |32768|16384| 8192| 4096|<br>
+&nbsp; |-----|-----|-----|-----|<br>
+&nbsp; | 2048| 1024| 512 | 256 |<br>
+&nbsp; |-----|-----|-----|-----|<br>
+&nbsp; | 128 | &nbsp;64 | &nbsp;32 | &nbsp;16 |<br>
+&nbsp; |-----|-----|-----|-----|<br>
+&nbsp; | &nbsp;8 &nbsp;| &nbsp;4 &nbsp;| &nbsp;2 &nbsp;| &nbsp;1 &nbsp;|<br>
+&nbsp; '-----------------------'<br>
+</p>
+<p>For example, FILLP(4+8+64+128+  256+512+4096+8192) would create a checkerboard pattern.</p>
+<p>This can be more neatly expressed in binary: FILLP(0b0011001111001100).</p>
+<p>The default fill pattern is 0, which means a single solid colour is drawn.</p>
+<p>To specify a second colour for the pattern, use the high bits of any colour parameter:</p>
+
+<p class="codebox">
+FILLP(0b0011010101101000)<br>
+CIRCFILL(64,64,20, 0x4E) -- brown and pink<br>
+</p>
+<p>Additional settings are given in bits 0b0.111:</p>
+<p>0b0.100 Transparency</p>
+<p>When this bit is set, the second colour is not drawn</p>
+
+<p class="codebox">
+-- checkboard with transparent squares<br>
+FILLP(0b0011001111001100.1) <br>
+</p>
+<p>0b0.010 Apply to Sprites</p>
+<p>When set, the fill pattern is applied to sprites (spr, sspr, map, tline), using a colour mapping provided by the secondary palette.</p>
+<p>Each pixel value in the sprite (after applying the draw palette as usual) is taken to be an index into the secondary palette. Each entry in the secondary palette contains the two colours used to render the fill pattern. For example, to draw a white and red (7 and 8) checkerboard pattern for only blue pixels (colour 12) in a sprite:</p>
+
+<p class="codebox">
+FOR I=0,15 DO PAL(I, I+I*16, 2) END &nbsp;-- &nbsp;all other colours map to themselves<br>
+PAL(12, 0x87, 2) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -- &nbsp;remap colour 12 in the secondary palette<br>
+&nbsp;<br>
+FILLP(0b0011001111001100.01) &nbsp; &nbsp; &nbsp; &nbsp; -- &nbsp;checkerboard palette, applied to sprites<br>
+SPR(1, 64,64) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- &nbsp;draw the sprite<br>
+</p>
+<p>0b0.001 Apply Secondary Palette Globally</p>
+<p>When set, the secondary palette mapping is also applied by all draw functions that respect fill patterns (circfill, line etc). This can be useful when used in  conjunction with sprite drawing functions, so that the colour index of each sprite  pixel means the same thing as the colour index supplied to the drawing functions.</p>
+
+<p class="codebox">
+FILLP(0b0011001111001100.001)<br>
+PAL(12, 0x87, 2)<br>
+CIRCFILL(64,64,20,12) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- red and white checkerboard circle<br>
+</p>
+<p>The secondary palette mapping is applied after the regular draw palette mapping. So the following would also draw a red and white checkered circle:</p>
+
+<p class="codebox">
+PAL(3,12)<br>
+CIRCFILL(64,64,20,3)<br>
+</p>
+<p>The fill pattern can also be set by setting bits in any colour parameter (for example, the parameter to <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#COLOR"><b>COLOR</b></a>(), or the last parameter to <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#LINE"><b>LINE</b></a>(), <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RECT"><b>RECT</b></a>() etc.</p>
+<p>POKE(0x5F34, 0x3) -- 0x1 enable fillpattern in high bits &nbsp;0x2 enable inversion mode<br>
+CIRCFILL(64,64,20, 0x114E.ABCD) -- sets fill pattern to ABCD<br>
+</p>
+<p>When using the colour parameter to set the fill pattern, the following bits are used:</p>
+<p>bit &nbsp;0x1000.0000 this needs to be set: it means "observe bits 0xf00.ffff"<br>
+bit &nbsp;0x0100.0000 transparency<br>
+bit &nbsp;0x0200.0000 apply to sprites<br>
+bit &nbsp;0x0400.0000 apply secondary palette globally<br>
+bit &nbsp;0x0800.0000 invert the drawing operation (circfill/ovalfill/rectfill)<br>
+bits 0x00FF.0000 are the usual colour bits<br>
+bits 0x0000.FFFF are interpreted as the fill pattern<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Table_Functions"><h2 id="Table_Functions">6.3 Table Functions</h2></a>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:28pt; background-color:#fff">&#9888;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+With the exception of PAIRS(), the following functions and the # operator apply only to tables  that are indexed starting from 1 and do not have NIL entries. All other forms of tables can  be considered as hash maps or sets, rather than arrays that have a length.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#ADD"><h5 id="ADD"> ADD(TBL, VAL, [INDEX])</h5></a>
+<p>Add value VAL to the end of table TBL. Equivalent to:</p>
+
+<p class="codebox">
+TBL[#TBL + 1] = VAL<br>
+</p>
+<p>If index is given then the element is inserted at that position:</p>
+
+<p class="codebox">
+FOO={} &nbsp; &nbsp; &nbsp; &nbsp;-- CREATE EMPTY TABLE<br>
+ADD(FOO, 11)<br>
+ADD(FOO, 22)<br>
+PRINT(FOO[2]) -- 22<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#DEL"><h5 id="DEL"> DEL(TBL, VAL)</h5></a>
+<p>Delete the first instance of value VAL in table TBL. The remaining entries are shifted left one index to avoid holes.</p>
+<p>Note that VAL is the value of the item to be deleted, not the index into the table. (To remove an item at a particular index, use DELI instead). DEL returns the deleted item, or returns no value when nothing was deleted.</p>
+
+<p class="codebox">
+A={1,10,2,11,3,12}<br>
+FOR ITEM IN ALL(A) DO<br>
+&nbsp; IF (ITEM &lt; 10) THEN DEL(A, ITEM) END<br>
+END<br>
+FOREACH(A, PRINT) -- 10,11,12<br>
+PRINT(A[3]) &nbsp; &nbsp; &nbsp; -- 12<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#DELI"><h5 id="DELI"> DELI(TBL, [I])</h5></a>
+<p>Like <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#DEL"><b>DEL</b></a>(), but remove the item from table TBL at index I When I is not given, the last element of the table is removed and returned.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#COUNT"><h5 id="COUNT"> COUNT(TBL, [VAL])</h5></a>
+<p>Returns the length of table t (same as #TBL) When VAL is given, returns the number of instances of VAL in that table.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#ALL"><h5 id="ALL"> ALL(TBL)</h5></a>
+<p>Used in FOR loops to iterate over all items in a table (that have a 1-based integer index),  in the order they were added.</p>
+
+<p class="codebox">
+T = {11,12,13}<br>
+ADD(T,14)<br>
+ADD(T,"HI")<br>
+FOR V IN ALL(T) DO PRINT(V) END -- 11 12 13 14 HI<br>
+PRINT(#T) -- 5<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FOREACH"><h5 id="FOREACH"> FOREACH(TBL, FUNC)</h5></a>
+<p>For each item in table TBL, call function FUNC with the item as a single parameter.</p>
+
+<p class="codebox">
+&gt; FOREACH({1,2,3}, PRINT)<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PAIRS"><h5 id="PAIRS"> PAIRS(TBL)</h5></a>
+<p>Used in FOR loops to iterate over table TBL, providing both the key and value for each item. Unlike <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#ALL"><b>ALL</b></a>(), PAIRS() iterates over every item regardless of indexing scheme. Order is not guaranteed.</p>
+
+<p class="codebox">
+T = {["HELLO"]=3, [10]="BLAH"}<br>
+T.BLUE = 5;<br>
+FOR K,V IN PAIRS(T) DO<br>
+&nbsp; PRINT("K: "..K.." &nbsp;V:"..V)<br>
+END<br>
+</p>
+<p>Output:</p>
+
+<p class="codebox">
+K: 10 &nbsp;v:BLAH<br>
+K: HELLO &nbsp;v:3<br>
+K: BLUE &nbsp;v:5<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Input"><h2 id="Input">6.4 Input</h2></a>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#BTN"><h5 id="BTN"> BTN([B], [PL])</h5></a>
+<p>Get button B state for player PL (default 0) </p>
+<p>B: 0..5: left right up down button_o button_x<br> PL: player index 0..7</p>
+<p>Instead of using a number for B, it is also possible to use a button glyph. (In the coded editor, use Shift-L R U D O X)</p>
+<p>If no parameters supplied, returns a bitfield of all 12 button states for player 0 &amp; 1 // P0: bits 0..5  P1: bits 8..13</p>
+<p>Default keyboard mappings to player buttons:<br>
+&nbsp;<br>
+&nbsp; player 0: [DPAD]: cursors, [O]: Z C N &nbsp; [X]: X V M<br>
+&nbsp; player 1: [DPAD]: SFED, &nbsp; &nbsp;[O]: LSHIFT &nbsp;[X]: TAB W &nbsp;Q A<br>
+</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:28pt; background-color:#fff">&#9888;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+Although PICO-8 accepts all button combinations, note that it is generally impossible to press both LEFT and RIGHT at the same time on a physical game controller. On some controllers, UP + LEFT/RIGHT is also awkward if [X] or [O] could be used instead of UP (e.g. to jump / accelerate).</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#BTNP"><h5 id="BTNP"> BTNP(B, [PL])</h5></a>
+<p>BTNP is short for "Button Pressed"; Instead of being true when a button is held down,  BTNP returns true when a button is down AND it was not down the last frame. It also repeats after 15 frames, returning true every 4 frames after that (at 30fps -- double that at 60fps). This can be used for things like menu navigation or grid-wise player  movement.</p>
+<p>The state that BTNP reads is reset at the start of each call to <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_UPDATE"><b>_UPDATE</b></a> or <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#_UPDATE60"><b>_UPDATE60</b></a>, so it is preferable to use BTNP from inside one of those functions.</p>
+<p>Custom delays (in frames <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#"><b></b></a> 30fps) can be set by poking the following memory addresses:</p>
+
+<p class="codebox">
+POKE(0X5F5C, DELAY) -- SET THE INITIAL DELAY BEFORE REPEATING. 255 MEANS NEVER REPEAT.<br>
+POKE(0X5F5D, DELAY) -- SET THE REPEATING DELAY.<br>
+</p>
+<p>In both cases, 0 can be used for the default behaviour (delays 15 and 4)</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Audio"><h2 id="Audio">6.5 Audio</h2></a>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SFX"><h5 id="SFX"> SFX(N, [CHANNEL], [OFFSET], [LENGTH])</h5></a>
+<p>Play sfx N (0..63) on CHANNEL (0..3) from note OFFSET (0..31 in notes) for LENGTH notes.</p>
+<p>Using negative CHANNEL values have special meanings:</p>
+<p>CHANNEL -1: (default) to automatically choose a channel that is not being used<br>
+CHANNEL -2: to stop the given sound from playing on any channel<br>
+</p>
+<p>N can be a command for the given CHANNEL (or all channels when CHANNEL &lt; 0):</p>
+<p>N -1: to stop sound on that channel<br>
+N -2: to release sound on that channel from looping<br>
+</p>
+
+<p class="codebox">
+SFX(3) &nbsp; &nbsp;-- &nbsp;PLAY SFX 3<br>
+SFX(3,2) &nbsp;-- &nbsp;PLAY SFX 3 ON CHANNEL 2<br>
+SFX(3,-2) -- &nbsp;STOP SFX 3 FROM PLAYING ON ANY CHANNEL<br>
+SFX(-1,2) -- &nbsp;STOP WHATEVER IS PLAYING ON CHANNEL 2<br>
+SFX(-2,2) -- &nbsp;RELEASE LOOPING ON CHANNEL 2<br>
+SFX(-1) &nbsp; -- &nbsp;STOP ALL SOUNDS ON ALL CHANNELS<br>
+SFX(-2) &nbsp; -- &nbsp;RELEASE LOOPING ON ALL CHANNELS<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MUSIC"><h5 id="MUSIC"> MUSIC(N, [FADE_LEN], [CHANNEL_MASK])</h5></a>
+<p>Play music starting from pattern N (0..63)<br>
+N -1 to stop music<br>
+&nbsp;<br>
+FADE_LEN is in ms (default: 0). So to fade pattern 0 in over 1 second:<br>
+</p>
+
+<p class="codebox">
+MUSIC(0, 1000)<br>
+</p>
+<p>CHANNEL_MASK specifies which channels to reserve for music only. For example, to play only on channels 0..2:</p>
+<p>MUSIC(0, NIL, 7) -- 1 | 2 | 4</p>
+<p>Reserved channels can still be used to play sound effects on, but only when that channel index is explicitly requested by <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SFX"><b>SFX</b></a>().</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Map"><h2 id="Map">6.6 Map</h2></a>
+<p>The PICO-8 map is a 128x32 grid of 8-bit values, or 128x64 when using the shared memory. When  using the map editor, the meaning of each value is taken to be an index into the sprite sheet  (0..255). However, it can instead be used as a general block of data.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MGET"><h5 id="MGET"> MGET(X, Y)</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MSET"><h5 id="MSET"> MSET(X, Y, VAL)</h5></a>
+<p>Get or set map value (VAL) at X,Y</p>
+<p>When X and Y are out of bounds, MGET returns 0, or a custom return value that can be specified with:</p>
+
+<p class="codebox">
+POKE(0x5f36, 0x10)<br>
+POKE(0x5f5a, NEWVAL)<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MAP"><h5 id="MAP"> MAP(TILE_X, TILE_Y, [SX, SY], [TILE_W, TILE_H], [LAYERS])</h5></a>
+<p>Draw section of map (starting from TILE_X, TILE_Y) at screen position SX, SY (pixels).</p>
+<p>To draw a 4x2 blocks of tiles starting from 0,0 in the map, to the screen at 20,20:</p>
+
+<p class="codebox">
+MAP(0, 0, 20, 20, 4, 2) <br>
+</p>
+<p>TILE_W and TILE_H default to the entire map (including shared space when applicable).</p>
+<p>MAP() is often used in conjunction with CAMERA(). To draw the map so that a player object (at PL.X in PL.Y in pixels) is centered:</p>
+
+<p class="codebox">
+CAMERA(PL.X - 64, PL.Y - 64)<br>
+MAP()<br>
+</p>
+<p>LAYERS is a bitfield. When given, only sprites with matching sprite flags are drawn. For example, when LAYERS is 0x5, only sprites with flag 0 and 2 are drawn.</p>
+<p>Sprite 0 is taken to mean "empty" and is not drawn. To disable this behaviour, use: POKE(0x5F36, 0x8)</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#TLINE"><h5 id="TLINE"> TLINE(X0, Y0, X1, Y1, MX, MY, [MDX, MDY], [LAYERS])</h5></a>
+<p>Draw a textured line from (X0,Y0) to (X1,Y1), sampling colour values from the map. When LAYERS is specified, only sprites with matching flags are drawn (similar to MAP()) </p>
+<p>MX, MY are map coordinates to sample from, given in tiles. Colour values are sampled from the 8x8 sprite present at each map tile. For example:</p>
+<p>2.0, 1.0 &nbsp;means the top left corner of the sprite at position 2,1 on the map<br>
+2.5, 1.5 &nbsp;means pixel (4,4) of the same sprite<br>
+</p>
+<p>MDX, MDY are deltas added to mx, my after each pixel is drawn. (Defaults to 0.125, 0)</p>
+<p>The map coordinates (MX, MY) are masked by values calculated by subtracting 0x0.0001 from the values at address 0x5F38 and 0x5F39. In simpler terms, this means you can loop a section of the map by poking the width and height you want to loop within, as  long as they are powers of 2 (2,4,8,16..)</p>
+<p>For example, to loop every 8 tiles horizontally, and every 4 tiles vertically:</p>
+
+<p class="codebox">
+POKE(0x5F38, 8)<br>
+POKE(0x5F39, 4)<br>
+TLINE(...)<br>
+</p>
+<p>The default values (0,0) gives a masks of 0xff.ffff, which means that the samples will loop every 256 tiles.</p>
+<p>An offset to sample from (also in tiles) can also be specified at addresses 0x5f3a, 0x5f3b:</p>
+
+<p class="codebox">
+POKE(0x5F3A, OFFSET_X)<br>
+POKE(0x5F3B, OFFSET_Y)<br>
+</p>
+<p>Sprite 0 is taken to mean "empty" and not drawn. To disable this behaviour, use: POKE(0x5F36, 0x8)</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Setting_TLINE_Precision"><h4 id="Setting_TLINE_Precision">&#9632; Setting TLINE Precision</h4>
+</a><p>By default, tline coordinates (mx,my,mdx,mdy) are expressed in tiles. This means that 1 pixel is 0.125, and only 13 bits are used for the fractional part. If more precision is needed, the coordinate space can be adjusted to allow more bits for the fractional part. This can be useful for things like textured walls, where the accumulated error from mdx,mdy rounding maybe become visible when viewed up close.</p>
+<p>The number of bits used for the fractional part of each pixel is stored in a special register that can be adjusted by calling TLINE once with a single argument:</p>
+<p>TLINE(16) -- MX,MY,MDX,MDY expressed in pixels</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Memory"><h2 id="Memory">6.7 Memory</h2></a>
+<p>PICO-8 has 3 types of memory:</p>
+<p>1. Base RAM (64k): see layout below. Access with PEEK() POKE() MEMCPY() MEMSET()<br>
+2. Cart ROM (32k): same layout as base ram until 0x4300<br>
+3. Lua RAM (2MB): compiled program + variables<br>
+</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+<br>
+Technical note: While using the editor, the data being modified is in cart rom, but api functions such as <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SPR"><b>SPR</b></a>()  and <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SFX"><b>SFX</b></a>() only operate on base ram. PICO-8 automatically copies cart rom to base ram (i.e. calls <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RELOAD"><b>RELOAD</b></a>()) in 3 cases:<br> 1. When a cartridge is loaded<br> 2. When a cartridge is run<br> 3. When exiting any of the editor modes // can turn off with: poke(0x5f37,1)<br></p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Base_RAM_Memory_Layout"><h4 id="Base_RAM_Memory_Layout">&#9632; Base RAM Memory Layout</h4>
+</a>
+<p class="codebox">
+0X0 &nbsp; &nbsp;GFX<br>
+0X1000 GFX2/MAP2 (SHARED)<br>
+0X2000 MAP<br>
+0X3000 GFX FLAGS<br>
+0X3100 SONG<br>
+0X3200 SFX<br>
+0X4300 USER DATA<br>
+0X5600 CUSTOM FONT (IF ONE IS DEFINED)<br>
+0X5E00 PERSISTENT CART DATA (256 BYTES)<br>
+0X5F00 DRAW STATE<br>
+0X5F40 HARDWARE STATE<br>
+0X5F80 GPIO PINS (128 BYTES)<br>
+0X6000 SCREEN (8K)<br>
+0x8000 USER DATA<br>
+</p>
+<p>User data has no particular meaning and can be used for anything via <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MEMCPY"><b>MEMCPY</b></a>(), <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PEEK"><b>PEEK</b></a>() &amp; <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#POKE"><b>POKE</b></a>(). Persistent cart data is mapped to 0x5e00..0x5eff but only stored if <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CARTDATA"><b>CARTDATA</b></a>() has been called. Colour format (gfx/screen) is 2 pixels per byte: low bits encode the left pixel of each pair. Map format is one byte per tile, where each byte normally encodes a sprite index.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Remapping_Graphics_and_Map_Data"><h4 id="Remapping_Graphics_and_Map_Data">&#9632; Remapping Graphics and Map Data</h4>
+</a><p>The GFX, MAP and SCREEN memory areas can be reassigned by setting values at the following addresses:</p>
+
+<p class="codebox">
+0X5F54 GFX: &nbsp; &nbsp;can be 0x00 (default) or 0x60 (use the screen memory as the spritesheet)<br>
+0X5F55 SCREEN: can be 0x60 (default) or 0x00 (use the spritesheet as screen memory)<br>
+0X5F56 MAP: &nbsp; &nbsp;can be 0x20 (default) or 0x10..0x2f, or 0x80 and above.<br>
+0X5F57 MAP SIZE: map width. 0 means 256. Defaults to 128.<br>
+</p>
+<p>Addresses can be expressed in 256 byte increments. So 0x20 means 0x2000, 0x21 means 0x2100 etc. Map addresses 0x30..0x3f are taken to mean 0x10..0x1f (shared memory area). Map data can only be contained inside the memory regions 0x1000..0x2fff, 0x8000..0xffff, and  the map height is determined to be the largest possible size that fits in the given region.</p>
+<p>GFX and SCREEN addresses can additionally be mapped to upper memory locations 0x80, 0xA0, 0xC0, 0xE0,  with the constraint that MAP can not overlap with that address (in this case, the conflicting GFX and/or SCREEN mappings are kicked back to their default mapping).</p>
+<div style="display:inline-block; float:left; position:relative; left:-10px; top:5px; font-size:16pt; background-color:#fff">&#9432;</div>
+<p style="width:90%; padding:16px; border-width:2px; border-radius:15px; border-style:dashed; border-color:#aaa; background-color:#fff; ">
+GFX and SCREEN memory mapping happens at a low level which also affects memory access functions (peek, poke, memcpy). The 8k memory blocks starting at 0x0 and 0x6000 can be thought of as pointers  to a separate video ram, and setting the values at 0X5F54 and 0X5F56 alters those pointers.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PEEK"><h5 id="PEEK"> PEEK(ADDR, [N])</h5></a>
+<p>Read a byte from an address in base ram. If N is specified, PEEK() returns that number of results (max: 8192). For example, to read the first 2 bytes of video memory:</p>
+
+<p class="codebox">
+A, B = PEEK(0x6000, 2)<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#POKE"><h5 id="POKE"> POKE(ADDR, VAL1, VAL2, ...)</h5></a>
+<p>Write one or more bytes to an address in base ram. If more than one parameter is provided, they are written sequentially (max: 8192).</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PEEK2"><h5 id="PEEK2"> PEEK2(ADDR)</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#POKE2"><h5 id="POKE2"> POKE2(ADDR, VAL)</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PEEK4"><h5 id="PEEK4"> PEEK4(ADDR)</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#POKE4"><h5 id="POKE4"> POKE4(ADDR, VAL)</h5></a>
+<p>16-bit and 32-bit versions of PEEK and POKE. Read and write one number (VAL) in little-endian format:</p>
+<p>&nbsp; 16 bit: 0xffff.0000<br>
+&nbsp; 32 bit: 0xffff.ffff<br>
+</p>
+<p>ADDR does not need to be aligned to 2 or 4-byte boundaries.</p>
+<p>Alternatively, the following operators can be used to peek (but not poke), and are slightly faster:</p>
+
+<p class="codebox">
+@ADDR &nbsp;-- PEEK(ADDR)<br>
+%ADDR &nbsp;-- PEEK2(ADDR)<br>
+$ADDR &nbsp;-- PEEK4(ADDR)<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MEMCPY"><h5 id="MEMCPY"> MEMCPY(DEST_ADDR, SOURCE_ADDR, LEN)</h5></a>
+<p>Copy LEN bytes of base ram from source to dest. Sections can be overlapping</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RELOAD"><h5 id="RELOAD"> RELOAD(DEST_ADDR, SOURCE_ADDR LEN, [FILENAME])</h5></a>
+<p>Same as MEMCPY, but copies from cart rom.</p>
+<p>The code section ( &gt;= 0x4300) is protected and can not be read.</p>
+<p>If filename specified, load data from a separate cartridge. In this case, the cartridge must be local (BBS carts can not be read in this way).</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CSTORE"><h5 id="CSTORE"> CSTORE(DEST_ADDR, SOURCE_ADDR, LEN, [FILENAME])</h5></a>
+<p>Same as memcpy, but copies from base ram to cart rom.</p>
+<p>CSTORE() is equivalent to CSTORE(0, 0, 0x4300)</p>
+<p>The code section ( &gt;= 0x4300) is protected and can not be written to.</p>
+<p>If FILENAME is specified, the data is written directly to that cartridge on disk. Up to 64 cartridges can be written in one session. See <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Cartridge_Data"><b>Cartridge Data</b></a> for more information.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MEMSET"><h5 id="MEMSET"> MEMSET(DEST_ADDR, VAL, LEN)</h5></a>
+<p>Write the 8-bit value VAL into memory starting at DEST_ADDR, for LEN bytes.</p>
+<p>For example, to fill half of video memory with 0xC8:</p>
+
+<p class="codebox">
+&gt; MEMSET(0x6000, 0xC8, 0x1000)<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Math"><h2 id="Math">6.8 Math</h2></a>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MAX"><h5 id="MAX"> MAX(X, Y)</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MIN"><h5 id="MIN"> MIN(X, Y)</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MID"><h5 id="MID"> MID(X, Y, Z)</h5></a>
+<p>Returns the maximum, minimum, or middle value of parameters</p>
+
+<p class="codebox">
+&gt; ?MID(7,5,10) -- 7<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#FLR"><h5 id="FLR"> FLR(X)</h5></a>
+
+<p class="codebox">
+&gt; ?FLR ( 4.1) --&gt; &nbsp;4		<br>
+&gt; ?FLR (-2.3) --&gt; -3<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CEIL"><h5 id="CEIL"> CEIL(X)</h5></a>
+<p>Returns the closest integer that is equal to or below x</p>
+
+<p class="codebox">
+&gt; ?CEIL( 4.1) --&gt; &nbsp;5<br>
+&gt; ?CEIL(-2.3) --&gt; -2<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#COS"><h5 id="COS"> COS(X)</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SIN"><h5 id="SIN"> SIN(X)</h5></a>
+<p>Returns the cosine or sine of x, where 1.0 means a full turn. For example, to animate a dial that turns once every second:</p>
+
+<p class="codebox">
+FUNCTION _DRAW()<br>
+&nbsp; CLS()<br>
+&nbsp; CIRC(64, 64, 20, 7)<br>
+&nbsp; X = 64 + COS(T()) * 20<br>
+&nbsp; Y = 64 + SIN(T()) * 20<br>
+&nbsp; LINE(64, 64, X, Y)	<br>
+END<br>
+</p>
+<p>PICO-8's SIN() returns an inverted result to suit screenspace (where Y means "DOWN", as opposed  to mathematical diagrams where Y typically means "UP").</p>
+
+<p class="codebox">
+&gt; SIN(0.25) -- RETURNS -1<br>
+</p>
+<p>To get conventional radian-based trig functions without the y inversion,  paste the following snippet near the start of your program:</p>
+
+<p class="codebox">
+P8COS = COS FUNCTION COS(ANGLE) RETURN P8COS(ANGLE/(3.1415*2)) END<br>
+P8SIN = SIN FUNCTION SIN(ANGLE) RETURN -P8SIN(ANGLE/(3.1415*2)) END<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#ATAN2"><h5 id="ATAN2"> ATAN2(DX, DY)</h5></a>
+<p>Converts DX, DY into an angle from 0..1</p>
+<p>As with cos/sin, angle is taken to run anticlockwise in screenspace. For example:</p>
+
+<p class="codebox">
+&gt; ?ATAN(0, -1) -- RETURNS 0.25<br>
+</p>
+<p>ATAN2 can be used to find the direction between two points:</p>
+
+<p class="codebox">
+X=20 Y=30<br>
+FUNCTION _UPDATE()<br>
+&nbsp; IF (BTN(0)) X-=2<br>
+&nbsp; IF (BTN(1)) X+=2<br>
+&nbsp; IF (BTN(2)) Y-=2<br>
+&nbsp; IF (BTN(3)) Y+=2	<br>
+END<br>
+&nbsp;<br>
+FUNCTION _DRAW()<br>
+&nbsp; CLS()<br>
+&nbsp; CIRCFILL(X,Y,2,14)<br>
+&nbsp; CIRCFILL(64,64,2,7)<br>
+&nbsp; &nbsp;<br>
+&nbsp; A=ATAN2(X-64, Y-64)<br>
+&nbsp; PRINT("ANGLE: "..A)<br>
+&nbsp; LINE(64,64,<br>
+&nbsp; &nbsp; 64+COS(A)*10,<br>
+&nbsp; &nbsp; 64+SIN(A)*10,7)<br>
+END<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SQRT"><h5 id="SQRT"> SQRT(X)</h5></a>
+<p>Return the square root of x</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#ABS"><h5 id="ABS"> ABS(X)</h5></a>
+<p>Returns the absolute (positive) value of x</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RND"><h5 id="RND"> RND(X)</h5></a>
+<p>Returns a random number n, where 0 &lt;= n &lt; x</p>
+<p>If you want an integer, use flr(rnd(x)). If x is an array-style table, return a random element between table[1] and table[#table].</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SRAND"><h5 id="SRAND"> SRAND(X)</h5></a>
+<p>Sets the random number seed. The seed is automatically randomized on cart startup.</p>
+
+<p class="codebox">
+FUNCTION _DRAW()<br>
+&nbsp; CLS()<br>
+&nbsp; SRAND(33)<br>
+&nbsp; FOR I=1,100 DO<br>
+&nbsp; &nbsp; PSET(RND(128),RND(128),7)<br>
+&nbsp; END<br>
+END<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Bitwise_Operations"><h4 id="Bitwise_Operations">&#9632; Bitwise Operations</h4>
+</a><p>Bitwise operations are similar to logical expressions, except that they work at the bit level.</p>
+<p>Say you have two numbers (written here in binary using the "0b" prefix): </p>
+
+<p class="codebox">
+X = 0b1010<br>
+Y = 0b0110<br>
+</p>
+<p>A bitwise AND will give you bits set when the corresponding bits in X /and/ Y are both set</p>
+
+<p class="codebox">
+&gt; PRINT(BAND(X,Y)) -- RESULT:0B0010 (2 IN DECIMAL)<br>
+</p>
+<p>There are 9 bitwise functions available in PICO-8:</p>
+
+<p class="codebox">
+BAND(X, Y) -- BOTH BITS ARE SET<br>
+BOR(X, Y) &nbsp;-- EITHER BIT IS SET<br>
+BXOR(X, Y) -- EITHER BIT IS SET, BUT NOT BOTH OF THEM<br>
+BNOT(X) &nbsp; &nbsp;-- EACH BIT IS NOT SET<br>
+SHL(X, N) &nbsp;-- SHIFT LEFT N BITS (ZEROS COME IN FROM THE RIGHT)<br>
+SHR(X, N) &nbsp;-- ARITHMETIC RIGHT SHIFT (THE LEFT-MOST BIT STATE IS DUPLICATED)<br>
+LSHR(X, N) -- LOGICAL RIGHT SHIFT (ZEROS COMES IN FROM THE LEFT)<br>
+ROTL(X, N) -- ROTATE ALL BITS IN X LEFT BY N PLACES<br>
+ROTR(X, N) -- ROTATE ALL BITS IN X RIGHT BY N PLACES<br>
+</p>
+<p>Operator versions are also available: &amp; | ^^ ~ &lt;&lt; &gt;&gt; &gt;&gt;&gt; &lt;&lt;&gt; &gt;&gt;&lt;</p>
+<p>For example: PRINT(67 &amp; 63) -- result:3  equivalent to BAND(67,63)</p>
+<p>Operators are slightly faster than their corresponding functions. They behave exactly the same, except that if any operands are not numbers the result is a runtime error (the function versions instead default to a value of 0).</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Integer_Division"><h4 id="Integer_Division">&#9632; Integer Division</h4>
+</a><p>Integer division can be performed with a \</p>
+
+<p class="codebox">
+&gt; PRINT(9\2) -- RESULT:4 &nbsp;EQUIVALENT TO FLR(9/2)<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Custom_Menu_Items"><h2 id="Custom_Menu_Items">6.9 Custom Menu Items</h2></a>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#MENUITEM"><h5 id="MENUITEM"> MENUITEM(INDEX, [LABEL], [CALLBACK])</h5></a>
+<p>Add or update an item to the pause menu.</p>
+<p>INDEX should be 1..5 and determines the order each menu item is displayed.</p>
+<p>LABEL should be a string up to 16 characters long</p>
+<p>CALLBACK is a function called when the item is selected by the user. If the callback returns true, the pause menu remains open.</p>
+<p>When no label or function is supplied, the menu item is removed.</p>
+
+<p class="codebox">
+MENUITEM(1, "RESTART PUZZLE",<br>
+&nbsp; FUNCTION() RESET_PUZZLE() SFX(10) END<br>
+)<br>
+</p>
+<p>The callback takes a single argument that is a bitfield of L,R,X button presses.</p>
+
+<p class="codebox">
+MENUITEM(1, "FOO", <br>
+&nbsp; FUNCTION(B) IF (B&amp;1 &gt; 0) THEN PRINTH("LEFT WAS PRESSED") END END<br>
+)<br>
+</p>
+<p>To filter button presses that are able to trigger the callback, a mask can be  supplied in bits 0xff00 of INDEX. For example, to disable L, R for a particular menu item, set bits 0x300 in the index:</p>
+
+<p class="codebox">
+MENUITEM(2 | 0x300, "RESET PROGRESS",<br>
+&nbsp; FUNCTION() DSET(0,0) END<br>
+)<br>
+</p>
+<p>Menu items can be updated, added or removed from within callbacks:</p>
+
+<p class="codebox">
+MENUITEM(3, "SCREENSHAKE: OFF",<br>
+&nbsp; FUNCTION()<br>
+&nbsp; &nbsp; SCREENSHAKE = NOT SCREENSHAKE<br>
+&nbsp; &nbsp; MENUITEM(NIL, "SCREENSHAKE: "..(SCREENSHAKE AND "ON" OR "OFF"))<br>
+&nbsp; &nbsp; RETURN TRUE -- DON'T CLOSE<br>
+&nbsp; END<br>
+)<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Strings_and_Type_Conversion"><h2 id="Strings_and_Type_Conversion">6.10 Strings and Type Conversion</h2></a>
+<p>Strings in Lua are written either in single or double quotes or with matching [[ ]] brackets:</p>
+
+<p class="codebox">
+S = "THE QUICK"<br>
+S = 'BROWN FOX';<br>
+S = [[<br>
+&nbsp; JUMPS OVER<br>
+&nbsp; MULTIPLE LINES<br>
+]]<br>
+</p>
+<p>The length of a string (number of characters) can be retrieved using the # operator:</p>
+
+<p class="codebox">
+&gt;PRINT(#S)<br>
+</p>
+<p>Strings can be joined using the .. operator. Joining numbers converts them to strings.</p>
+
+<p class="codebox">
+&gt;PRINT("THREE "..4) --&gt; "THREE 4"<br>
+</p>
+<p>When used as part of an arithmetic expression, string values are converted to numbers:</p>
+
+<p class="codebox">
+&gt;PRINT(2+"3") &nbsp; --&gt; 5<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#TOSTR"><h5 id="TOSTR"> TOSTR(VAL, [FORMAT_FLAGS])</h5></a>
+<p>Convert VAL to a string.</p>
+<p>FORMAT_FLAGS is a bitfield:</p>
+<p>&nbsp; 0x1: Write the raw hexadecimal value of numbers, functions or tables.<br>
+&nbsp; 0x2: Write VAL as a signed 32-bit integer by shifting it left by 16 bits.<br>
+</p>
+<p>TOSTR(NIL) returns "[nil]"</p>
+<p>TOSTR() returns ""</p>
+
+<p class="codebox">
+TOSTR(17) &nbsp; &nbsp; &nbsp; -- "17"<br>
+TOSTR(17,0x1) &nbsp; -- "0x0011.0000"<br>
+TOSTR(17,0x3) &nbsp; -- "0x00110000"<br>
+TOSTR(17,0x2) &nbsp; -- "1114112"<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#TONUM"><h5 id="TONUM"> TONUM(VAL, [FORMAT_FLAGS])</h5></a>
+<p>Converts VAL to a number.</p>
+
+<p class="codebox">
+TONUM("17.5") &nbsp;-- 17.5<br>
+TONUM(17.5) &nbsp; &nbsp;-- 17.5<br>
+TONUM("HOGE") &nbsp;-- NO RETURN VALUE<br>
+</p>
+<p>FORMAT_FLAGS is a bitfield:</p>
+<p>&nbsp; 0x1: Read the string as written in (unsigned, integer) hexadecimal without the "0x" prefix<br>
+&nbsp; &nbsp; &nbsp; &nbsp;Non-hexadecimal characters are taken to be '0'.<br>
+&nbsp; 0x2: Read the string as a signed 32-bit integer, and shift right 16 bits.<br>
+&nbsp; 0x4: When VAL can not be converted to a number, return 0<br>
+</p>
+
+<p class="codebox">
+TONUM("FF", &nbsp; &nbsp; &nbsp; 0x1) &nbsp;-- 255<br>
+TONUM("1114112", &nbsp;0x2) &nbsp;-- 17<br>
+TONUM("1234abcd", 0x3) &nbsp;-- 0x1234.abcd<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CHR"><h5 id="CHR"> CHR(VAL0, VAL1, ...)</h5></a>
+<p>Convert one or more ordinal character codes to a string.</p>
+
+<p class="codebox">
+CHR(64) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- "@"<br>
+CHR(104,101,108,108,111) &nbsp; -- "hello"<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#ORD"><h5 id="ORD"> ORD(STR, [INDEX], [NUM_RESULTS])</h5></a>
+<p>Convert one or more characters from string STR to their ordinal (0..255) character codes.</p>
+<p>Use the INDEX parameter to specify which character in the string to use. When INDEX is out of range or str is not a string, ORD returns nil.</p>
+<p>When NUM_RESULTS is given, ORD returns multiple values starting from INDEX.</p>
+
+<p class="codebox">
+ORD("@") &nbsp; &nbsp; &nbsp; &nbsp; -- 64<br>
+ORD("123",2) &nbsp; &nbsp; -- 50 (THE SECOND CHARACTER: "2")<br>
+ORD("123",2,3) &nbsp; -- 50,51,52<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SUB"><h5 id="SUB"> SUB(STR, POS0, [POS1])</h5></a>
+<p>Grab a substring from string str, from pos0 up to and including pos1. When POS1 is not specified, the remainder of the string is returned. When POS1 is specified, but not a number, a single character at POS0 is returned.</p>
+
+<p class="codebox">
+S = "THE QUICK BROWN FOX"<br>
+PRINT(SUB(S,5,9)) &nbsp; &nbsp;--&gt; "QUICK"<br>
+PRINT(SUB(S,5)) &nbsp; &nbsp; &nbsp;--&gt; "QUICK BROWN FOX"<br>
+PRINT(SUB(S,5,TRUE)) --&gt; "Q"<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SPLIT"><h5 id="SPLIT"> SPLIT(STR, [SEPARATOR], [CONVERT_NUMBERS])</h5></a>
+<p>Split a string into a table of elements delimited by the given separator (defaults to ","). When separator is a number n, the string is split into n-character groups. When convert_numbers is true, numerical tokens are stored as numbers (defaults to true). Empty elements are stored as empty strings.</p>
+
+<p class="codebox">
+SPLIT("1,2,3") &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -- {1,2,3}<br>
+SPLIT("ONE:TWO:3",":",FALSE) -- {"ONE","TWO","3"}<br>
+SPLIT("1,,2,") &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -- {1,"",2,""}<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#TYPE"><h5 id="TYPE"> TYPE(VAL)</h5></a>
+<p>Returns the type of val as a string.</p>
+
+<p class="codebox">
+&gt; PRINT(TYPE(3))<br>
+NUMBER<br>
+&gt; PRINT(TYPE("3"))<br>
+STRING<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Cartridge_Data"><h2 id="Cartridge_Data">6.11 Cartridge Data</h2></a>
+<p>Using <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CARTDATA"><b>CARTDATA</b></a>(), <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#DSET"><b>DSET</b></a>(), AND <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#DGET"><b>DGET</b></a>(), 64 numbers (256 bytes) of persistent data  can be stored on the user's PICO-8 that persists after the cart is unloaded or PICO-8 is shutdown. This can be used as a lightweight way to store things like  high scores or to save player progress. It can also be used to share data across  cartridges / cartridge versions.</p>
+<p>If more than 256 bytes is needed, it is also possible to write directly to the cartridge using <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CSTORE"><b>CSTORE</b></a>(). The disadvantage is that the data is tied to that particular version of the cartridge. e.g. if a game is updated, players will lose their savegames. Also, some space in the data sections of the cartridge need to be left available to use as storage.</p>
+<p>Another alternative is to write directly to a second cartridge by specifying a fourth parameter to <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CSTORE"><b>CSTORE</b></a>(). This requires a cart swap (which in reality only means the user needs to watch a spinny cart animation for 1 second).</p>
+
+<p class="codebox">
+CSTORE(0,0,0X2000, "SPRITE SHEET.P8")<br>
+-- LATER, RESTORE THE SAVED DATA:<br>
+RELOAD(0,0,0X2000, "SPRITE SHEET.P8")<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CARTDATA"><h5 id="CARTDATA"> CARTDATA(ID)</h5></a>
+<p>Opens a permanent data storage slot indexed by ID that can be used to store and retrieve up to 256 bytes (64 numbers) worth of data using <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#DSET"><b>DSET</b></a>() and <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#DGET"><b>DGET</b></a>().</p>
+
+<p class="codebox">
+CARTDATA("ZEP_DARK_FOREST")<br>
+DSET(0, SCORE)<br>
+</p>
+<p>ID is a string up to 64 characters long, and should be unusual enough that  other cartridges do not accidentally use the same id. Legal characters are a..z, 0..9 and underscore (_)</p>
+<p>Returns true if data was loaded, otherwise false.</p>
+<p>CARTDATA can be called once per cartridge execution, and so only a single data slot can be used.</p>
+<p>Once a cartdata ID has been set, the area of memory 0X5E00..0X5EFF is mapped  to permanent storage, and can either be accessed directly or via <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#DGET"><b>DGET</b></a>()/@DSET().</p>
+<p>There is no need to flush written data -- it is automatically saved to permanent storage even if modified by directly <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#POKE"><b>POKE</b></a>()'ing 0X5E00..0X5EFF.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#DGET"><h5 id="DGET"> DGET(INDEX)</h5></a>
+<p>Get the number stored at INDEX (0..63)</p>
+<p>Use this only after you have called <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CARTDATA"><b>CARTDATA</b></a>()</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#DSET"><h5 id="DSET"> DSET(INDEX, VALUE)</h5></a>
+<p>Set the number stored at index (0..63)</p>
+<p>Use this only after you have called <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CARTDATA"><b>CARTDATA</b></a>()</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#GPIO"><h2 id="GPIO">6.12 GPIO</h2></a>
+<p>GPIO stands for "General Purpose Input Output", and allows machines to communicate with  each other. PICO-8 maps bytes in the range 0x5f80..0x5fff to gpio pins that can be</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#POKE"><h5 id="POKE"> POKE()ed (to output a value -- e.g. to make an LED light up) or @PEEK()ed (e.g. to read</h5></a>
+<p>the state of a switch).</p>
+<p>GPIO means different things for different host platforms:</p>
+<p>CHIP: &nbsp; &nbsp; &nbsp; &nbsp; 0x5f80..0x5f87 mapped to xio-p0..xio-p7<br>
+Pocket CHIP: &nbsp;0x5f82..0x5f87 mapped to GPIO1..GPIO6<br>
+&nbsp; // xio-p0 &amp; p1 are exposed inside the prototyping area inside the case.<br>
+Raspberry Pi: 0x5f80..0x5f9f mapped to wiringPi pins 0..31<br>
+&nbsp; // see http://wiringpi.com/pins/ for mappings on different models.<br>
+&nbsp; // also: watch out for BCM vs. WiringPi GPIO indexing!<br>
+</p>
+<p>CHIP and Raspberry Pi values are all digital: 0 (LOW) and 255 (HIGH)</p>
+<p>A program to blink any LEDs attached on and off:</p>
+
+<p class="codebox">
+T = 0<br>
+FUNCTION _DRAW()<br>
+&nbsp;CLS(5)<br>
+&nbsp;FOR I=0,7 DO<br>
+&nbsp; VAL = 0<br>
+&nbsp; IF (T % 2 &lt; 1) VAL = 255<br>
+&nbsp; POKE(0X5F80 + I, VAL)<br>
+&nbsp; CIRCFILL(20+I*12,64,4,VAL/11)<br>
+&nbsp;END<br>
+&nbsp;T += 0.1<br>
+END<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Serial"><h4 id="Serial">&#9632; Serial</h4>
+</a><p>For more precise timing, the <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SERIAL"><b>SERIAL</b></a>() command can be used. GPIO writes are buffered and  dispatched at the end of each frame, allowing clock cycling at higher and/or more regular  speeds than is possible by manually bit-banging using <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#POKE"><b>POKE</b></a>() calls.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SERIAL"><h5 id="SERIAL"> SERIAL(CHANNEL, ADDRESS, LENGTH)</h5></a>
+<p>CHANNEL:<br>
+&nbsp; 0x000..0x0fe &nbsp; &nbsp;corresponds to gpio pin numbers; send 0x00 for LOW or 0xFF for HIGH<br>
+&nbsp; 0x0ff &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; delay; length is taken to mean "duration" in microseconds (excl. overhead)<br>
+&nbsp; 0x400..0x401 &nbsp; &nbsp;ws281x LED string (experimental)<br>
+</p>
+<p>ADDRESS: The PICO-8 memory location to read from / write to.</p>
+<p>LENGTH:  Number of bytes to send. 1/8ths are allowed to send partial bit strings.</p>
+<p>For example, to send a byte one bit at a time to a typical APA102 LED string:</p>
+
+<p class="codebox">
+VAL = 42 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;-- VALUE TO SEND<br>
+DAT = 16 CLK = 15 -- DATA AND CLOCK PINS DEPEND ON DEVICE<br>
+POKE(0X4300,0) &nbsp; &nbsp;-- DATA TO SEND (SINGLE BYTES: 0 OR 0XFF)<br>
+POKE(0X4301,0XFF)<br>
+FOR B=0,7 DO<br>
+&nbsp; -- SEND THE BIT (HIGH FIRST)<br>
+&nbsp; SERIAL(DAT, BAND(VAL, SHL(1,7-B))&gt;0 AND 0X4301 OR 0X4300, 1)<br>
+&nbsp; -- CYCLE THE CLOCK<br>
+&nbsp; SERIAL(CLK, 0X4301)<br>
+&nbsp; SERIAL(0XFF, 5) -- DELAY 5<br>
+&nbsp; SERIAL(CLK, 0X4300)<br>
+&nbsp; SERIAL(0XFF, 5) -- DELAY 5<br>
+END<br>
+</p>
+<p>Additional channels are available for bytestreams to and from the host operating system. These are intended to be most useful for UNIX-like environments while developing toolchains, and are not available while running a BBS or exported cart [1]. Maximum transfer rate in all  cases is 64k/sec (blocks cpu).</p>
+<p>0x800 &nbsp;dropped file &nbsp; // &nbsp;stat(120) returns TRUE when data is available<br>
+0x802 &nbsp;dropped image &nbsp;// &nbsp;stat(121) returns TRUE when data is available<br>
+0x804 &nbsp;stdin<br>
+0x805 &nbsp;stdout<br>
+0x806 &nbsp;file specified with: pico8 -i filename<br>
+0x807 &nbsp;file specified with: pico8 -o filename<br>
+</p>
+<p>Image files dropped into PICO-8 show up on channel 0x802 as a bytestream with a special format: The first 4 bytes are the image's width and height (2 bytes each little-endian, like PEEK2), followed by the image in reading order, one byte per pixel, colour-fitted to the display palette at the time the file was dropped.</p>
+<p>[1]	Channels 0x800 and 0x802 are available from exported binaries, but with a maximum file size of 256k, or 128x128 for images.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#HTML"><h4 id="HTML">&#9632; HTML</h4>
+</a><p>Cartridges exported as HTML / .js use a global array of integers (pico8_gpio) to  represent gpio pins. The shell HTML should define the array:</p>
+
+<p class="codebox">
+var pico8_gpio = Array(128);<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Mouse_and_Keyboard_Input"><h2 id="Mouse_and_Keyboard_Input">6.13 Mouse and Keyboard Input</h2></a>
+<p>// EXPERIMENTAL -- but mostly working on all platforms</p>
+<p>Mouse and keyboard input can be achieved by enabling devkit input mode:</p>
+<p>POKE(0x5F2D, flags)  -- where flags are:</p>
+<p>0x1 Enable<br>
+0x2 Mouse buttons trigger btn(4)..btn(6)<br>
+0x4 Pointer lock (use stat 38..39 to read movements)<br>
+</p>
+<p>Note that not every PICO-8 will have a keyboard or mouse attached to it, so when posting carts to the Lexaloffle BBS, it is encouraged to make keyboard and/or mouse control  optional and off by default, if possible. When devkit input mode is enabled, a message is displayed to BBS users warning them that the program may be expecting input beyond the  standard 6-button controllers.</p>
+<p>The state of the mouse and keyboard can be found in stat(x):</p>
+<p>STAT(30) -- (Boolean) True when a keypress is available<br>
+STAT(31) -- (String) character returned by keyboard<br>
+STAT(32) -- Mouse X<br>
+STAT(33) -- Mouse Y<br>
+STAT(34) -- Mouse buttons (bitfield)<br>
+STAT(36) -- Mouse wheel event<br>
+STAT(38) -- Relative x movement (in host desktop pixels) -- requires flag 0x4<br>
+STAT(39) -- Relative y movement (in host desktop pixels) -- requires flag 0x4<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Additional_Lua_Features"><h2 id="Additional_Lua_Features">6.14 Additional Lua Features</h2></a>
+<p>PICO-8 also exposes 2 features of Lua for advanced users: Metatables and Coroutines.</p>
+<p>For more information, please refer to the Lua 5.2 manual.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Metatables"><h3 id="Metatables">&#9640; Metatables</h3>
+</a><p>Metatables can be used to define the behaviour of objects under particular operations. For example, to use tables to represent 2D vectors that can be added together, the  '+' operator is redefined by defining an "__add" function for the metatable:</p>
+
+<p class="codebox">
+VEC2D={<br>
+&nbsp;__ADD=FUNCTION(A,B) <br>
+&nbsp;	RETURN {X=(A.X+B.X), Y=(A.Y+B.Y)} <br>
+&nbsp;END<br>
+}<br>
+&nbsp;<br>
+V1={X=2,Y=9} SETMETATABLE(V1, VEC2D)<br>
+V2={X=1,Y=5} SETMETATABLE(V2, VEC2D)<br>
+V3 = V1+V2<br>
+PRINT(V3.X..","..V3.Y) -- 3,14<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#SETMETATABLE"><h5 id="SETMETATABLE"> SETMETATABLE(TBL, M)</h5></a>
+<p>Set table TBL metatable to M</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#GETMETATABLE"><h5 id="GETMETATABLE"> GETMETATABLE(TBL)</h5></a>
+<p>return the current metatable for table t, or nil if none is set</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RAWSET"><h5 id="RAWSET"> RAWSET(TBL, KEY, VALUE)</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RAWGET"><h5 id="RAWGET"> RAWGET(TBL, KEY)</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RAWEQUAL"><h5 id="RAWEQUAL"> RAWEQUAL(TBL1,TBL2</h5></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#RAWLEN"><h5 id="RAWLEN"> RAWLEN(TBL)</h5></a>
+<p>Raw access to the table, as if no metamethods were defined.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Function_Arguments"><h3 id="Function_Arguments">&#9640; Function Arguments</h3>
+</a><p>The list of function arguments can be specifed with ... </p>
+
+<p class="codebox">
+FUNCTION PREPRINT(PRE, S, ...)<br>
+&nbsp; LOCAL S2 = PRE..TOSTR(S)<br>
+&nbsp; PRINT(S2, ...) -- PASS THE REMAINING ARGUMENTS ON TO PRINT()<br>
+END<br>
+</p>
+<p>To accept a variable number of arguments, use them to define a table and/or use Lua's select() function. select(index, ...) returns all of the arguments after index.</p>
+
+<p class="codebox">
+FUNCTION FOO(...)<br>
+&nbsp; LOCAL ARGS={...} -- BECOMES A TABLE OF ARGUMENTS<br>
+&nbsp; FOREACH(ARGS, PRINT)<br>
+&nbsp; ?SELECT("#",...) &nbsp; &nbsp;-- ALTERNATIVE WAY TO COUNT THE NUMBER OF ARGUMENTS<br>
+&nbsp; FOO2(SELECT(3,...)) -- PASS ARGUMENTS FROM 3 ONWARDS TO FOO2()<br>
+END<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Coroutines"><h3 id="Coroutines">&#9640; Coroutines</h3>
+</a><p>Coroutines offer a way to run different parts of a program in a somewhat concurrent  way, similar to threads. A function can be called as a coroutine, suspended with </p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#YIELD"><h5 id="YIELD"> YIELD() any number of times, and then resumed again at the same points.</h5></a>
+
+<p class="codebox">
+FUNCTION HEY()<br>
+&nbsp; PRINT("DOING SOMETHING")<br>
+&nbsp; YIELD()<br>
+&nbsp; PRINT("DOING THE NEXT THING")<br>
+&nbsp; YIELD()<br>
+&nbsp; PRINT("FINISHED")<br>
+END<br>
+&nbsp;<br>
+C = COCREATE(HEY)<br>
+FOR I=1,3 DO CORESUME(C) END<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#COCREATE"><h5 id="COCREATE"> COCREATE(F)</h5></a>
+<p>Create a coroutine for function f.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#CORESUME"><h5 id="CORESUME"> CORESUME(C, [P0, P1 ..])</h5></a>
+<p>Run or continue the coroutine c. Parameters p0, p1.. are passed to the coroutine's function.</p>
+<p>Returns true if the coroutine completes without any errors Returns false, error_message if there is an error.</p>
+<p>** Runtime errors that occur inside coroutines do not cause the program to stop running. It is a good idea to wrap CORESUME() inside an <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#ASSERT"><b>ASSERT</b></a>(). If the assert fails, it will print the error message generated by  coresume.</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#ASSERT"><h5 id="ASSERT"> ASSERT(CORESUME(C))</h5></a>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#COSTATUS"><h5 id="COSTATUS"> COSTATUS(C)</h5></a>
+<p>Return the status of coroutine C as a string:<br>
+&nbsp; "running"<br>
+&nbsp; "suspended"<br>
+&nbsp; "dead"<br>
+</p>
+<br><a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#YIELD"><h5 id="YIELD"> YIELD</h5></a>
+<p>Suspend execution and return to the caller.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Appendix"><h1 id="Appendix"><span style="font-size:48pt">&#10108;</span> Appendix</h1></a>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Appendix_A__P8SCII_Control_Codes"><h2 id="Appendix_A__P8SCII_Control_Codes">7.1 Appendix A: P8SCII Control Codes</h2></a>
+<p>When printed with <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PRINT"><b>PRINT</b></a>(), some characters have a special meaning that can be used to alter things like the cursor position and text rendering style. Control characters in PICO-8 are CHR(0)..CHR(15) and can be written as an escaped sequence ("\n" for newline etc.)</p>
+<p>Some of the control codes below take parameters which are written using a scheme that is a superset of hexadecimal format. That is, '0'..'f' also mean 0..15. But characters after 'f' are also accepted: 'g' means 16 and so on. Such parameters are written below as P0, P1.</p>
+<p>For example, to print with a blue background ("\#c") and dark gray foreground ("\f5"):</p>
+
+<p class="codebox">
+PRINT("\#C\F5 BLUE ")<br>
+</p>
+<p>The only side-effects on the draw state are changes in cursor position and foreground color; all other attributes are reset each time <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PRINT"><b>PRINT</b></a>() is called.</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Control_Codes"><h4 id="Control_Codes">&#9632; Control Codes</h4>
+</a><p>0 "\0" &nbsp; terminate printing<br>
+1 "\*" &nbsp; repeat next character P0 times. ?"\*3a" --&gt; aaa<br>
+2 "\#" &nbsp; draw solid background with colour P0 <br>
+3 "\-" &nbsp; shift cursor horizontally by P0-16 pixels<br>
+4 "\|" &nbsp; shift cursor vertically by P0-16 pixels<br>
+5 "\+" &nbsp; shift cursor by P0-16, P1-16 pixels<br>
+6 "\^" &nbsp; special command (see below)<br>
+7 "\a" &nbsp; audio (see below)<br>
+8 "\b" &nbsp; backspace<br>
+9 "\t" &nbsp; tab<br>
+a "\n" &nbsp; newline<br>
+b "\v" &nbsp; decorate previous character (see below)<br>
+c "\f" &nbsp; set foreground colour<br>
+d "\r" &nbsp; carriage return<br>
+e "\014" switch to font defined at 0x5600<br>
+f "\015" switch to default font<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Special_Commands"><h4 id="Special_Commands">&#9632; Special Commands</h4>
+</a><p>These commands all start with "\^" and take up to 2 parameters (P0, P1) For example, to clear screen to dark blue: print("\^c1")</p>
+<p>1..9 skip 1,2,4,8,16,32..256 frames		<br>
+c cls to colour P0, set cursor to 0,0<br>
+d set delay to P0 frames for every character printed<br>
+g set cursor position to home<br>
+h set home to cursor position<br>
+j jump to absolute P0*4, P1*4 (in screen pixels)<br>
+r set rhs character wrap boundary to P0*4<br>
+s set tab stop width to P0 pixels (used by "\t")<br>
+x set character width &nbsp;(default: 4)<br>
+y set character height (default: 6)<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Rendering_mode_options__"><h4 id="Rendering_mode_options__">&#9632; Rendering mode options  </h4>
+</a><p>// prefix these with "-" to disable: e.g. ?"\^i on \^-i off "</p>
+<p>w wide mode: scales by 2x1 <br>
+t tall mode: scales by 1x2<br>
+= stripey mode: when wide or tall, draw only even pixels<br>
+p pinball mode: equivalent to setting wide, tall and stripey<br>
+i invert<br>
+b border: toggle 1px padding on left and top // on by default<br>
+# solid background &nbsp;// off by default, but enabled automatically by \#<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Raw_memory_writes"><h4 id="Raw_memory_writes">&#9632; Raw memory writes</h4>
+</a><p>The following two commands take 4-character hex parameters:</p>
+<p>@addrnnnn[binstr] poke nnnn bytes to address addr<br>
+!addr[binstr] &nbsp; &nbsp; poke all remaining characters to address addr<br>
+</p>
+<p>For example, to write 4 bytes to video memory halfway down the screen:</p>
+
+<p class="codebox">
+&gt;?"\^@70000004xxxxhello"<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#One_off_characters"><h4 id="One_off_characters">&#9632; One-off characters</h4>
+</a><p>Character data can be specified and printed in-line using \^. followed by 8 bytes of raw binary data, or \^: followed by 8 2-digit hexadecimal values. The data format is the same as custom fonts; each byte specifies a row of 1-bit pixel values, with the  low bit on the left.</p>
+<p>\^.[8 chars of raw binary data]<br>
+\^:[16 chars of hexadecimal]<br>
+</p>
+<p>To print a cat:</p>
+
+<p class="codebox">
+&gt; ?"\^:447cb67c3e7f0106"<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Audio_"><h4 id="Audio_">&#9632; Audio </h4>
+</a><p>? ?"\A"   -- SINGLE BEEP ?"\A12" -- PLAY EXISTING DATA AT SFX 12</p>
+<p>If an sfx index is not specified, a non-active sfx between 60..63 is selected automatically. To fill the SFX with data before playback, the following commands can then be appended.</p>
+<p>1. (optional) SFX attributes must appear once at the start as they apply to the whole sound:</p>
+<p>s P0 &nbsp; &nbsp; set the sfx speed<br>
+l P0 P1 &nbsp;set the sfx loop start and end points<br>
+</p>
+<p>2. Note data:</p>
+<p>Note are written as a..g, optionally followed by a sharp # or flat -, and octave number.</p>
+
+<p class="codebox">
+PRINT "\ACE-G" -- MINOR TRIAD<br>
+</p>
+<p>Empty notes Can be written with a dot:</p>
+
+<p class="codebox">
+PRINT "\AC..E-..G" -- STACCATO MINOR TRIAD <br>
+</p>
+<p>Note attribute commands apply to following notes:</p>
+<p>i P0 &nbsp; &nbsp;set the instrument (default: 5)<br>
+v P0 &nbsp; &nbsp;set the volume &nbsp; &nbsp; (default: 5)<br>
+x P0 &nbsp; &nbsp;set the effect &nbsp; &nbsp; (default: 0)<br>
+&lt;  &gt;   increase or decrease volume by 1 
+</p>
+<p>For example, to play a fast (speed 4), staccato (effect 5) arpeggio starting at C1:</p>
+
+<p class="codebox">
+PRINT "\AS4X5C1EGC2EGC3EGC4"<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Decoration_Characters"><h4 id="Decoration_Characters">&#9632; Decoration Characters</h4>
+</a><p>The control character \v can be used to decorate the last printed character with another character at a given offset, without needing to otherwise manage the cursor position. After the decorating character is printed, the previous cursor position is restored.</p>
+<p>The format is \v P0 char, where P0 is a number giving the desired offset, and char is any character to print at that offset (relative to the previous printed character).</p>
+<p>The offset has x packed into the lowest 2 bits, and starts (-2,-8) in reading order. So 3 means (+1, -8), 4 means (-2, -7) and so on.</p>
+<p>For example, to write "café!", using a comma to draw the acute accent:</p>
+
+<p class="codebox">
+PRINT"\NCAFE\VB,!"<br>
+</p>
+<p>In this case P0 is 'b', which is read as the number 11. So the comma is drawn at:</p>
+<p>x = (11%4)-2 = 1<br>
+y = (11\4)-8 = -6<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Custom_Font"><h4 id="Custom_Font">&#9632; Custom Font</h4>
+</a><p>A custom font can be defined at 0x5600, consisting of 8 bytes per character * 256 characters = 2048 bytes. Each character is an 8x8 bitfield (1 bit/pixel), where starting from the top, each row is a single byte starting with 0x1 on the left.</p>
+<p>The first 128 bytes (characters 0~15 are never drawn) describe attributes of the font:</p>
+<p>0x5600 character width in pixels (can be more than 8, but only 8 pixels are drawn)<br>
+0x5601 character width for character 128 and above<br>
+0x5602 character height in pixels<br>
+0x5603 draw offset x<br>
+0x5604 draw offset y<br>
+0x5605 flags: 0x1 apply_size_adjustments &nbsp;0x2: apply tabs relative to cursor home<br>
+0x5606 tab width in pixels (used only when alt font is drawn)<br>
+0x5607 unused<br>
+</p>
+<p>The remaining 120 bytes are used to adjust the width and vertical offset of characters 16..255. Each nibble (low nibbles first) describes the adjustments for one characters:</p>
+<p>bits 0x7: adjust character width by 0,1,2,3,-4,-3,-2,-1<br>
+bit &nbsp;0x8: when set, draw the character one pixel higher (useful for latin accents)<br>
+</p>
+<a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#Default_Attributes"><h4 id="Default_Attributes">&#9632; Default Attributes</h4>
+</a><p>Although attributes are reset every time <a href="https://www.lexaloffle.com/dl/docs/pico-8_manual.html#PRINT"><b>PRINT</b></a>() is called, it is possible to set their default values by writing to memory addresses 0x5f58..0x5f5b.</p>
+<p>0x5f58 // bitfield<br>
+&nbsp; 0x1 &nbsp;when set to 0x1, bits 1..7 are observed:<br>
+&nbsp; 0x2 &nbsp;padding<br>
+&nbsp; 0x4 &nbsp;wide<br>
+&nbsp; 0x8 &nbsp;tall<br>
+&nbsp; 0x10 solid background<br>
+&nbsp; 0x20 invert<br>
+&nbsp; 0x40 stripey (when wide or tall)<br>
+&nbsp; 0x80 use custom font<br>
+&nbsp;<br>
+&nbsp; // e.g. poke(0x5f58, 0x1 | 0x2 | 0x4 | 0x8 | 0x20 | 0x40) &nbsp;-- pinball everywhere<br>
+</p>
+<p>0x5f59 char_w &nbsp; (low nibble), char_h &nbsp; (high)<br>
+0x5f5a char_w2 &nbsp;(low nibble), tab_w &nbsp; &nbsp;(high)<br>
+0x5f5b offset_x (low nibble), offset_y (high)<br>
+&nbsp;<br>
+// any nibbles equal to 0 are ignored<br>
+// tab_w (global tab width) values are mapped to 4..60<br>
+</p>
+
+</div>
+
+
+</body></html>

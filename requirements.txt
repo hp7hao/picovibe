@@ -1,1 +1,4 @@
 Pillow
+markdown
+weasyprint
+BeautifulSoup4
