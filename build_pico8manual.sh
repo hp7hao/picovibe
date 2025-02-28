@@ -14,4 +14,4 @@ fi
 
 source venv/bin/activate
 
-python3 tools/buildpico8manual.py docs/pico8manual v0.2.6c_rev0 docs/pico8manual
+python3 tools/buildpico8manual.py docs/pico8manual v0.2.6c_rev1 docs/pico8manual

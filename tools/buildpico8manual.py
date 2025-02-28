@@ -42,7 +42,7 @@ def convert_markdown_to_pdf(input_file, output_file, version, translators_file):
     """ + html_content
 
     # 添加标题、版本和译者信息
-    html_content = f"<h1>PICO-8 中文手册</h1><h2>{version}</h2><h3>译者: {authors_str}</h3>\n" + html_content
+    html_content = f"<h1>PICO-8 中文手册</h1><h2>{version}</h2><h3>译者: {authors_str}</h3>\nPICO-8 像素炸弹！爱好者交流群：143554779\n" + html_content
 
     # 修改代码块以添加 multiline 类
     from bs4 import BeautifulSoup

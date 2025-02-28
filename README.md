@@ -35,3 +35,8 @@
 
 #### carts/pico8pixelbomb/pico8go-thanks
 	SPRWAR.p8 by randc0degen
+
+
+# PICO-8 像素炸弹！
+
+企鹅交流群：143554779
