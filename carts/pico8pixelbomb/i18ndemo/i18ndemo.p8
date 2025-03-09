@@ -1,12 +1,33 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
+-- i18ndemo
+-- by hp7hao
+
+-- load lib
 #include ../../../libs/pico8/i18n.lua
+
+-- load translations
 #include ./i18ndemo.texts.zhcn.lua
+#include ./i18ndemo.texts.enus.lua
+
+-- set default lang
+i18n.setlang("zhcn")
+
+-- predefine text keys
+-- __text("t0")
 
 function _draw()
 	cls(1)
-	_t("t0",1,1,7,0)
+	_p("t0",1,1,7,0)
+end
+
+function _update()
+	if btn(4) then
+		i18n.setlang("enus")
+	elseif btn(5) then
+		i18n.setlang("zhcn")
+	end
 end
 
 __label__

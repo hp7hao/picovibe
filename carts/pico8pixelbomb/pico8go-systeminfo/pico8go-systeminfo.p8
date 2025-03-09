@@ -6,6 +6,12 @@ __lua__
 #include ../../../libs/pico8/i18n.lua
 #include ./pico8go-systeminfo.texts.zhcn.lua
 
+i18n.setlang("zhcn")
+
+-- __text("os")
+-- __text("ver")
+-- __text("author")
+
 function vibrate()
  printh("vibrate 1 0.5","vibrator")
 end
@@ -245,17 +251,17 @@ end
 
 function draw_txt()
  if blink>0 then
-	 _t("OS:", 19, 24, 6)
-	 _t("Version:", 19, 32, 6)
-  _t("Author:", 19, 40, 6)
-	else
-  _t("OS:", 19, 24, 5)
-	 _t("Version:", 19, 32, 5)
-  _t("Author:", 19, 40, 5)
+  _p("os",19,24,6,0)
+  _p("ver",19,32,6,0)
+  _p("author",19,40,6,0)
+ else
+  _p("os",19,24,5,0)
+  _p("ver",19,32,5,0)
+  _p("author",19,40,5,0)
  end
- _t("OS:", 20, 25, 14)
- _t("Version:", 20, 33, 14)
- _t("Author:", 20, 41, 14)
+ _p("os",20,25,14,0)
+ _p("ver",20,33,14,0)
+ _p("author",20,41,14,0)
 end
 
 __gfx__

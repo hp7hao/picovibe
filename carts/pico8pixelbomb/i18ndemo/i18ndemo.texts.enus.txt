@@ -1,0 +1,1 @@
+texts["t0"]="By riverside a pair\nOf turtledoves are cooing;\nThere is a maiden fair\nWhom a young man is wooing.\n--Cooing and Wooing"

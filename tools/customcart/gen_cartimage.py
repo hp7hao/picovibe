@@ -87,12 +87,13 @@ if __name__ == "__main__":
     cart_template = sys.argv[4]
 
     meta_file_path = "{}/{}.meta.{}.txt".format(target_folder, cart_name, lang)
+    print(meta_file_path)
     # check meta file exist or not
     if not os.path.exists(meta_file_path):
         print("meta file not exist")
         sys.exit(1)
 
-    input_image_path = "{}/{}.{}.orig.p8.png".format(target_folder, cart_name, lang)
+    input_image_path = "{}/{}.p8.png".format(target_folder, cart_name)
     # check .orig file exist or not
     if not os.path.exists(input_image_path):
         print("input image not exist")
@@ -104,20 +105,18 @@ if __name__ == "__main__":
         print("cart template not exist")
         sys.exit(1)
 
-    output_image_path = "{}/{}.{}.preview.p8.png".format(target_folder, cart_name, lang)
+    if not os.path.exists("{}/output".format(target_folder)):
+        os.makedirs("{}/output".format(target_folder))
+    output_image_path = "{}/output/{}.{}.p8.preview.png".format(target_folder, cart_name, lang)
 
     # write name and author to image
     meta_data = read_meta_file(meta_file_path)
     write_text_to_image(meta_data, input_image_path, cart_template_path, output_image_path)
 
     # encode data in the output png file
-    final_image_path = "{}/{}.{}.p8.png".format(target_folder, cart_name, lang)
+    final_image_path = "{}/output/{}.{}.p8.png".format(target_folder, cart_name, lang)
     merge_images(input_image_path, output_image_path, final_image_path)
 
-    # delete input_image_path
-    if os.path.exists(input_image_path):
-        os.remove(input_image_path)
-    
     if os.path.exists(output_image_path):
         os.remove(output_image_path)
 

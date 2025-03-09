@@ -81,7 +81,7 @@ def build_bin_str(text):
                     continue
             # font_path = os.path.join(os.path.dirname(script_dir), "resources", "3x7-font.ttf")
             # offset = (0, -1)
-            font_path = os.path.join(os.path.dirname(script_dir), "resources", "fonts", "BoutiqueBitmap7x7_1.7.ttf")
+            font_path = os.path.join(os.path.dirname(script_dir), "resources", "fonts", "3x7-font.ttf")
             offset = (0, 0)
         else:
             font_path = os.path.join(os.path.dirname(script_dir), "resources", "fonts", "BoutiqueBitmap7x7_1.7.ttf")
@@ -108,12 +108,35 @@ def build_hex_str(text):
     return convert_bin_to_hex(build_bin_str(text))
 
 # read all texts
-folder = sys.argv[1]
-cart_name = sys.argv[2]
-lang = sys.argv[3]
-translation_path = "carts/pico8pixelbomb/{}/{}.texts.{}.txt".format(folder, cart_name, lang)
+# Check if enough arguments are provided
+if len(sys.argv) < 3:
+    print("Usage: python gen_tpl.py <path_to_p8_file> <lang>")
+    sys.exit(1)
+
+# Extract information from the .p8 file path
+p8_file_path = sys.argv[1]
+lang = sys.argv[2]
+
+# Validate file path has .p8 extension
+if not p8_file_path.endswith('.p8'):
+    print("Error: Input file must have a .p8 extension")
+    sys.exit(1)
+
+# Extract folder and cart_name from the p8 file path
+folder = os.path.dirname(p8_file_path)
+
+# Extract cart_name from filename (remove language and extension)
+filename = os.path.basename(p8_file_path)
+# Assuming format is cartname.lang.p8
+if '.' in filename:
+    cart_name = filename.split('.')[0]
+else:
+    print("Error: Invalid filename format, expected cartname.lang.p8")
+    sys.exit(1)
+
+translation_file = os.path.join(folder, '{}.texts.{}.txt'.format(cart_name, lang))
 translations = {}
-with open(translation_path, 'r') as inf:  # 使用传入的路径
+with open(translation_file, 'r') as inf:  # 使用传入的路径
   lines = inf.readlines()
   for line in lines:
     if line:
@@ -122,15 +145,12 @@ with open(translation_path, 'r') as inf:  # 使用传入的路径
       print(translations[kv[0]])
 
 # save lua files
-# 获取翻译文件所在的目录
-translation_dir = os.path.dirname(translation_path)
-lua_file = os.path.join(translation_dir, '{}.texts.{}.lua'.format(cart_name, lang))
+lua_file = os.path.join(folder, '{}.texts.{}.lua'.format(cart_name, lang))
 lines = [
-   'lang="{}"'.format(lang),
-   'texts={}'
+   'i18n.texts["' + lang + '"]={}',
 ]
 for k, v in translations.items():
-    lines.append('texts["{}"]="{}"'.format(k, v))
+    lines.append('i18n.texts["{}"]["{}"]="{}"'.format(lang, k, v))
 
 with open(lua_file, 'w') as outf:
     for line in lines:

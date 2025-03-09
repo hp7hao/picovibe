@@ -1,9 +1,16 @@
-function _t(str,x,y,fgc,bgc)
-	fgc=fgc or 7
-	bgc=bgc or 0
-	local hex=texts[str]
+i18n={}
+i18n.lang=nil
+i18n.texts={}
+
+function i18n.setlang(lang)
+	i18n.lang=lang
+end
+
+function _p(str,x,y,fc,bc)
+	local fgc=fc or 7
+	local bgc=bc or 0
+	local hex=i18n.texts[i18n.lang][str]
 	local bs=h2b(hex)
-	-- print(bs)
 	local px=x
 	local py=y
 	local i=1
