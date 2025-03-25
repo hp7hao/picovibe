@@ -7,6 +7,7 @@ __lua__
 
 #include ../../../libs/pico8/i18n.lua
 #include ./pico8go-thanks.texts.zhcn.lua
+i18n.lang="zhcn"
 
 csts={
  -- scene box
@@ -68,7 +69,7 @@ glbs={
  -- end game objects
 
  -- text
- tx=64,
+ tx=1,
  ty=1,
  lh=9, -- line height
  -- end text
@@ -299,13 +300,13 @@ end
 function draw_txt()
  x=glbs.tx
  y=glbs.ty
- _t("t0",x,y,7);y=y+glbs.lh
- _t("t1",x,y,14);y=y+glbs.lh
- _t("t2",x,y,14);y=y+glbs.lh
- _t("t3",x,y,14);y=y+glbs.lh
- _t("t4",x,y,14);y=y+glbs.lh
- _t("t5",x,y,14);y=y+glbs.lh
- _t("t6",x,y,14);y=y+glbs.lh
+ _p("t0",x,y,7);y=y+glbs.lh
+ _p("t1",x,y,14);y=y+glbs.lh
+ _p("t2",x,y,14);y=y+glbs.lh
+ _p("t3",x,y,14);y=y+glbs.lh
+ _p("t4",x,y,14);y=y+glbs.lh
+ _p("t5",x,y,14);y=y+glbs.lh
+ _p("t6",x,y,14);y=y+glbs.lh
 end
 
 function draw_game()

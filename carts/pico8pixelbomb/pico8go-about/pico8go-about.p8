@@ -1,16 +1,11 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
---pico8go systeminfo
+--pico8go about 
 --by hp7hao 
 #include ../../../libs/pico8/i18n.lua
-#include ./pico8go-systeminfo.texts.zhcn.lua
-
-i18n.setlang("zhcn")
-
--- __text("os")
--- __text("ver")
--- __text("author")
+#include ./pico8go-about.texts.zhcn.lua
+i18n.lang="zhcn"
 
 function vibrate()
  printh("vibrate 1 0.5","vibrator")

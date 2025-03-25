@@ -1,2 +1,0 @@
-name="PICO8GO 致谢"
-author="hp7hao"

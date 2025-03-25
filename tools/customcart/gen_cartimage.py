@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 import sys
 import subprocess
+import json
 
 def open_image(file_path):
     try:
@@ -33,13 +34,20 @@ def merge_images(data_image_path, picture_image_path, output_path):
         sys.exit(1)
 
 def read_meta_file(meta_file_path):
-    with open(meta_file_path, 'r', encoding='utf-8') as file:
-        lines = file.readlines()
-        meta_data = {}
-        for line in lines:
-            key, value = line.strip().split('=')
-            meta_data[key] = value.strip('"')
-        return meta_data
+    try:
+        with open(meta_file_path, 'r', encoding='utf-8') as file:
+            meta_data = json.load(file)
+            return {
+                'title': meta_data.get('title', ''),
+                'author': meta_data.get('author', ''),
+                'template': meta_data.get('template', '')
+            }
+    except json.JSONDecodeError as e:
+        print(f"Error reading JSON file {meta_file_path}: {e}")
+        sys.exit(1)
+    except IOError as e:
+        print(f"Error opening file {meta_file_path}: {e}")
+        sys.exit(1)
 
 def get_font_path():
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -70,7 +78,7 @@ def write_text_to_image(meta_data, input_image_path, template_path, output_image
     
     # 写入文字
     text_position = (18, 166)
-    text = f"{meta_data['name']}"
+    text = f"{meta_data['title']}"
     draw.text(text_position, text, font=font, fill=(0xff, 0xff, 0xff))
     text = f"{meta_data['author']}"
     text_position = (18, 176)
@@ -81,12 +89,17 @@ def write_text_to_image(meta_data, input_image_path, template_path, output_image
 
 
 if __name__ == "__main__":
+    # Make template argument optional by checking arg length
+    if len(sys.argv) < 4:
+        print("Usage: python gen_cartimage.py <target_folder> <cart_name> <lang> [template]")
+        sys.exit(1)
+
     target_folder = sys.argv[1]
     cart_name = sys.argv[2]
     lang = sys.argv[3]
-    cart_template = sys.argv[4]
+    cli_template = sys.argv[4] if len(sys.argv) > 4 else None  # Optional template argument
 
-    meta_file_path = "{}/{}.meta.{}.txt".format(target_folder, cart_name, lang)
+    meta_file_path = "{}/{}.meta.{}.json".format(target_folder, cart_name, lang)
     print(meta_file_path)
     # check meta file exist or not
     if not os.path.exists(meta_file_path):
@@ -99,22 +112,30 @@ if __name__ == "__main__":
         print("input image not exist")
         sys.exit(1)
     
-    cart_template_path = get_cart_template_path(cart_template)
+    # Read meta data to get the template
+    meta_data = read_meta_file(meta_file_path)
+    
+    # Priority: CLI template > JSON template > default
+    template_to_use = cli_template or meta_data['template'] or 'default'
+    cart_template_path = get_cart_template_path(template_to_use)
+    
     # check cart template exist or not
     if not os.path.exists(cart_template_path):
-        print("cart template not exist")
-        sys.exit(1)
+        print(f"Template {template_to_use} not found, trying default template")
+        cart_template_path = get_cart_template_path('default')
+        if not os.path.exists(cart_template_path):
+            print("default template not exist")
+            sys.exit(1)
 
-    if not os.path.exists("{}/output".format(target_folder)):
-        os.makedirs("{}/output".format(target_folder))
-    output_image_path = "{}/output/{}.{}.p8.preview.png".format(target_folder, cart_name, lang)
+    if not os.path.exists("{}/release".format(target_folder)):
+        os.makedirs("{}/release".format(target_folder))
+    output_image_path = "{}/release/{}.{}.p8.preview.png".format(target_folder, cart_name, lang)
 
     # write name and author to image
-    meta_data = read_meta_file(meta_file_path)
     write_text_to_image(meta_data, input_image_path, cart_template_path, output_image_path)
 
     # encode data in the output png file
-    final_image_path = "{}/output/{}.{}.p8.png".format(target_folder, cart_name, lang)
+    final_image_path = "{}/release/{}.{}.p8.png".format(target_folder, cart_name, lang)
     merge_images(input_image_path, output_image_path, final_image_path)
 
     if os.path.exists(output_image_path):

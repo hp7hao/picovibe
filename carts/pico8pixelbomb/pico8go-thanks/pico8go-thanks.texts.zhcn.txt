@@ -1,7 +1,0 @@
-texts["t1"]="哪块小饼干"
-texts["t4"]="randc0degen"
-texts["t2"]="Ashenini"
-texts["t3"]="生姜小姐GinRL"
-texts["t0"]="感谢大家的支持"
-texts["t5"]="GYX888888"
-texts["t6"]="黑羽瑞"

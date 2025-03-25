@@ -2,10 +2,6 @@ i18n={}
 i18n.lang=nil
 i18n.texts={}
 
-function i18n.setlang(lang)
-	i18n.lang=lang
-end
-
 function _p(str,x,y,fc,bc)
 	local fgc=fc or 7
 	local bgc=bc or 0

@@ -1,3 +1,0 @@
-texts["os"]="作者：hp7hao"
-texts["ver"]="版本：v0.1"
-texts["author"]="系统：PICO8GO"

@@ -3,6 +3,7 @@
 import re
 import sys  # 导入sys模块以获取命令行参数
 import os  # 导入os模块以获取文件路径
+import json
 
 from PIL import Image, ImageDraw, ImageFont
 from typing import Tuple
@@ -134,15 +135,12 @@ else:
     print("Error: Invalid filename format, expected cartname.lang.p8")
     sys.exit(1)
 
-translation_file = os.path.join(folder, '{}.texts.{}.txt'.format(cart_name, lang))
+# Read translations from meta file
+meta_file = os.path.join(folder, '{}.meta.{}.json'.format(cart_name, lang))
 translations = {}
-with open(translation_file, 'r') as inf:  # 使用传入的路径
-  lines = inf.readlines()
-  for line in lines:
-    if line:
-      kv = re.findall('"(.+?)"', line)
-      translations[kv[0]] = build_hex_str(kv[1])
-      print(translations[kv[0]])
+with open(meta_file, 'r', encoding='utf-8') as inf:
+    meta_data = json.load(inf)
+    translations = meta_data.get('translations', {})
 
 # save lua files
 lua_file = os.path.join(folder, '{}.texts.{}.lua'.format(cart_name, lang))
@@ -150,7 +148,7 @@ lines = [
    'i18n.texts["' + lang + '"]={}',
 ]
 for k, v in translations.items():
-    lines.append('i18n.texts["{}"]["{}"]="{}"'.format(lang, k, v))
+    lines.append('i18n.texts["{}"]["{}"]="{}"'.format(lang, k, build_hex_str(v)))
 
 with open(lua_file, 'w') as outf:
     for line in lines:

@@ -2,6 +2,7 @@
 import re
 import os
 import sys
+import json
 
 # Check if enough arguments are provided
 if len(sys.argv) < 3:
@@ -29,11 +30,10 @@ else:
     print("Error: Invalid filename format, expected cartname.lang.p8")
     sys.exit(1)
 
-# Reconstruct cart_file path for consistent structure
-translation_file = os.path.join(folder, '{}.texts.{}.txt'.format(cart_name, lang))
+# Reconstruct meta file path for consistent structure
+meta_file = os.path.join(folder, '{}.meta.{}.json'.format(cart_name, lang))
 
 texts = set()
-dictionary = {}
 # read lua file
 with open(p8_file_path, 'r') as inf:
     lines = inf.readlines()
@@ -45,29 +45,38 @@ with open(p8_file_path, 'r') as inf:
         if '__gfx__' in line:
             break
         if flag:
-            matched = re.findall('__text\("(.+?)"', line)
+            matched = re.findall('_p\("(.+?)"', line)
             print(matched)
             if len(matched) > 0:
                 for m in matched:
                     texts.add(m)
 
-# generate texts.zh.txt
-# delete output file first
+# Read existing translations from meta file
 translations = {}
-if os.path.exists(translation_file):
-    with open(translation_file, 'r') as inf:
-        lines = inf.readlines()
-        for line in lines:
-            kv = re.findall('"(.+?)"', line)
-            translations[kv[0]] = kv[1]
-    os.remove(translation_file)
+if os.path.exists(meta_file):
+    with open(meta_file, 'r', encoding='utf-8') as inf:
+        meta_data = json.load(inf)
+        translations = meta_data.get('translations', {})
 
-lines = []
+# Update translations with new texts
 for text in texts:
-    v = ""
-    if text in translations:
-        v = translations[text]
-    lines.append('texts["{}"]="{}"\n'.format(text, v))
+    if text not in translations:
+        translations[text] = ""
 
-with open(translation_file, 'w') as outf:
-    outf.writelines(lines)
+# Read existing meta file
+if not os.path.exists(meta_file):
+    print(f"Error: Meta file {meta_file} does not exist")
+    sys.exit(1)
+
+with open(meta_file, 'r', encoding='utf-8') as inf:
+    meta_data = json.load(inf)
+
+if not meta_data:
+    print(f"Error: Meta file {meta_file} is empty")
+    sys.exit(1)
+
+# Update only the translations section, keeping all other fields unchanged
+meta_data['translations'] = dict(sorted(translations.items()))
+
+with open(meta_file, 'w', encoding='utf-8') as outf:
+    json.dump(meta_data, outf, ensure_ascii=False, indent=4)
