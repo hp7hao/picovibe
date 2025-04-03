@@ -5,5 +5,6 @@ carts/demos
 /**/*.preview.p8.png
 .environment_ready
 
+pico8config.json
 
 deps/ImgToP8

@@ -2,20 +2,122 @@
 
 set -e
 
-# Global variables
-P8PATH=$1
-CART_TEMPLATE=${2:-""}  # Make it empty string by default instead of 'default'
+###########################################
+# System Tool Check Functions
+###########################################
 
-echo "Input P8PATH: $P8PATH"
+# Function to check if a command exists
+check_command() {
+    local cmd=$1
+    if ! command -v "$cmd" &> /dev/null; then
+        echo "Error: Required command '$cmd' is not installed."
+        echo "Please install it using your system's package manager."
+        echo "For example:"
+        echo "  - On Ubuntu/Debian: sudo apt-get install $cmd"
+        echo "  - On Fedora: sudo dnf install $cmd"
+        echo "  - On Arch Linux: sudo pacman -S $cmd"
+        return 1
+    fi
+    return 0
+}
 
-# Extract folder and name more robustly
-P8FOLDER="${P8PATH%/*}"
-P8NAME="${P8PATH##*/}"
-P8NAME="${P8NAME%.p8}"
+# Function to check all required system tools
+check_required_tools() {
+    local missing_tools=()
+    
+    # Check Python3
+    if ! check_command "python3"; then
+        missing_tools+=("python3")
+    fi
+    
+    # Check xdotool
+    if ! check_command "xdotool"; then
+        missing_tools+=("xdotool")
+    fi
+    
+    # Check sed
+    if ! check_command "sed"; then
+        missing_tools+=("sed")
+    fi
+    
+    # If any tools are missing, exit
+    if [ ${#missing_tools[@]} -ne 0 ]; then
+        echo "The following required tools are missing: ${missing_tools[*]}"
+        echo "Please install them and try again."
+        exit 1
+    fi
+}
 
-echo "Extracted values:"
-echo "  P8FOLDER: $P8FOLDER"
-echo "  P8NAME: $P8NAME"
+###########################################
+# Configuration Functions
+###########################################
+
+# Function to read PICO-8 path from config file
+get_pico8_path() {
+    local config_file="pico8config.json"
+    local example_file="pico8config.json.example"
+    
+    # Check if config file exists
+    if [ ! -f "$config_file" ]; then
+        # Check if example file exists
+        if [ ! -f "$example_file" ]; then
+            echo "Error: Neither $config_file nor $example_file found!"
+            echo "Please create $config_file with your PICO-8 path configuration."
+            exit 1
+        fi
+        
+        # Copy example file to config file
+        echo "Creating $config_file from example file..."
+        cp "$example_file" "$config_file"
+        
+        echo "======================================================="
+        echo "Please edit $config_file and set your PICO-8 path first!"
+        echo "The file has been created from $example_file"
+        echo "After setting the path, run this script again."
+        echo "======================================================="
+        exit 1
+    fi
+    
+    # Read path from config file using Python
+    local pico8_path=$(python3 -c "
+import json
+try:
+    with open('$config_file', 'r') as f:
+        config = json.load(f)
+        path = config.get('pico8path')
+        if not path or path == '<<your pico8 path>>':
+            print('ERROR: PICO-8 path not properly configured in $config_file')
+            exit(1)
+        print(path)
+except Exception as e:
+    print(f'ERROR: Failed to read $config_file: {str(e)}')
+    exit(1)
+")
+    
+    # Check if we got an error message
+    if [[ "$pico8_path" == ERROR:* ]]; then
+        echo "$pico8_path"
+        exit 1
+    fi
+    
+    # Check if PICO-8 executable exists
+    if [ ! -f "$pico8_path" ]; then
+        echo "Error: PICO-8 executable not found at: $pico8_path"
+        echo "Please check your PICO-8 installation and update the path in $config_file"
+        echo "Make sure the path points to the actual PICO-8 executable file"
+        exit 1
+    fi
+    
+    # Check if the file is executable
+    if [ ! -x "$pico8_path" ]; then
+        echo "Error: PICO-8 executable is not executable: $pico8_path"
+        echo "Please make sure the file has execute permissions:"
+        echo "  chmod +x \"$pico8_path\""
+        exit 1
+    fi
+    
+    echo "$pico8_path"
+}
 
 # Function to get list of configured languages
 get_configured_langs() {
@@ -45,6 +147,10 @@ get_configured_langs() {
     printf "%s\n" "${langs[@]}"
 }
 
+###########################################
+# Environment Setup Functions
+###########################################
+
 # Function to check and setup environment
 setup_environment() {
     if [ ! -f ".environment_ready" ]; then
@@ -60,6 +166,10 @@ setup_environment() {
     
     source venv/bin/activate
 }
+
+###########################################
+# File Generation Functions
+###########################################
 
 # Function to generate template and lua files
 generate_files() {
@@ -82,6 +192,10 @@ update_p8_language() {
     sed -i "s/#include \.\/${p8name}\.texts\.[^\.]*\.lua/#include \.\/${p8name}\.texts\.$lang\.lua/" "$p8path"
 }
 
+###########################################
+# PICO-8 Automation Functions
+###########################################
+
 # Function to handle PICO-8 automation
 handle_pico8_automation() {
     local p8folder=$1
@@ -89,7 +203,7 @@ handle_pico8_automation() {
     
     # Start PICO-8
     echo "Starting PICO-8..."
-    /home/hp/apps/pico-8/pico8 -root_path . &
+    "$PICO8_PATH" -root_path . &
 
     # Wait for PICO-8 window to appear
     echo "Waiting for PICO-8 window..."
@@ -190,6 +304,10 @@ generate_cart_image() {
     fi
 }
 
+###########################################
+# Main Build Functions
+###########################################
+
 # Function to build cart for a specific language
 build_cart_for_language() {
     local lang=$1
@@ -209,7 +327,33 @@ build_cart_for_language() {
     generate_cart_image "$P8FOLDER" "$P8NAME" "$lang" "$CART_TEMPLATE"
 }
 
-# Main execution
+###########################################
+# Main Workflow
+###########################################
+
+# Check for required tools before proceeding
+check_required_tools
+
+# Global variables
+P8PATH=$1
+CART_TEMPLATE=${2:-""}  # Make it empty string by default instead of 'default'
+
+echo "Input P8PATH: $P8PATH"
+
+# Extract folder and name more robustly
+P8FOLDER="${P8PATH%/*}"
+P8NAME="${P8PATH##*/}"
+P8NAME="${P8NAME%.p8}"
+
+echo "Extracted values:"
+echo "  P8FOLDER: $P8FOLDER"
+echo "  P8NAME: $P8NAME"
+
+# Get PICO-8 path from config
+PICO8_PATH=$(get_pico8_path)
+echo "Using PICO-8 path: $PICO8_PATH"
+
+# Setup environment
 setup_environment
 
 # Get list of configured languages
