@@ -16,6 +16,7 @@
 | nezhapoems<br/>《小爷集》要求全文背诵 | ![nezhapoems](./carts/pico8pixelbomb/nezhapoems/nezhapoems.zhcn.p8.png) | 开发中 |
 | pico8go-about<br/>pico8go 关于(掌机) | ![pico8go-systeminfo](./carts/pico8pixelbomb/pico8go-about/release/pico8go-about.zhcn.p8.png) | - |
 | pico8go-thanks<br/>pico8go 致谢(掌机) | ![pico8go-thanks](./carts/pico8pixelbomb/pico8go-thanks/release/pico8go-thanks.zhcn.p8.png) | - |
+| pico8go-wizard<br/>pico8go 致谢(掌机) | ![pico8go-wizard](./carts/pico8pixelbomb/pico8go-wizard/release/pico8go-wizard.zhcn.p8.png) | - |
 | splooshdemo | ![splooshdemo](./carts/pico8pixelbomb/splooshdemo/splooshdemo.p8.png) | - |
 | yxkl<br/>元宵节快乐 | ![yxkl](./carts/pico8pixelbomb/yxkl/yxkl.p8.png) | - |
 

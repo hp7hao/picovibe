@@ -4,7 +4,6 @@ i18n.texts={}
 
 function _p(str,x,y,fc,bc)
 	local fgc=fc or 7
-	local bgc=bc or 0
 	local hex=i18n.texts[i18n.lang][str]
 	local bs=h2b(hex)
 	local px=x
@@ -25,7 +24,9 @@ function _p(str,x,y,fc,bc)
 					if bs[i+(j-1)*w+k-1]=='1' then
 						pset(px+k,py+j,fgc)
 					else
-						pset(px+k,py+j,bgc)
+						if bc then
+							pset(px+k,py+j,bc)
+						end
 					end
 				end
 			end
@@ -43,7 +44,9 @@ function _p(str,x,y,fc,bc)
 					if bs[i+(j-1)*8+k-1]=='1' then
 						pset(px+k,py+j,fgc)
 					else
-						pset(px+k,py+j,bgc)
+						if bc then
+							pset(px+k,py+j,bc)
+						end
 					end
 				end
 			end

@@ -1,0 +1,21 @@
+{
+    "title": "PICO8GO Wizard",
+    "author": "hp7hao",
+    "translations": {
+        "chooselang": "Select Language",
+        "chooselang_cn": "选择语言",
+        "confirm": "Confirm",
+        "confirm_cn": "确定",
+        "done1": "All done!",
+        "done1_cn": "全部完成",
+        "done2": "Press F1+F2 to Continue",
+        "done2_cn": "按F1+F2继续",
+        "lang": "English",
+        "lang_cn": "中文",
+        "layout": "Select Layout",
+        "layout_cn": "选择按键布局",
+        "welcome": "Welcome",
+        "welcome_cn": "欢迎"
+    },
+    "template": "default"
+}
