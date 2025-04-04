@@ -14,10 +14,17 @@ p_lang=1
 p_layout=2
 p_done=3
 
-sel_lang="zhcn"
+--zhcn=0
+--enus=1
+sel_lang=0
 sel_layout=0
 
 function _init()
+	--lang:0
+	--layout:1
+ cartdata("pico8gowizard")
+ sel_lang=dget(0)
+ sel_layout=dget(1)
 end
 
 function _update()
@@ -34,15 +41,16 @@ end
 
 function handle_lang()
 	if btnp(➡️) or btnp(⬅️) then
-		if sel_lang=="zhcn" then
-			sel_lang="enus"
-		elseif sel_lang=="enus" then
-			sel_lang="zhcn"
+		if sel_lang==0 then
+			sel_lang=1
+		elseif sel_lang==1 then
+			sel_lang=0
 		end
 	end
 	if btnp(❎) then
 		pindex=p_layout
 		printh("lang "..sel_lang,"p8wizard")
+		dset(0,sel_lang)
 	end
 end
 
@@ -57,6 +65,7 @@ function handle_layout()
  if btnp(❎) then
 		pindex=p_done
 		printh("layout "..sel_layout,"p8wizard")
+		dset(1,sel_layout)
 	end
 end
 
@@ -68,9 +77,9 @@ end
 
 function draw_bg()
 	if pindex==p_lang then
-		if sel_lang=="zhcn" then
+		if sel_lang==0 then
 	 	rectfill(0,0,63,127,14)
-	 elseif sel_lang=="enus" then
+	 elseif sel_lang==1 then
 	 	rectfill(64,0,127,127,14)
 	 end
 	elseif pindex==p_layout then
@@ -116,11 +125,11 @@ function draw_txt()
  	_p("confirm",84,118)
  	print("❎",112,120,7)
  elseif pindex==p_layout then
-  if sel_lang=="zhcn" then
+  if sel_lang==0 then
   	_p("layout_cn",10,10)
    _p("confirm_cn",50,118)
    print("❎",67,120,7)
-  elseif sel_lang=="enus" then
+  elseif sel_lang==1 then
    _p("layout",10,10)
    _p("confirm",44,118)
    print("❎",71,120,7)
@@ -130,10 +139,10 @@ function draw_txt()
   print("🅾️",94,70,7)
   print("❎",104,60,7)
  elseif pindex==p_done then
- 	if sel_lang=="zhcn" then
+ 	if sel_lang==0 then
  	 _p("done1_cn",5,5)
  	 _p("done2_cn",5,15)
- 	elseif sel_lang=="enus" then
+ 	elseif sel_lang==1 then
  		_p("done1",5,5)
  		_p("done2",5,15)
  	end
