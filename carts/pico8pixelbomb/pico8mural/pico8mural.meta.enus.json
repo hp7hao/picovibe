@@ -1,0 +1,10 @@
+{
+    "title": "PICO8 Mural Portal",
+    "author": "hp7hao",
+    "translations": {
+        "t1": "Visit PICO-8 Mural",
+        "t2": "Free feel to add your sprites",
+        "t3": "Don't cover the existing artwork"
+    },
+    "template": "default"
+}
