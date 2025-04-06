@@ -5,6 +5,7 @@ carts/demos
 /**/*.preview.p8.png
 /**/*.p8l
 .environment_ready
+references
 
 pico8config.json
 

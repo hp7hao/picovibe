@@ -288,20 +288,25 @@ generate_cart_image() {
     local p8name=$2
     local lang=$3
     local template=$4
+    local qrcode_mode=$5
     
     echo "Generating cart image for $lang..."
-    if [ -z "$template" ]; then
-        python3 tools/customcart/gen_cartimage.py \
-            "$p8folder" \
-            "$p8name" \
-            "$lang"
-    else
-        python3 tools/customcart/gen_cartimage.py \
-            "$p8folder" \
-            "$p8name" \
-            "$lang" \
-            "$template"
+    
+    # Build the command with the new argparse interface
+    local cmd="python3 tools/customcart/gen_cartimage.py \"$p8folder\" \"$p8name\" \"$lang\""
+    
+    # Add template if provided
+    if [ -n "$template" ]; then
+        cmd="$cmd --template \"$template\""
     fi
+    
+    # Add qrcode mode if provided
+    if [ -n "$qrcode_mode" ]; then
+        cmd="$cmd --qrcode \"$qrcode_mode\""
+    fi
+    
+    # Execute the command
+    eval "$cmd"
 }
 
 ###########################################
@@ -324,7 +329,7 @@ build_cart_for_language() {
     handle_pico8_automation "$P8FOLDER" "$P8NAME"
     
     # Generate cart image
-    generate_cart_image "$P8FOLDER" "$P8NAME" "$lang" "$CART_TEMPLATE"
+    generate_cart_image "$P8FOLDER" "$P8NAME" "$lang" "$CART_TEMPLATE" "$QRCODE_MODE"
 }
 
 ###########################################
@@ -337,6 +342,7 @@ check_required_tools
 # Global variables
 P8PATH=$1
 CART_TEMPLATE=${2:-""}  # Make it empty string by default instead of 'default'
+QRCODE_MODE=${3:-""}  # Make it empty string by default instead of 'qrcode'
 
 echo "Input P8PATH: $P8PATH"
 

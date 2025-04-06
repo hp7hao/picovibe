@@ -5,7 +5,9 @@ REM Set parameters
 set P8PATH=%1
 set LANG=%2
 set CART_TEMPLATE=%3
+set QRCODE_MODE=%4
 if "%CART_TEMPLATE%"=="" set CART_TEMPLATE=default
+if "%QRCODE_MODE%"=="" set QRCODE_MODE=
 
 REM Extract folder and filename from the path
 for %%F in ("%P8PATH%") do (
@@ -45,6 +47,10 @@ if not exist "%P8PATH%.png" (
 
 REM Generate custom cart image
 echo Generating cart image...
-python tools\customcart\gen_cartimage.py %P8PATH%.png %LANG% %CART_TEMPLATE%
+if "%QRCODE_MODE%"=="" (
+    python tools\customcart\gen_cartimage.py %P8PATH%.png %LANG% %CART_TEMPLATE%
+) else (
+    python tools\customcart\gen_cartimage.py %P8PATH%.png %LANG% %CART_TEMPLATE% %QRCODE_MODE%
+)
 
 echo Build complete.
