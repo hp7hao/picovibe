@@ -1307,12 +1307,12 @@ function _update()
 			music(-1)
 			start_game_flash=50
 			start_game=true
+			vibrate(2,500)
 			sfx(38)
 		end
 		if start_game then
 			start_game_flash-=1
 			if start_game_flash<=-30 then
-				vibrate(2,200)
 				begin_game()
 			end
 		end
