@@ -126,10 +126,10 @@ get_configured_langs() {
     local langs=()
     
     # Find meta files that match the exact pattern
-    for meta_file in "$cart_folder/meta."*".json"; do
+    for meta_file in "$cart_folder/$cart_name.meta."*".json"; do
         if [ -f "$meta_file" ]; then
-            # Extract language code from filename (e.g., meta.enus.json -> enus)
-            lang=$(basename "$meta_file" | sed -n 's/meta\.\([^.]*\)\.json$/\1/p')
+            # Extract language code from filename (e.g., celestecn.meta.zhcn.json -> zhcn)
+            lang=$(basename "$meta_file" | sed -n 's/.*\.meta\.\([^.]*\)\.json$/\1/p')
             
             # Only add if we got a valid language code
             if [ ! -z "$lang" ]; then
@@ -137,11 +137,6 @@ get_configured_langs() {
             fi
         fi
     done
-    
-    # If no meta files found, use default languages
-    if [ ${#langs[@]} -eq 0 ]; then
-        langs=("enus" "zhcn")
-    fi
     
     # Only output the language list, no debug messages
     printf "%s\n" "${langs[@]}"
@@ -175,6 +170,15 @@ setup_environment() {
 generate_files() {
     local p8path=$1
     local lang=$2
+    local cart_folder=$(dirname "$p8path")
+    local cart_name=$(basename "$p8path" .p8)
+    local meta_file="$cart_folder/$cart_name.meta.$lang.json"
+    
+    # Skip if meta file doesn't exist
+    if [ ! -f "$meta_file" ]; then
+        echo "Skipping language $lang - meta file does not exist"
+        return
+    fi
     
     echo "Generating files for language: $lang"
     python tools/pico8i18n/gen_tpl.py "$p8path" "$lang"

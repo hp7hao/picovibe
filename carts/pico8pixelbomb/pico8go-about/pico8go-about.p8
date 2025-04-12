@@ -8,7 +8,7 @@ __lua__
 i18n.lang="zhcn"
 
 function vibrate()
- printh("vibrate 1 0.5","vibrator")
+ printh("vibrate 2 300","vibrator")
 end
 
 function _init()
@@ -86,12 +86,12 @@ function newbit()
 end
 
 function boom(_x,_y,_c,_p)
+ vibrate()
 	local n=80+flr((0.5-rnd()))
  for i=0,n do
  	spawn_particles(_x,_y,_c,_p)
  end
  sfx(0)
- vibrate()
  blink=3
 end
 
