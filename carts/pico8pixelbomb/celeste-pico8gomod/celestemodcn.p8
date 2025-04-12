@@ -6,7 +6,7 @@ __lua__
 
 #include ../../../libs/pico8/pico8go.lua
 #include ../../../libs/pico8/i18n.lua
-#include ./celestecn.texts.zhcn.lua
+#include ./celestemodcn.texts.zhcn.lua
 i18n.lang="zhcn"
 
 -- globals --
@@ -104,6 +104,18 @@ dead_particles = {}
 -- player entity --
 -------------------
 
+function vib_jump()
+	vibrate(2,100)
+end
+
+function vib_land()
+	vibrate(1,120)
+end
+
+function vib_dash()
+	vibrate(2,200)
+end
+
 player = 
 {
 	init=function(this) 
@@ -139,13 +151,14 @@ player =
 		
 		-- smoke particles
 		if on_ground and not this.was_on_ground then
+		 vib_land()
 		 init_object(smoke,this.x,this.y+4)
 		end
 
 		local jump = btn(k_jump) and not this.p_jump
 		this.p_jump = btn(k_jump)
 		if (jump) then
-			vibrate(2,300)
+			vib_jump()
 			this.jbuffer=4
 		elseif this.jbuffer>0 then
 		 this.jbuffer-=1
@@ -157,7 +170,7 @@ player =
 		if on_ground then
 			this.grace=6
 			if this.djump<max_djump then
-			 vibrate(3,300)
+			 vib_jump()
 			 psfx(54)
 			 this.djump=max_djump
 			end
@@ -167,6 +180,7 @@ player =
 
 		this.dash_effect_time -=1
   if this.dash_time > 0 then
+   vib_land()
    init_object(smoke,this.x,this.y)
   	this.dash_time-=1
   	this.spd.x=appr(this.spd.x,this.dash_target.x,this.dash_accel.x)
@@ -210,6 +224,7 @@ player =
 			if input!=0 and this.is_solid(input,0) and not this.is_ice(input,0) then
 		 	maxfall=0.4
 		 	if rnd(10)<2 then
+				vib_land()
 		 		init_object(smoke,this.x+input*6,this.y)
 				end
 			end
@@ -226,6 +241,7 @@ player =
 		  	this.jbuffer=0
 		  	this.grace=0
 					this.spd.y=-2
+					vib_land()
 					init_object(smoke,this.x,this.y+4)
 				else
 					-- wall jump
@@ -236,6 +252,7 @@ player =
 			 		this.spd.y=-2
 			 		this.spd.x=-wall_dir*(maxrun+1)
 			 		if not this.is_ice(wall_dir*3,0) then
+						vib_land()
 		 				init_object(smoke,this.x+wall_dir*6,this.y)
 						end
 					end
@@ -247,6 +264,7 @@ player =
 			local d_half=d_full*0.70710678118
 		
 			if this.djump>0 and dash then
+			vib_dash()
 		 	init_object(smoke,this.x,this.y)
 		 	this.djump-=1		
 		 	this.dash_time=4
@@ -269,7 +287,6 @@ player =
 		  	this.spd.y=0
 		 	end
 
-		 	vibrate(5,300)
 		 	psfx(3)
 		 	freeze=2
 		 	shake=6
@@ -290,6 +307,7 @@ player =
 		 	end	 	 
 			elseif dash and this.djump<=0 then
 			 psfx(9)
+			 vib_land()
 			 init_object(smoke,this.x,this.y)
 			end
 		
@@ -400,6 +418,7 @@ player_spawn = {
 				this.state=2
 				this.delay=5
 				shake=5
+				vib_land()
 				init_object(smoke,this.x,this.y+4)
 				sfx(5)
 			end
@@ -444,6 +463,7 @@ spring = {
 				hit.spd.y=-3
 				hit.djump=max_djump
 				this.delay=10
+				vib_land()
 				init_object(smoke,this.x,this.y)
 				
 				-- breakable below us
@@ -451,7 +471,7 @@ spring = {
 				if below~=nil then
 					break_fall_floor(below)
 				end
-				
+				vib_jump()
 				psfx(8)
 			end
 		elseif this.delay>0 then
@@ -491,6 +511,7 @@ balloon = {
 			local hit = this.collide(player,0,0)
 			if hit~=nil and hit.djump<max_djump then
 				psfx(6)
+				vib_land()
 				init_object(smoke,this.x,this.y)
 				hit.djump=max_djump
 				this.spr=0
@@ -500,6 +521,7 @@ balloon = {
 			this.timer-=1
 		else 
 		 psfx(7)
+		 vib_land()
 		 init_object(smoke,this.x,this.y)
 			this.spr=22 
 		end
@@ -540,6 +562,7 @@ fall_floor = {
 				psfx(7)
 				this.state=0
 				this.collideable=true
+				vib_land()
 				init_object(smoke,this.x,this.y)
 			end
 		end
@@ -561,6 +584,7 @@ function break_fall_floor(obj)
  	psfx(15)
 		obj.state=1
 		obj.delay=15--how long until it falls
+		vib_land()
 		init_object(smoke,obj.x,obj.y)
 		local hit=obj.collide(spring,0,-1)
 		if hit~=nil then
@@ -706,6 +730,7 @@ fake_wall = {
 			sfx_timer=20
 			sfx(16)
 			destroy_object(this)
+			vib_land()
 			init_object(smoke,this.x,this.y)
 			init_object(smoke,this.x+8,this.y)
 			init_object(smoke,this.x,this.y+8)
@@ -896,6 +921,7 @@ big_chest={
 				hit.spd.x=0
 				hit.spd.y=0
 				this.state=1
+				vib_land()
 				init_object(smoke,this.x,this.y)
 				init_object(smoke,this.x+8,this.y)
 				this.timer=60
@@ -1140,7 +1166,7 @@ function destroy_object(obj)
 end
 
 function kill_player(obj)
-	vibrate(5,1000)
+	vibrate(2,1000)
 	sfx_timer=12
 	sfx(0)
 	deaths+=1
@@ -1286,6 +1312,7 @@ function _update()
 		if start_game then
 			start_game_flash-=1
 			if start_game_flash<=-30 then
+				vibrate(2,200)
 				begin_game()
 			end
 		end
