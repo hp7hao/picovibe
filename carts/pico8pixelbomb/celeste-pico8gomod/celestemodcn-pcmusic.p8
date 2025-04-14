@@ -52,7 +52,7 @@ function title_screen()
 	start_game=false
 	start_game_flash=0
 	--music(40,0,7)
-	sfxplay("01.mp3")
+	sfxplay("00.mp3")
 	
 	load_room(7,3)
 end
@@ -64,7 +64,7 @@ function begin_game()
 	music_timer=0
 	start_game=false
 	--music(0,0,7)
-	sfxplay("02.mp3")
+	sfxplay("01.mp3")
 	load_room(0,0)
 end
 
@@ -1202,13 +1202,16 @@ end
 function next_room()
  if room.x==2 and room.y==1 then
   music(30,500,7)
+  sfxstop()
  elseif room.x==3 and room.y==1 then
   --music(20,500,7)
-  sfxplay("03.mp3")
+  sfxplay("02.mp3")
  elseif room.x==4 and room.y==2 then
   music(30,500,7)
+  sfxstop()
  elseif room.x==5 and room.y==3 then
   music(30,500,7)
+  sfxstop()
  end
 
 	if room.x==7 then
@@ -1268,7 +1271,9 @@ function _update()
 	if music_timer>0 then
 	 music_timer-=1
 	 if music_timer<=0 then
-	  music(10,0,7)
+	  --music(10,0,7)
+	  music(-1,1000)
+	  sfxplay("03.mp3")
 	 end
 	end
 	
@@ -1308,7 +1313,7 @@ function _update()
 	-- start game
 	if is_title() then
 		if not start_game and (btn(k_jump) or btn(k_dash)) then
-			--music(-1)
+			music(-1)
 			sfxstop()
 			start_game_flash=50
 			start_game=true
