@@ -1,0 +1,12 @@
+{
+    "title": "BAS",
+    "author": "yokoboko",
+    "translations": {
+        "best": "最高分",
+        "game over": "游戏结束",
+        "highscore": "最高分",
+        "new": "新纪录",
+        "score": "得分"
+    },
+    "template": "e-zombie16"
+}
