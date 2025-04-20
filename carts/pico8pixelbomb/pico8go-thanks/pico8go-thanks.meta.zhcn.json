@@ -2,13 +2,14 @@
     "title": "PICO8GO 致谢",
     "author": "hp7hao",
     "translations": {
-        "t0": "感谢所有支持者：",
+        "t0": "感谢大家的帮助：",
         "t1": "哪块小饼干",
         "t2": "Ashenini",
         "t3": "生姜小姐GinRL",
         "t4": "randc0degen",
         "t5": "GYX888888",
-        "t6": "黑羽瑞"
+        "t6": "黑羽瑞",
+        "t7": "压缩文渐"
     },
     "template": "cyan"
 }
