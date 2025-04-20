@@ -31,6 +31,11 @@ thanks for playing!
 
 -->8
 
+function vibrate(s,d,delay)
+	de=delay or 0
+    printh("vibrate "..s.." "..d.." "..de,"vibrator")
+end
+
 cartdata("bridgs_justoneboss")
 
 function noop() end
@@ -48,6 +53,7 @@ end,
 function(self)
 if self.frames_alive%15==0 then
 spawn_entity(3,self,nil,{vx=rnd_dir()*(1+rnd(2)),vy=-1-rnd(2)}):poof()
+vibrate(1,900)
 sfx(25,2)
 end
 end
@@ -373,6 +379,7 @@ self:get_hurt()
 end,
 get_hurt=function(self)
 if self.invincibility_frames<=0 then
+vibrate(2,300)
 sfx(17,0)
 self.render_layer=11
 freeze_and_shake_screen(6,10)
@@ -444,6 +451,7 @@ rainbow_frames=0
 {
 function(self,x,y,f,f2)
 if f2==10 then
+vibrate(1,300)
 sfx(8,3)
 end
 if f2<=10 then
@@ -472,6 +480,7 @@ hurtbox_channel=2,
 on_hurt=function(self)
 freeze_and_shake_screen(2,2)
 self.hurtbox_channel,self.frames_to_death,score_mult=0,6,min(score_mult+1,8)
+vibrate(2,500)
 sfx(9,3)
 score+=score_mult
 spawn_entity(29,self.x,self.y-7,{points=score_mult})
@@ -1042,6 +1051,7 @@ return self:promise_sequence(
 "pound",
 {"set_expression",1},
 function()
+vibrate(2,400)
 sfx(16,3)
 lh.is_holding_bouquet=true
 end,
@@ -1309,6 +1319,8 @@ shoot_laser=function(self,long_duration)
 return self:promise_sequence(
 ternary_hard_mode(2,12),
 function()
+vibrate(1,200)
+vibrate(3,700,200)
 sfx(ternary(long_duration,7,14),1)
 self.default_counter=ternary(long_duration,173,31)
 end,
@@ -1470,6 +1482,7 @@ return self:promise_sequence(
 {"set_pose",2},
 {"move",m.x+4*self.dir,m.y+20,15,ease_out,{d,0,d,0}},
 function()
+vibrate(2,300)
 sfx(12,2)
 freeze_and_shake_screen(0,2)
 end,
@@ -1894,6 +1907,7 @@ end
 end
 
 function start_game(phase)
+vibrate(2,500)
 curtains:promise_sequence(
 ternary(skip_title_screen,0,35),
 {"set_anim","open"},
