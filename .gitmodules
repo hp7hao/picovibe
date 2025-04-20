@@ -1,3 +1,6 @@
 [submodule "deps/picotool"]
 	path = deps/picotool
 	url = https://github.com/dansanderson/picotool.git
+[submodule "deps/shrinko8"]
+	path = deps/shrinko8
+	url = https://github.com/thisismypassport/shrinko8.git

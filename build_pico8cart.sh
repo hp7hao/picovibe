@@ -30,11 +30,6 @@ check_required_tools() {
         missing_tools+=("python3")
     fi
     
-    # Check xdotool
-    if ! check_command "xdotool"; then
-        missing_tools+=("xdotool")
-    fi
-    
     # Check sed
     if ! check_command "sed"; then
         missing_tools+=("sed")
@@ -197,93 +192,28 @@ update_p8_language() {
 }
 
 ###########################################
-# PICO-8 Automation Functions
+# Main Build Functions
 ###########################################
 
-# Function to handle PICO-8 automation
-handle_pico8_automation() {
+# Function to generate cart PNG using shrinko8
+generate_cart_png() {
     local p8folder=$1
     local p8name=$2
     
-    # Start PICO-8
-    echo "Starting PICO-8..."
-    "$PICO8_PATH" -root_path . &
-
-    # Wait for PICO-8 window to appear
-    echo "Waiting for PICO-8 window..."
-    while ! xdotool search --name "PICO-8" >/dev/null; do
-        sleep 0.5
-    done
-    sleep 1  # Additional wait to ensure window is fully ready
-
-    # Focus PICO-8 window
-    echo "Focusing PICO-8 window..."
-    xdotool search --name "PICO-8" windowfocus
-    sleep 2
-
-    # Change to cart directory by splitting the path
-    echo "Changing to cart directory..."
-    # Split the path into components
-    IFS='/' read -ra path_components <<< "$p8folder"
+    echo "Generating cart PNG using shrinko8..."
+    local input_path="$p8folder/$p8name.p8"
+    local output_path="$p8folder/$p8name.p8.png"
     
-    # Navigate through each component
-    for component in "${path_components[@]}"; do
-        echo "cd $component"
-        xdotool type "cd $component"
-        xdotool key Return
-        sleep 0.5 
-    done
-    sleep 1
-
-    # Send load command and wait for it to complete
-    echo "Loading cart..."
-    xdotool type "load $p8name"
-    xdotool key Return
-    sleep 1
-
-    # Check if p8.png file exists in the correct directory
-    if [ -f "$p8folder/$p8name.p8.png" ]; then
-        echo "p8.png file exists, will need confirmation..."
-        NEED_CONFIRM=true
-    else
-        echo "No existing p8.png file, no confirmation needed..."
-        NEED_CONFIRM=false
+    # Run shrinko8 to generate PNG
+    python3 deps/shrinko8/shrinko8.py "$input_path" "$output_path" --minify-safe-only
+    
+    # Check if the file was generated successfully
+    if [ ! -f "$output_path" ]; then
+        echo "Error: Failed to generate cart PNG using shrinko8"
+        exit 1
     fi
-
-    # Send save command and wait for it to complete
-    echo "Saving cart image..."
-    xdotool type "save $p8name.p8.png"
-    xdotool key Return
-    sleep 0.5
-
-    # Send confirmation only if needed
-    if [ "$NEED_CONFIRM" = true ]; then
-        echo "Sending confirmation..."
-        xdotool type "y"
-        xdotool key Return
-    fi
-
-    # Wait for save to complete by checking if the file exists
-    echo "Waiting for save to complete..."
-    TIMEOUT=30  # 30 seconds timeout
-    COUNTER=0
-    while [ ! -f "$p8folder/$p8name.p8.png" ]; do
-        sleep 0.5
-        COUNTER=$((COUNTER + 1))
-        if [ $COUNTER -ge $TIMEOUT ]; then
-            echo "Error: Save operation timed out after ${TIMEOUT} seconds"
-            echo "Closing PICO-8..."
-            xdotool key ctrl+q
-            sleep 1
-            exit 1
-        fi
-    done
-    sleep 1  # Additional wait to ensure file is fully written
-
-    # Close PICO-8
-    echo "Closing PICO-8..."
-    xdotool key ctrl+q
-    sleep 1
+    
+    echo "Successfully generated cart PNG at: $output_path"
 }
 
 # Function to generate cart image
@@ -313,10 +243,6 @@ generate_cart_image() {
     eval "$cmd"
 }
 
-###########################################
-# Main Build Functions
-###########################################
-
 # Function to build cart for a specific language
 build_cart_for_language() {
     local lang=$1
@@ -329,8 +255,8 @@ build_cart_for_language() {
     # Update p8 file with language settings
     update_p8_language "$P8PATH" "$lang" "$P8NAME"
     
-    # Handle PICO-8 automation
-    handle_pico8_automation "$P8FOLDER" "$P8NAME"
+    # Generate cart PNG using shrinko8
+    generate_cart_png "$P8FOLDER" "$P8NAME"
     
     # Generate cart image
     generate_cart_image "$P8FOLDER" "$P8NAME" "$lang" "$CART_TEMPLATE" "$QRCODE_MODE"
