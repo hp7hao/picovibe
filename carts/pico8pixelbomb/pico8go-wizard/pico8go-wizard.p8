@@ -11,8 +11,9 @@ i18n.lang="zhcn"
 pindex=1
 p_splash=0
 p_lang=1
-p_layout=2
-p_done=3
+p_eula=2
+p_layout=3
+p_done=4
 
 --zhcn=0
 --enus=1
@@ -34,6 +35,8 @@ function _update()
 		end
 	elseif pindex==p_lang then
 	 handle_lang()
+	elseif pindex==p_eula then
+		handle_eula()
 	elseif pindex==p_layout then
 		handle_layout()
 	end
@@ -48,10 +51,18 @@ function handle_lang()
 		end
 	end
 	if btnp(❎) then
-		pindex=p_layout
+		pindex=p_eula
 		printh("lang "..sel_lang,"p8wizard")
 		dset(0,sel_lang)
 	end
+end
+
+function handle_eula()
+ if btnp(❎) then
+ 	pindex=p_layout
+ 	printh("eula agreed","p8wizard")
+ 	dset(2,1)
+ end
 end
 
 function handle_layout()
@@ -124,6 +135,30 @@ function draw_txt()
  	_p("lang",69,50)
  	_p("confirm",84,118)
  	print("❎",112,120,7)
+ elseif pindex==p_eula then
+ 	if sel_lang==0 then
+ 		_p("t00",10,10,14)
+	 	_p("t01",10,20,14)
+	 	_p("t02",10,40,14)
+	 	_p("t03",30,118,14)
+	 	print("❎",100,120,14)
+ 	elseif sel_lang==1 then
+ 		print("dear player:",2,2)
+ 		print("thank you for choosing pico8go.",2,10)
+ 		print("this is a non-official system",2,18)
+ 		print("designed for pico8 platform,",2,26)
+ 		print("which may have compatibility",2,34)
+ 		print("differences with the original",2,42)
+ 		print("factory device. you may lose",2,50)
+ 		print("warranty and there is a",2,58)
+ 		print("probability of system",2,66)
+ 		print("failure. for safety reasons,",2,74)
+ 		print("it is recommended that you",2,82)
+ 		print("backup the original factory",2,90)
+ 		print("system, just as important as",2,98)
+ 		print("saving the game save.",2,106)
+		print("i'm ready, let's go! ❎",20,118,14)
+ 	end
  elseif pindex==p_layout then
   if sel_lang==0 then
   	_p("layout_cn",10,10)
