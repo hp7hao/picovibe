@@ -3,6 +3,72 @@
 set -e
 
 ###########################################
+# Parameter Parsing Functions
+###########################################
+
+# Default values
+P8PATH=""
+CART_TEMPLATE=""
+QRCODE_MODE=""
+SHOULD_MINIFY="false"
+
+# Function to display usage
+show_usage() {
+    echo "Usage: $0 [options]"
+    echo "Options:"
+    echo "  --cart <path>          Path to the PICO-8 cart file (required)"
+    echo "  --template <path>      Path to custom cart template image (optional)"
+    echo "  --qrcode <mode>        QR code mode for cart image (optional)"
+    echo "  --minify               Enable code minification (optional, default: disabled)"
+    echo "  --help                 Show this help message"
+    echo ""
+    echo "Example:"
+    echo "  $0 --cart game.p8 --template custom.png --qrcode qrcode --minify"
+    exit 1
+}
+
+# Function to parse named parameters
+parse_parameters() {
+    if [ $# -eq 0 ]; then
+        show_usage
+    fi
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --cart)
+                P8PATH="$2"
+                shift 2
+                ;;
+            --template)
+                CART_TEMPLATE="$2"
+                shift 2
+                ;;
+            --qrcode)
+                QRCODE_MODE="$2"
+                shift 2
+                ;;
+            --minify)
+                SHOULD_MINIFY="true"
+                shift
+                ;;
+            --help)
+                show_usage
+                ;;
+            *)
+                echo "Unknown parameter: $1"
+                show_usage
+                ;;
+        esac
+    done
+
+    # Validate required parameters
+    if [ -z "$P8PATH" ]; then
+        echo "Error: --cart parameter is required"
+        show_usage
+    fi
+}
+
+###########################################
 # System Tool Check Functions
 ###########################################
 
@@ -199,13 +265,18 @@ update_p8_language() {
 generate_cart_png() {
     local p8folder=$1
     local p8name=$2
+    local should_minify=$3
     
     echo "Generating cart PNG using shrinko8..."
     local input_path="$p8folder/$p8name.p8"
     local output_path="$p8folder/$p8name.p8.png"
     
     # Run shrinko8 to generate PNG
-    python3 deps/shrinko8/shrinko8.py "$input_path" "$output_path" --minify-safe-only
+    if [ "$should_minify" = "true" ]; then
+        python3 deps/shrinko8/shrinko8.py "$input_path" "$output_path" --minify-safe-only
+    else
+        python3 deps/shrinko8/shrinko8.py "$input_path" "$output_path"
+    fi
     
     # Check if the file was generated successfully
     if [ ! -f "$output_path" ]; then
@@ -246,6 +317,7 @@ generate_cart_image() {
 # Function to build cart for a specific language
 build_cart_for_language() {
     local lang=$1
+    local should_minify=$2
     
     echo "Building for language: $lang"
     
@@ -256,7 +328,7 @@ build_cart_for_language() {
     update_p8_language "$P8PATH" "$lang" "$P8NAME"
     
     # Generate cart PNG using shrinko8
-    generate_cart_png "$P8FOLDER" "$P8NAME"
+    generate_cart_png "$P8FOLDER" "$P8NAME" "$should_minify"
     
     # Generate cart image
     generate_cart_image "$P8FOLDER" "$P8NAME" "$lang" "$CART_TEMPLATE" "$QRCODE_MODE"
@@ -266,15 +338,16 @@ build_cart_for_language() {
 # Main Workflow
 ###########################################
 
+# Parse command line parameters
+parse_parameters "$@"
+
 # Check for required tools before proceeding
 check_required_tools
 
-# Global variables
-P8PATH=$1
-CART_TEMPLATE=${2:-""}  # Make it empty string by default instead of 'default'
-QRCODE_MODE=${3:-""}  # Make it empty string by default instead of 'qrcode'
-
 echo "Input P8PATH: $P8PATH"
+echo "Template: $CART_TEMPLATE"
+echo "QR Code Mode: $QRCODE_MODE"
+echo "Minification enabled: $SHOULD_MINIFY"
 
 # Extract folder and name more robustly
 P8FOLDER="${P8PATH%/*}"
@@ -298,7 +371,7 @@ echo "Building cart for languages: ${langs[*]}"
 
 # Build for each language
 for lang in "${langs[@]}"; do
-    build_cart_for_language "$lang"
+    build_cart_for_language "$lang" "$SHOULD_MINIFY"
 done
 
 echo "Build complete for all languages."
