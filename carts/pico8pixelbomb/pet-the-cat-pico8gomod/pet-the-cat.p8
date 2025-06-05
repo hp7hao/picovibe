@@ -1,0 +1,1007 @@
+pico-8 cartridge // http://www.pico-8.com
+version 42
+__lua__
+--pet the cat
+--by doriencey
+--v 2.2
+--add vibration by hp7hao
+
+#include ../../../libs/pico8/i18n.lua
+#include ./pet-the-cat.texts.zhcn.lua
+i18n.lang="zhcn"
+
+function vibrate(s,d)
+    printh("vibrate "..s.." "..d,"vibrator")
+end
+
+function _init()
+	--reset()
+	
+	head={x=0,y=40}
+	allow_hissing=0					
+	eyecol=	flr(rnd(5))+9				
+	eyerad=	rnd(3)+3
+	norerad=rnd(2)
+	
+	sprs={0,3}
+	head_spr=rnd(sprs)
+						
+	pl={x=64,y=8,r=25,spr=7}
+	
+purrgoing=false
+offst=-20
+
+hiss_t=0
+hissing=false
+
+anger=0
+angry=false
+puff_t=10
+
+cat={}
+legs={}
+
+catcols=split("0,1,4,5,6,7,13,137,128,129,132,134")
+									
+catc=ceil(rnd(#catcols))
+catcolor=catcols[catc]
+
+pi=3.14
+
+spd=2
+puff=0
+mode="ˇ…pet the kitty…ˇ"
+maxh=100
+
+eyesopen=true
+t=1
+
+purrmeter=0
+meow_t=0
+
+blink=.1
+
+meow_sound=1	
+		
+	switch_t=10
+	move=move_arrows
+	cartdata("ptc_3_by_doriencey")
+	loadsetting()
+	menu_txt=menu[allow_hissing+1]
+	
+	setup_body()
+	setup_personality()
+	pickcolors()
+	lock_to_pl()
+end
+
+function _update60()
+--resetting mouse position
+	if stat(31)=='r' then
+		mouse_x,mouse_y=pl.x,pl.y
+	end
+
+	switch_t-=1
+		menuitem(2,menu_txt,
+		toggle_hiss)
+	t+=1
+	
+	npox=(pl.x/127)*28-5
+	
+	update_cat_body()
+	update_head()
+	update_eyes()
+	update_legs()
+	breath()
+	purr()
+		
+	if allow_hissing==0 then
+		get_angry()
+		hiss()
+		puff_up()
+	end
+	if allow_hissing!=0 then
+		anger=0
+		angry=false
+	end
+	
+	update_mean()	
+	meow()
+	move()
+	
+	--extra offset y-position
+	--so the hand actually
+	--reaches the cat
+	offst=sin((pl.y*pl.y)/20*0.0018)*40	
+
+	--angry=true
+	mouse_or_arrows()
+	pl.y=limit(pl.y,0,40)
+	pl.x=limit(pl.x,20,127)
+	
+end--update
+
+function _draw()
+
+	cls(3)
+	map()	
+	palt(0)
+	palt(3,true)
+
+	textshad(mode,30,textpos,7,5)	
+		
+	textpos=(sint(1)*2)+30
+	
+	draw_legs()
+	draw_cat_body()
+	drawhead(0,head.y)
+	draw_angry()
+	drawhand()
+	
+	pickcolors()
+	
+--print(purrmeter,8,8,10)
+
+end--draw
+
+textpos=0
+------------------------------
+
+function drawhead(x,y)
+	
+	spr(head_spr,x+6,y,3,4)
+	
+	spr(head_spr,x+30,
+					y,3,4,true)
+	circfill(x+30,y+22,
+												noserad,14)
+																	
+	for i=1,2 do
+		draw_eye(head.x+i*20,
+		head.y+15)
+	end
+		drawmouth(head.x+30,head.y+28)		
+end
+
+--bell curve calculations
+function calcbell(x,
+									inflx,infly)
+
+		local xm=(x-inflx)
+		local devi=2--deviation
+		local 
+		exp=(-1/2*((xm)/devi))*
+		(-1/2*((xm)/devi))
+		bell=1/devi*sqrt(2*pi)*exp						
+		bell=limit(bell,-4,4)			
+		local y=(bell-2*bell+infly)*5
+		local val=(infly*y/100)+20
+
+		return val
+end
+
+
+-->8
+
+function mouse_or_arrows()
+	
+	for i=0,4 do
+		if btn(i) then
+			move=move_arrows
+		end
+	end
+	
+	if check_using_mouse()then
+		move=move_mouse
+	end
+	
+end
+
+function lock_to_pl()
+	poke(0x5f2d,0x5) 
+	mouse_x=pl.x
+	mouse_y=pl.y
+end
+
+function move_mouse()
+	pl.x+=stat(38)/8
+	pl.y+=stat(39)/8
+end
+
+function check_using_mouse()
+	if stat(38)!=0 then
+		lock_to_pl()
+		mode=""
+		return true
+	end
+		return false
+end
+
+function move_arrows()	
+	for i=1,4 do	
+		local dirx={-spd,spd,0,0}
+		local diry={0,0,-spd/2,spd/2}
+				if btn(i-1) then
+					pl.x+=dirx[i]
+					pl.y+=diry[i]
+					mode="  "
+				end
+	end	
+end
+
+
+function check_moving_richt()
+
+	if stat(38)>0 then
+		return true
+	end
+
+	if btn(➡️) then
+		return true
+	end
+	
+	return false
+end
+
+function check_moving_left()
+	if stat(38)<0 then
+		return true
+	end
+	if btn(⬅️) then
+		return true
+	end
+	
+	x_buff=pl.x
+	
+	return false
+end
+
+
+
+	function check_push()
+		if	pl.y>37 then
+			return true
+			else return false
+		end
+	end
+	
+	function check_rub()
+		if touchingbody() and btn(⬅️) then
+			return true 
+			else return false
+		end
+	end
+
+function touch_head()
+	if pl.x<60 and pl.y>23 
+	and pl.y<37
+	then return true end
+	return false
+end
+
+function touchingbody()
+	if pl.y>23 and pl.y<37
+	then
+		return true
+	end
+	return false
+end
+
+function pickcolors()
+
+	if catcolor==eyecol then
+		catcolor=0
+	end
+	
+	pal(0,catcolor,1)
+	pal(3,143,1)
+	pal(2,142,1)
+	if catcolor==137 then
+		pal(3,133,1)
+		pal(2,141,1)	
+	end
+end
+
+function limit(val,mn,mx)
+	val=min(mx,val)
+	val=max(mn,val)
+		return val
+end
+	
+	function textshad(string,x,y,c1,c2)
+		_p(string,x,y+1,c2)
+		_p(string,x,y,c1)
+	end
+	
+function cycle(val,mn,mx)
+	if val>mx then 
+	val=mn
+	elseif val<mn then
+	val=mx 
+	end
+	return val
+end
+
+function sint(exp)
+	return sin(time()*exp)
+end
+-->8
+
+function drawhand()
+	if touchingbody() then
+		animatehand()
+	end
+
+	rectfill(pl.x-7,
+										0,pl.x+6,
+										pl.y-offst-7,13)
+
+	spr(pl.spr,pl.x-16,
+					pl.y-offst-16,3,4)
+end
+
+
+function animatehand()
+	local id=1
+	local plsprts={7,10,13}
+	id+=flr(sint(4))
+	id=cycle(id,1,#plsprts)
+	pl.spr=plsprts[id]
+	if sint(1.5)==0 then
+		vibrate(2,100)
+		sfx(7,2)
+	end
+end
+
+
+-->8
+--sound
+
+function pickmeow()
+	meow_sound=flr(rnd(4))
+	c_meowfreq=
+	flr(rnd(meowfreq)+meowfreq)
+end
+
+function meowing()
+	if meow_t>0 then
+		return true else 
+		return false
+	end
+end
+
+function canmeow()
+	if touchingbody() then
+		if not touch_head() then
+			if not purrgoing then
+				if not hissing then
+					if t%meowfreq==1 then
+						return true
+					end
+				end
+			end
+		end
+	end
+	return false
+end
+
+function meow()
+	meow_t-=1
+	meow_t=limit(meow_t,0,30)
+	if canmeow() then
+			meow_t=60
+			vibrate(2,800)
+			sfx(meow_sound)
+			pickmeow()
+	end
+end
+
+function purr()
+	fillpurr()		
+	if purring then
+		meowt=false
+		if not purrgoing then
+			music(4,20000)
+			purrgoing=true
+			
+		end
+		else music(-1,1000)
+							purrgoing=false
+	end
+end
+
+function hiss()
+	hiss_t-=1
+	if anger>=moody and 
+	purring==false and
+	hissing==false then
+		hiss_t=200+rnd(300)
+		vibrate(3,1200)
+		sfx(10)
+		hissing=true
+		anger-=500
+	end
+	if hiss_t<1 then 
+	hissing=false
+	end 
+	hiss_t=limit(hiss_t,0,200)
+end
+
+
+-->8
+--personality functions
+
+function setup_personality()
+	
+	verbmode=rnd(1000)	
+	raggdoll=rnd(100)
+	
+	meowfreq=flr(rnd(100)+200)
+	c_meowfreq=meowfreq
+			
+	friendlyness=3000
+	moody=rnd(3000)+500
+	maxfriend=friendlyness+rnd(600)+100
+	
+	headpet_rate=rnd(3)
+--headpet=0
+	bodypet_rate=rnd(3)
+--	bodypet=0
+	stroke_bonus=rnd(10)+3
+--	stroke=0
+
+	rub_rate=rnd(3)+6-15
+--	rub=0
+	push_rate=-rnd(3)+6-15
+--	push=0
+	decay=rnd(3)+1-4
+		
+	if verbmode>995 then
+		mean=true
+	end
+	
+	a_push_rate=rnd(3)+1
+	a_rub_rate=rnd(1)+1
+	a_decay=rnd()
+	
+	if raggdoll>98 then
+		friendlyness=1
+		maxfriendlyness=1500
+		rub_rate=1
+		push_rate=1
+		a_push_rae=0
+		a_rub_rate=0
+	end
+end
+
+
+function fillpurr()	
+
+	if	eyesopen==false then
+		headpet=headpet_rate
+		else headpet=0
+	end
+	if touchingbody() 
+	and pl.y<37 and check_moving_left()==false 
+	then
+		bodypet=bodypet_rate
+		else bodypet=0
+	end
+	
+	if touchingbody() and 
+	check_moving_left() then
+		rub=rub_rate
+		else rub=0
+	end
+	
+	if touchingbody() and 
+	check_moving_richt() then
+		stroke=stroke_bonus
+		else stroke=0
+	end
+	
+	if check_push() then
+		push=push_rate
+		else push=0
+	end	
+
+			purrate=headpet+bodypet+rub
+		+stroke+push+decay		
+
+	purrmeter+=purrate		
+			
+		purrmeter=
+		limit(purrmeter,0,maxfriend)
+		
+		if purrmeter>friendlyness then
+		purring=true
+		else purring =false
+	end	
+end
+
+
+function get_angry()
+	
+	if check_push() then
+		a_push=a_push_rate
+		else a_push=0
+	end
+	
+	if check_rub() then
+		a_rub=a_rub_rate
+		else a_rub=0
+	end
+	
+	if purrate>1 then
+	 anger_rate=-(purrate/20)
+	 else 
+	 	anger_rate=
+			a_push+a_rub-a_decay/20
+	end
+	
+	anger+=anger_rate
+	anger=limit(anger,0,moody+500)	
+	
+	if anger>moody or hissing then
+		angry=true
+		else angry=false
+	end
+	
+end
+
+function update_mean()
+	if mean then
+		if touchingbody() then
+			anger+=5
+			purrate=0
+		end
+	end
+end
+
+
+-->8
+--new cat renderer
+
+function setup_body()
+	for i=1,28 do
+		local c={}
+		c.x=40+i*3+2
+		c.y=60
+		if i<20 then
+		c.r=10
+		else c.r=3
+		end
+		add(cat,c)
+	end
+	
+	for i=1,2 do
+		local l={}
+		l.x=i*51-1
+		l.y=65
+		add(legs,l)
+	end
+	
+end
+
+function update_legs()
+	for i=1,#legs do
+		local l=legs[i]
+		local _npox=(pl.x/127)*2
+		l.y=
+		calcbell(i,_npox,pl.y)
+		l.y=limit(l.y,60,110)
+	end
+end
+
+function draw_legs()
+	for i=1,#legs do
+		local l=legs[i]
+			rectfill(l.x-2,l.y+sint(.5)*2,
+			l.x+5,109,0)
+			circfill(i*51-2,
+			106,4,0)
+	end
+end
+
+function update_cat_body()
+	for i=1,#cat do
+		local c=cat[i]
+		c.y=
+		calcbell(i,npox,pl.y)			
+		c.y=limit(c.y,60,maxh)		
+	end
+end
+
+function breath()
+	for c in all(cat) do
+		c.y+=sint(.5)
+	end
+end
+
+function draw_cat_body()
+	for c in all(cat) do
+		circfill(c.x,c.y,c.r+puff,0)
+	end
+end
+
+function update_head()	
+	local hpos=
+	calcbell(pl.x/127,npox,pl.y)
+	+pl.y/10
+	head.y=hpos-15	
+	head.y=limit(head.y,40,110)
+	if touch_head() then
+		head.y+=sint(3)
+	end	
+end
+
+		
+	function update_eyes()
+		if touch_head() then
+			eyesopen = false
+			else eyesopen = true
+		end
+		
+	if sint(blink)>.95 then
+		eyesopen=false
+	end
+	
+	if angry then
+		eyesopen=true
+	end
+		
+	end
+
+function draw_eye(x,y)
+	local lineval=eyerad/2	
+
+	if eyesopen then 
+	local pupil=pl.x/50*(eyerad/5)
+	
+	circfill(x,y,eyerad,eyecol)
+	line(x+pupil,
+						y-lineval,
+						x+pupil,
+						y+lineval,1)
+	circfill(x-lineval,
+										y-eyerad/3+sint(.2)/2,
+										eyerad/3,7)
+	else
+	line(x-eyerad,y,x+eyerad,y,
+	catcolor+1) 
+	end
+		
+end
+
+function draw_angry()
+	if angry then
+		spr(128,head.x+15,
+		head.y+eyerad+3,2,2)
+		spr(128,head.x+30,
+		head.y+eyerad+3,
+		2,2,true)
+	end
+end
+
+function mouthopen()
+	if meowing() or hissing then
+		return true
+		else return false
+	end
+end
+
+function drawmouth(x,y)
+	if	mouthopen() then
+			for i=1,2 do
+				local c={0,8}
+				circfill(x,y,6-(i*2),c[i])
+			end
+	end
+end
+
+function puff_up()
+	if hiss_t>0 then
+		puff+=2
+		else puff-=.25
+	end
+	puff=limit(puff,0,2)
+end	
+
+
+-->8
+--menu and cartdata
+
+--cartdata("ptc 3 by doriencey")
+
+menu={"disallow hissing",
+						"allow hissing"}
+
+function toggle_hiss()
+	allow_hissing+=1
+	allow_hissing%=2
+	anger=0
+	dset(0,allow_hissing)
+	menu_txt=menu[allow_hissing+1]
+end
+
+function loadsetting()
+	if dget(0)!=nil then
+		allow_hissing=dget(0)
+		else allow_hissing=0
+	end
+end
+
+
+
+
+
+-->8
+--make enabeling
+--mouse support
+--a menu item
+__gfx__
+33333333333333333333333333333333333000333333333333333333333333333dddddddddddd333333333333dd6666dddddd333333333333d6666666dddd333
+33333333333336333633000033333333330ee003373337333333333333333333666666666dddd33333333333666666666dddd3333333333366666666666dd333
+3333000033333733306000003333333330efe000307000003333333333333336666666666666dd3333333336666666666666dd3333333336666666666666dd33
+3330000000333370000000003333333330ffee000070000033333333333333666ddddddd66666d33333333666ddddddd66666d33333333666ddddddd66666d33
+3330fee00003006000000000333333330fffee00000700003333333333333666ddddddddddd666d333333666ddddddddddd666d333333666ddddddddddd66dd3
+3330ffe00000006000000000333333330fffee0000000000333333333333366dddd1111dddddd6dd3333366ddd11111dddddd6dd3333366dd111111ddddd66dd
+3330fffe0000006000000000333333330ee000000000000033333333333336dd111111111dddd66d333336dd111111111dddd6dd333336dd111111111ddd66dd
+33330ffee0000000000000003333003000000000000000003333333333333dd11222eeee211ddd6d33333dd1122eeeee211dd66d33333dd112eeeeee211d666d
+33330fffe0000000000000003333300000000000000000003333333333333dd112eeeeeeee21dd6633333dd11eeeeeeeee21dd6d33333dd11eeeeeeeee21d66d
+33330fff000000000000000033333330000000000000000033333333333333d1eeeeeeeeeee1dd66333333d1eeeeeeeeeee1dd66333333d1eeefffeeeee1dd6d
+33300000000000000000000033330000000000000000000033333333333333dfffffffffeee1ddd6333333dfffffffffeee1d666333333dfffffffffeee1dd6d
+30000000000000000000000033300300000000000000000033333333333333effffffffffeee2d66333333effffffffffeee2666333333effffffffffeee2d6d
+0000000000000000000000003333300000000000000000003333333333333effffffffffffee2d6333333effffffffffffee2d6333333effffffffffffe22d63
+000000000000000000000000333330000000000000000000333333333333ffffffefffffffee26633333ffffffefffffffe226633333ffffffefffffffe22663
+330000000000000000000000333300000000000000000000333333333337ffeffe7fffeffee26663333fffeffe7fffeffee266633337ffeffe7fffeffee26663
+30000000000000000000000033300000000000000000000033333333337ffeeffefffe7ffee26633337ffeeffefffe7ffee26633337ffeeffefffe7ffee26633
+3000000000000000000000003300003000000000000000003333333337fffeeffefffefffee2333333fffeeffefffefffee23333337ffeeffefffefffee23333
+0000000000000000000000003003330000000000000000003333333337ffeefffefffefffee2333337ffeefffefffefffee233333fffeeffeffffefffee23333
+000000000000000000000000333330000000000000000000333333337ffeeefffefffefffe2233333ffeeefffefffefffe2233333ffeeeffefffeffffe233333
+00000000000000000000000033333000000000000000000033333333ffee33fffefffeffee2333333feee3fffefffeffee2333333feeefffefffefffee233333
+30000006700000000000000033330000000000000000000033333333eeee3efffeffeeffe22333333eeeeefffeffeeffe22333333eeeefffefffefffe2233333
+3330007d000000000000000033330030000000000000000033333333eeee3effefffeefee23333333eeeeeffefffeefee23333333eeeeeffefffeefee2333333
+33337600000000000000000033330330000000000000000033333333eeee3effeefeeeeeee3333333eeeeeffeefeeeeeee33333333eeeeffeefeeeeeee333333
+33363000000000000000000033333330030000000000000033333333eee33eeeeeeeeeeeee3333333eee3eeeeeeeeeeeee33333333eeeeeeeeeeeeeeeee33333
+33733007000070000000000033333333030000000000000033333333eee33eeeeeeee3eeee3333333eee3eeeeeeeeeeeee333333333e3eeeeeeeeeeeeee33333
+333337730007600000000000333333333303000076000000333333333ee33eeeeeeee3eeee3333333ee333eeeeeeeeeeee333333333333eeeeeeeeeeeee33333
+3333373330060000000000003333333333333766000000003333333333333eeeeeeee3eeee333333333333eeeeeeeeeeee333333333333eeeeeeee3eee333333
+33337333300d0070000000003333333333337333000700003333333333333eee3eeee33eee333333333333eeeeeeee3ee33333333333333ee3eeee3333333333
+33773333337330700000000033333333337733333060000033333333333333ee3eee333ee33333333333333e33eee3333333333333333333333ee33333333333
+33333333337333700000000033333333333333333700000033333333333333333eee3333333333333333333333ee333333333333333333333333333333333333
+33333333377333373300000033333333333333337333000033333333333333333333333333333333333333333333333333333333333333333333333333333333
+33333333733333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+00000000222222222332233222222222223222222222222222232222333333333333333333333333333333333333333300000000000000000000000000000000
+00000000222222322323323222322322232322322222222222323222222222223333333333333333333336333633000000000000000000000000000000000000
+00000000223223232332233222333322223223232232222222232222333333233333333333330000333337333060000000000000000000000000000000000000
+00000000232322322323323223233232222222322323222322222222323332323333333333300000003333700000000000000000000000000000000000000000
+0000000022322222233223322333333223333222223222323223223223233323333333333330fee0000300600000000000000000000000000000000000000000
+0000000022222322232332322333333333333322222222232223333232332333333333333330ffe0000000600000000000000000000000000000000000000000
+0000000022223232233223322233333333333332222222222232332333323233333333333330fffe000000600000000000000000000000000000000000000000
+00000000222223222323323222333333332233332222333322333333333323333333333333330ffee00000000000000000000000000000000000000000000000
+00000000000000002222222222233333323333332223333333333333323232323333333333330fffe00000000000000000000000000000000000000000000000
+00000000000000002332223222232333233333332233333333333332222323233333333333330fff000000000000000000000000000000000000000000000000
+00000000000000002323232323323222333333322333322333333332323232223333333333300000000000000000000000000000000000000000000000000000
+00000000000000002322322322233333333333222333333233333322232223233333333330000000000000000000000000000000000000000000000000000000
+00000000000000002322233222222222222222322333333323332322223232323333333300000000000000000000000000000000000000000000000000000000
+00000000000000002232232222322222232223232233333332223233232322233333333300000000000000000000000000000000000000000000000000000000
+00000000000000002223322223232222323222322223333333333322322232323333333333000000000000000000000000000000000000000000000000000000
+00000000000000002222222222322222232222222222222222222222232323223333333330000000000000000000000000000000000000000000000000000000
+00000000000000002222222222222222222222222222222222222222000000003333333330000000000000000000000000000000000000000000000000000000
+00000000000000002233322222333322222222222222222222222222000000003333330000000000000000000000000000000000000000000000000000000000
+00000000000000002323332233332333222222222233332222233322000000003333333000000000000000000000000000000000000000000000000000000000
+00000000000000003333333333233232222222223332333322333232000000003333333300000000000000000000000000000000000000000000000000000000
+00000000000000002223333323323322222222222323323333333333000000003333333330000006700000000000000000000000000000000000000000000000
+0000000000000000222323333233223222222222223323323333322200000000333333333330007d000000000000000000000000000000000000000000000000
+00000000000000002222333333222323222222222222332333323222000000003333333333337600000000000000000000000000000000000000000000000000
+00000000000000002223333333322232222222222222223333332222000000003333333333363000000000000000000000000000000000000000000000000000
+00000000000000002233323333332222222222222222233333333222000000003333333333733007000070000000000000000000000000000000000000000000
+00000000000000002232332333333333222222222222333333233322000000003333333333333773000760000000000000000000000000000000000000000000
+00000000000000002333233222332323222222223333333332332322000000003333333333333733300600000000000000000000000000000000000000000000
+00000000000000002323232222333232222222223232332223323332000000003333333333337333300d00700000000000000000000000000000000000000000
+00000000000000003323322222232322222222222323332222323232000000003333333333773333337330700000000000000000000000000000000000000000
+00000000000000003332222322233222222222222232322222233233000000003333333333333333337333700000000000000000000000000000000000000000
+00000000000000002222223232222222222222222223322222222333000000003333333333333333377333373300000000000000000000000000000000000000
+00000000000000002222222322222222222222222222222222222222000000003333333333333333733333333333333300000000000000000000000000000000
+33333000000333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33300000000003330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33000000000000330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+30000000000000030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+30000000000000030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333330333000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333033330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333033333330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333330300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333333333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333333333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333333333300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333333333333000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+33333333333333333333333333333333000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+__label__
+uuuuuuuuuuuuuuuuuvvuuvvuuuuvvvvvvuvvvvvvuuuuuuuuuuuuuuuuudddddddddddddduuuuuuuuuuvvuuvvuuuuvvvvvvuvvvvvvuuuuuuuuuuuvuuuuuvvuuvvu
+uuvvvuuuuuvvvvuuuvuvvuvuuuuvuvvvuvvvvvvvuvvuuuvuuuuuuuvuudddddddddddddduuuvvvvuuuvuvvuvuuuuvuvvvuvvvvvvvuuuuuuuuuuvuvuuuuvuvvuvu
+uvuvvvuuvvvvuvvvuvvuuvvuuvvuvuuuvvvvvvvuuvuvuvuvuuvuuvuvudddddddddddddduvvvvuvvvuvvuuvvuuvvuvuuuvvvvvvvuuuvuuuuuuuuvuuuuuvvuuvvu
+vvvvvvvvvvuvvuvuuvuvvuvuuuuvvvvvvvvvvvuuuvuuvuuvuvuvuuvuuddddddddddddddvvvuvvuvuuvuvvuvuuuuvvvvvvvvvvvuuuvuvuuuvuuuuuuuuuvuvvuvu
+uuuvvvvvuvvuvvuuuvvuuvvuuuuuuuuuuuuuuuvuuvuuuvvuuuvuuuuuuddddddddddddddvuvvuvvuuuvvuuvvuuuuuuuuuuuuuuuvuuuvuuuvuvuuvuuvuuvvuuvvu
+uuuvuvvvvuvvuuvuuvuvvuvuuuvuuuuuuvuuuvuvuuvuuvuuuuuuuvuuuddddddddddddddvvuvvuuvuuvuvvuvuuuvuuuuuuvuuuvuvuuuuuuuvuuuvvvvuuvuvvuvu
+uuuuvvvvvvuuuvuvuvvuuvvuuvuvuuuuvuvuuuvuuuuvvuuuuuuuvuvuuddddddddddddddvvvuuuvuvuvvuuvvuuvuvuuuuvuvuuuvuuuuuuuuuuuvuvvuvuvvuuvvu
+uuuvvvvvvvvuuuvuuvuvvuvuuuvuuuuuuvuuuuuuuuuuuuuuuuuuuvuuuddddddddddddddvvvvuuuvuuvuvvuvuuuvuuuuuuvuuuuuuuuuuvvvvuuvvvvvvuvuvvuvu
+uuvvvuvvvvvvuuuuuvvuuvvuuuuuuuuuuuuuuuuuuuuuuuuuuuuvuuuuuddddddddddddddvvvvvuuuuuvvuuvvuuuuuuuuuuuuuuuuuuuuvvvvvvvvvvvvvuvvuuvvu
+uuvuvvuvvvvvvvvvuvuvvuvuuuuuuuvuuvvuuuvuuuuuuuuuuuvuvuuuuddddddddddddddvvvvvvvvvuvuvvuvuuuuuuuvuuvvuuuvuuuvvvvvvvvvvvvvuuvuvvuvu
+uvvvuvvuuuvvuvuvuvvuuvvuuuvuuvuvuvuvuvuvuuvuuuuuuuuvuuuuudddddddddddddduuuvvuvuvuvvuuvvuuuvuuvuvuvuvuvuvuvvvvuuvvvvvvvvuuvvuuvvu
+uvuvuvuuuuvvvuvuuvuvvuvuuvuvuuvuuvuuvuuvuvuvuuuvuuuuuuuuudddddddddddddduuuvvvuvuuvuvvuvuuvuvuuvuuvuuvuuvuvvvvvvuvvvvvvuuuvuvvuvu
+vvuvvuuuuuuvuvuuuvvuuvvuuuvuuuuuuvuuuvvuuuvuuuvuvuuvuuvuudddddddddddddduuuuvuvuuuvvuuvvuuuvuuuuuuvuuuvvuuvvvvvvvuvvvuvuuuvvuuvvu
+vvvuuuuvuuuvvuuuuvuvvuvuuuuuuvuuuuvuuvuuuuuuuuuvuuuvvvvuuddddddddddddddvuuuvvuuuuvuvvuvuuuuuuvuuuuvuuvuuuuvvvvvvvuuuvuvvuvuvvuvu
+uuuuuuvuvuuuuuuuuvvuuvvuuuuuvuvuuuuvvuuuuuuuuuuuuuvuvvuvudddddddddddddduvuuuuuuuuvvuuvvuuuuuvuvuuuuvvuuuuuuvvvvvvvvvvvuuuvvuuvvu
+uuuuuuuvuuuuuuuuuvuvvuvuuuuuuvuuuuuuuuuuuuuuvvvvuuvvvvvvuddddddddddddddvuuuuuuuuuvuvvuvuuuuuuvuuuuuuuuuuuuuuuuuuuuuuuuuuuvuvvuvu
+uuuuuuuuuuuuuuuuuvvuuvvuuuuuuuuuuuvuuuuuuuuvvvvvvvvvvvvvudddddddddddddduuuuuuuuuuvvuuvvuuuuuuuuuuuvuuuuuuuuuuuuuuuuuuuuuuvvuuvvu
+uuuuuuuuuuuuuuuuuvuvvuvuuuvuuvuuuvuvuuvuuuvvvvvvvvvvvvvuudddddddddddddduuuuuuuuuuvuvvuvuuuvuuvuuuvuvuuvuuvvuuuvuuuuuuuvuuvuvvuvu
+uuvvvvuuuuuvvvuuuvvuuvvuuuvvvvuuuuvuuvuvuvvvvuuvvvvvvvvuudddddddddddddduuuuvvvuuuvvuuvvuuuvvvvuuuuvuuvuvuvuvuvuvuuvuuvuvuvvuuvvu
+vvvuvvvvuuvvvuvuuvuvvuvuuvuvvuvuuuuuuuvuuvvvvvvuvvvvvvuuuddddddddddddddvuuvvvuvuuvuvvuvuuvuvvuvuuuuuuuvuuvuuvuuvuvuvuuvuuvuvvuvu
+uvuvvuvvvvvvvvvvuvvuuvvuuvvvvvvuuvvvvuuuuvvvvvvvuvvvuvuuuddddddddddddddvvvvvvvvvuvvuuvvuuvvvvvvuuvvvvuuuuvuuuvvuuuvuuuuuuvvuuvvu
+uuvvuvvuvvvvvuuuuvuvvuvuuvvvvvvvvvvvvvuuuuvvvvvvvuuuvuvvudddddddddddddduvvvvvuuuuvuvvuvuuvvvvvvvvvvvvvuuuuvuuvuuuuuuuvuuuvuvvuvu
+uuuuvvuvvvvuvuuuuvvuuvvuuuvvvvvvvvvvvvvuuuuvvvvvvvvvvvuuuddddddddddddddvvvvuvuuuuvvuuvvuuuvvvvvvvvvvvvvuuuuvvuuuuuuuvuvuuvvuuvvu
+uuuuuuvvvvvvuuuuuvuvvuvuuuvvvvvvvvuuvvvvuuuuuuuuuuuuuuuuuddddddddddddddvvvvvuuuuuvuvvuvuuuvvvvvvvvuuvvvvuuuuuuuuuuuuuvuuuvuvvuvu
+uuuuuvvvvvvvvuuuuvvuuvvuuuuvvvvvvuvvvvvvuuuuuuuuuuuvuuuuuddddddddddddddvvvvvvuuuuvvuuvvuuuuvvvvvvuvvvvvvuuuuuuuuuuuvuuuuuvvuuvvu
+uuuuvvvvvvuvvvuuuvuvvuvuuuuvuvvvuvvvvvvvuuuuuuuuuuvuvuuuuddddddddddddddvvvuvvvuuuvuvvuvuuuuvuvvvuvvvvvvvuuuuuuuuuuvuvuuuuvuvvuvu
+vvvvvvvvvuvvuvuuuvvuuvvuuvvuvuuuvvvvvvvuuuvuuuuuuuuvuuuuuddddddddddddddvvuvvuvuuuvvuuvvuuvvuvuuuvvvvvvvuuuvuuuuuuuuvuuuuuvvuuvvu
+vuvuvvuuuvvuvvvuuvuvvuvuuuuvvvvvvvvvvvuuuvuvuuuvuuuuuuuuudddddddddddddduuvvuvvvuuvuvvuvuuuuvvvvvvvvvvvuuuvuvuuuvuuuuuuuuuvuvvuvu
+uvuvvvuuuuvuvuvuuvvuuvvuuuuuuuuuuuuuuuvuuuvuuuvuvuuvuuvuudddddddddddddduuuvuvuvuuvvuuvvuuuuuuuuuuuuuuuvuuuvuuuvuvuuvuuvuuvvuuvvu
+uuvuvuuuuuuvvuvvuvuvvuvuuuvuuuuuuvuuuvuvuuuuuuuvuuuvvvvuudddddddddddddduuuuvvuvvuvuvvuvuuuvuuuuuuvuuuvuvuuuuuuuvuuuvvvvuuvuvvuvu
+uuuvvuuuuuuuuvvvuvvuuvvuuvuvuuuuvuvuuuvuuuuuuuuuuuvuvvuvudddddddddddddduuuuuuvvvuvvuuvvuuvuvuuuuvuvuuuvuuuuuuuuuuuvuvvuvuvvuuvvu
+uuuuuuuuuuuuuuuuuvuvvuvuuuvuuuuuuvuuuuuuuuuuvvvvuuvvvvvvudddddddddddddduuuuuuuuuuvuvvuvuuuvuuuuuuvuuuuuuuuuuvvvvuuvvvvvvuvuvvuvu
+uuuuuuuuuuuuuuuuuvvuuvvuuuuuuuuuuuuuuuuuuuuvvvvvvvvvvvvvudddddddddddddduuuuuuuuuuvvuuvvuuuuuuuuuuuuuuuuuuuuvvvvvvvvvvvvvuvvuuvvu
+uuvvvuuuuuvvvvuuuvuvvuvuuuuuuuvuuvvuuuvuuuvvvvvvvvvvvvvuudddddddddddddduuuvvvvuuuvuvvuvuuuuuuuvuuvvuuuvuuuvvvvvvvvvvvvvuuvuvvuvu
+uvuvvvuuvvvvuvvvuvvuuvvuuuvuuvuvuvuvuvuvuvvvvuuvvvvvvvvuudddddddddddddduvvvvuvvvuvvuuvvuuuvuuvuvuvuvuvuvuvvvvuuvvvvvvvvuuvvuuvvu
+vvvvvvvvvvuvvuvuuvuvvuvuuvuvuuvuuvuuvuuvuvvvvvvuvvvvvvuuuddddddddddddddvvvuvvuvuuvuvvuvuuvuvuuvuuvuuvuuvuvvvvvvuvvvvvvuuuvuvvuvu
+uuuvvvvvuvvuvvuuuvvuuvvuuuvuuuuuuvuuuvvuuvvvvvvvuvvvuvuuuddddddddddddddvuvvuvvuuuvvuuvvuuuvuuuuuuvuuuvvuuvvvvvvvuvvvuvuuuvvuuvvu
+uuuvuvvvvuvvuuvuuvuvvuvuuuuuuvuuuuvuuvuuuuvvvvvvvuuuvuvvuddddddddddddddvvuvvuuvuuvuvvuvuuuuuuvuuuuvuuvuuuuvvvvvvvuuuvuvvuvuvvuvu
+uuuuvvvvvvuuuvuvuvvuuvvuuuuuvuvuuuuvvuuuuuuvvvvvvvvvvvuuuddddddddddddddvvvuuuvuvuvvuuvvuuuuuvuvuuuuvvuuuuuuvvvvvvvvvvvuuuvvuuvvu
+uuuvvvvvvvvuuuvuuvuvvuvuuuuuuvuuuuuuuuuuuuuuuuuuuuuuuuuuuddddddddddddddvvvvuuuvuuvuvvuvuuuuuuvuuuuuuuuuuuuuuuuuuuuuuuuuuuvuvvuvu
+uuvvvuvvvvvvuuuuuvvuuvvuuuuuuuuuuuvuuuuuuuuuuuuuuuuuuuuuuddddddddddddddvvvvvuuuuuvvuuvvuuuuuuuuuuuvuuuuuuuuuuuuuuuuuuuuuuvvuuvvu
+uuvuvvuvvvvvvvvvuvuvvuvuuuvuuvuuuvuvuuvuuvvuuuvuuuuuuuvuuddddddddddddddvvvvvvvvvuvuvvuvuuuvuuvuuuvuvuuvuuvvuuuvuuuuuuuvuuvuvvuvu
+uvvvuvvuuuvvuvuvuvvuuvvuuuvvvvuuuuvuuvuvuvuvuvuvuuvuuvuvudddddddddddddduuuvvuvuvuvvuuvvuuuvvvvuuuuvuuvuvuvuvuvuvuuvuuvuvuvvuuvvu
+uvuvuvuuuuvvvuvuuvuvvuvuuvuvvuvuuuuuuuvuuvuuvuuvuvuvuuvuudddddddddddddduuuvvvuvuuvuvvuvuuvuvvuvuuuuuuuvuuvuuvuuvuvuvuuvuuvuvvuvu
+vvuvvuuuuuuvuvuuuvvuuvvuuvvvvvvuuvvvvuuuuvuuuvvuuuvuuuuuudddddddddddddduuuuvuvuuuvvuuvvuuvvvvvvuuvvvvuuuuvuuuvvuuuvuuuuuuvvuuvvu
+vvvuuuuvuuuvvuuuuvuvvuvuuvvvvvvvvvvvvvuuuuvuuvuuuuuuuvuuuddddddddddddddvuuuvvuuuuvuvvuvuuvvvvvvvvvvvvvuuuuvuuvuuuuuuuvuuuvuvvuvu
+uuuuuuvuvuuuuuuuuvvuuvvuuuvvvvvvvvvvvvvuuuuvvuuuuuuuvuvuudddddddddddddduvuuuuuuuuvvuuvvuuuvvvvvvvvvvvvvuuuuvvuuuuuuuvuvuuvvuuvvu
+uuuuuuuvuuuuuuuuuvuvvuvuuuvvvvvvvvuuvvvvuuuuuuuuuuuuuvuu666666666ddddddvuuuuuuuuuvuvvuvuuuvvvvvvvvuuvvvvuuuuuuuuuuuuuvuuuvuvvuvu
+uuuuuuuuuuuuuuuuuvvuuvvuuuuvvvvvvuvvvvvvuuuuuuuuuuuvuuu6666666666666ddduuuuuuuuuuvvuuvvuuuuvvvvvvuvvvvvvuuuuuuuuuuuvuuuuuvvuuvvu
+uuuuuuuuuuuuuuuuuvuvvuvuuuuvuvvvuvvvvvvvuuuuuuuuuuvuvu666ddddddd66666dduuuuuuuuuuvuvvuvuuuuvuvvvuvvvvvvvuuuuuuuuuuvuvuuuuvuvvuvu
+uuvvvvuuuuuvvvuuuvvuuvvuuvvuvuuuvvvvvvvuuuvuuuuuuuuvu666ddddddddddd666duuuuvvvuuuvvuuvvuuvvuvuuuvvvvvvvuuuvuuuuuuuuvuuuuuvvuuvvu
+vvvuvvvvuuvvvuvuuvuvvuvuuuuvvvvvvvvvvvuuuvuvuuuvuuuuu66dddd1111dddddd6dduuvvvuvuuvuvvuvuuuuvvvvvvvvvvvuuuvuvuuuvuuuuuuuuuvuvvuvu
+uvuvvuvvvvvvvvvvuvvuuvvuuuuuuuuuuuuuuuvuuuvuuuvuvuuvu6dd111111111dddd66dvvvvvvvvuvvuuvvuuuuuuuuuuuuuuuvuuuvuuuvuvuuvuuvuuvvuuvvu
+uuvvuvvuvvvvvuuuuvuvvuvuuuvuuuuuuvuuuvuvuuuuuuuvuuuvvdd11uuueeeeu11ddd6dvvvvvuuuuvuvvuvuuuvuuuuuuvuuuvuvuuuuuuuvuuuvvvvuuvuvvuvu
+uuuuvvuvvvvuvuuuuvvuuvvuuvuvuuuuvuvuuuvuuuuuuuuuuuvuvdd11ueeeeeeeeu1dd66vvvuvuuuuvvuuvvuuvuvuuuuvuvuuuvuuuuuuuuuuuvuvvuvuvvuuvvu
+uuuuuuvvvvvvuuuuuvuvvuvuuuvuuuuuuvuuuuuuuuuuvvvvuuvvvvd1eeeeeeeeeee1dd66vvvvuuuuuvuvvuvuuuvuuuuuuvuuuuuuuuuuvvvvuuvvvvvvuvuvvuvu
+uuuuuvvvvvvvvuuuuvvuuvvuuuuuuuuuuuuuuuuuuuuvvvvvvvvvvvdfffffffffeee1ddd6vvvvvuuuuvvuuvvuuuuuuuuuuuuuuuuuuuuvvvvvvvvvvvvvuvvuuvvu
+uuuuvvvvvvuvvvuuuvuvvuvuuuuuuuvuuvvuuuvuuuvvvvvvvvvvvveffffffffffeeeud66vvuvvvuuuvuvvuvuuuuuuuvuuvvuuuvuuuvvvvvvvvvvvvvuuvuvvuvu
+vvvvvvvvvuvvuvuuuvvuuvvuuuvuuvuvuvuvuvuvuvvvvuuvvvvvveffffffffffffeeud6vvuvvuvuuuvvuuvvuuuvuuvuvuvuvuvuvuvvvvuuvvvvvvvvuuvvuuvvu
+vuvuvvuuuvvuvvvuuvuvvuvuuvuvuuvuuvuuvuuvuvvvvvvuvvvvffffffefffffffeeu66uuvvuvvvuuvuvvuvuuvuvuuvuuvuuvuuvuvvvvvvuvvvvvvuuuvuvvuvu
+uvuvvvuuuuvuvuvuuvvuuvvuuuvuuuuuuvuuuvvuuvvvvvvvuvv7ffeffe7fffeffeeu666uuuvuvuvuuvvuuvvuuuvuuuuuuvuuuvvuuvvvvvvvuvvvuvuuuvvuuvvu
+uuvuvuuuuuuvvuvvuvuvvuvuuuuuuvuuuuvuuvuuuuvvvvvvvu7ffeeffefffe7ffeeu66uuuuuvvuvvuvuvvuvuuuuuuvuuuuvuuvuuuuvvvvvvvuuuvuvvuvuvvuvu
+uuuvvuuuuuuuuvvvuvvuuvvuuuuuvuvuuuuvvuuuuuuvvvvvv7fffeeffefffefffeeuvuuuuuuuuvvvuvvuuvvuuuuuvuvuuuuvvuuuuuuvvvvvvvvvvvuuuvvuuvvu
+uuuuuuuuuuuuuuuuuvuvvuvuuuuuuvuuuuuuuuuuuuuuuuuuu7ffeefffefffefffeeuuuuuuuuuuuuuuvuvvuvuuuuuuvuuuuuuuuuuuuuuuuuuuuuuuuuuuvuvvuvu
+uuuuuuuuuuuuuuuuuvvuuvvuuuuuuuuuuuvuuuuuuuuuuuuu7ffeeefffefffefffeuuuuuuuuuuuuuuuvvuuvvuuuuuuuuuuuvuuuuuuuuuuuuuuuuuuuuuuvvuuvvu
+uuvvvuuuuuvvvvuuuvuvvuvuuuvuuvuuuvuvuuvuuvvuuuvuffeeuufffefffeffeeuvvuuuuuvvvvuuuvuvvuvuuuvuuvuuuvuvuuvuuvvuuuvuuuuuuuvuuvuvvuvu
+uvuvvvuuvvvvuvvvuvvuuvvuuuvvvvuuuuvuuvuvuv000000eeeeuefffeffeeffeuuvvvuuvvvvuvvvuvvuuvvuuu0000000000000vuvuvuvuvuuvuuvuvuvvuuvvu
+vvvvvvvvvvuvvuvuuvu6vuv6uv00000000uu6uvu60000000eeee0effefffeefeeuvvvvvvvvuvvuvuuvuvvuv000000000000000000vuuvuuvuvuvuuvuuvuvvuvu
+uuuvvvvvuv0000uuuvv7uvv06000000000060uu070000000eeee0effeefeeeeeeeuvvvvvuvvuvvuuuvvu0000000000000000000000uuuvvuuuvuuuuuuvvuuvvu
+uuuvuvvvv0000000uvuv7000000000000000000700000000eee00eeeeeeeeeeeeeuvuvvvvuvvuuvuuv0000000000000000000000000uuvuuuuuuuvuuuvuvvuvu
+uuuuvvvvv0fee0000v00600000000000000000060000000eeee00eeeeeeeeveeeeuuvvvvvvuuuvuvu000000000000000000000000000vuuuuuuuvuvuuvvuuvvu
+uuuvvvvvv0ffe0000000600000000000000000060000000efee00eeeeeeeeueeeeuvvvvvvvvuuu0000000000000000000000000000000uuuuuuuuvuuuvuvvuvu
+uuvvvuvvv0fffe00000060000000000000000006000000efff000eeeeeeee0eeeevvvuvvvvv0000000000000000000000000000000000uuuuuuvuuuuuvvuuvvu
+uuvuvvuvvv0ffee000000000000000000000000000000eeff0000eee0eeee00eee00000000000000000000000000000000000000000000000000000000000000
+uvvvuvvuuu0fffe000000000000000000000000000000efff00000ee0eee000ee000000000000000000000000000000000000000000000000000000000000000
+uvuvuvuuuu0fff00000000000000000000000000000000fff00000000eee00000000000000000000000000000000000000000000000000000000000000000000
+vvuvvuuuu00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+vvvuuuu0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+uuuuuu0000000000007ddd00000000000000007ddd00000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+uuuuuu000000000007771dd000000000000007771dd0000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+uuuuuuuu000000000d7d1ddd0000000000000d7d1ddd00000000000000000000000000000000000000000000000000000000000000000vvvvvvvvvvvuvvuuvvu
+uuuuuuu0000000000ddd1ddd0000000000000ddd1ddd00000000000000000000000000000000000000000000000000000000000000000vvvvvvvvvvuuvuvvuvu
+uuvvvvu0000000000ddd1ddd0000000000000ddd1ddd0000000000000000000000000000000000000000000000000000000000000000vuuvvvvvvvvuuvvuuvvu
+vvvuvv000000000000dd1dd000000000000000dd1dd0000000000000000000000000000000000000000000000000000000000000000vvvvuvvvvvvuuuvuvvuvu
+uvuvvu0000000000000ddd00000000000000000ddd00000000000000000000000000000000000000000000000000000000000000000vvvvvuvvvuvuuuvvuuvvu
+uuvvuv00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000vvvvvvuuuvuvvuvuvvuvu
+uuuuvvu0000006700000000000000000000000000000076000000000000000000000000000000000000000000000000000000000000vvvvvvvvvvvuuuvvuuvvu
+uuuuuuvvv0007d00000000000000000000000000000000d70000000000000000000000000000000000000000000000uuuuu00000000uuuuuuuuuuuuuuvuvvuvu
+uuuuuvvvvv76000000000000000000e000000000000000006700000000000000000000000000000000000000000uuuuuuuv00000000uuuuuuuuuuuuuuvvuuvvu
+uuuuvvvvv6u0000000000000000000000000000000000000006000000000000000000000000000000000000000vuuvuuuvu00000000uuuvuuuuuuuvuuvuvvuvu
+vvvvvvvv7uv00700007000000000000000000000070000700007000000000000000000000000000000000000uuvvvvuuuuv00000000vuvuvuuvuuvuvuvvuuvvu
+vuvuvvuuuvv77v00076000000000000000000000067000u77000000000000000000000000000000000000uvuuvuvvuvuuuu00000000uvuuvuvuvuuvuuvuvvuvu
+uvuvvvuuuuv7vuv006000000000000000000000000600vvu70000000u0000000000000000000000000vuuvvuuvvvvvvuuvv00000000uuvvuuuvuuuuuuvvuuvvu
+uuvuvuuuuu7vvuv00d007000000000000000000700d00vuu07000000uvuv0000000000000000000vuvuvvuvuuvvvvvvvvvv00000000uuvuuuuuuuvuuuvuvvuvu
+uuuvvuuu77uuuvvv7vv0700000000000000000070uu7vuuu00770000uvvuuvvuuuuvvuuuuuuuuvvvuvvuuvvuuuvvvvvvvvv00000000vvuuuuuuuvuvuuvvuuvvu
+uuuuuuuuuuuuuuuu7vuv70000000000000000007uuu7uuuu00000000uvuvvuvuuuuuuuuuuuuuuuuuuvuvvuvuuuvvvvvvvvu00000000uuuuuuuuuuvuuuvuvvuvu
+uuuuuuuuuuuuuuu77vvuu7vu000000000000vv7vuuu77uuu00000000uvvuuvvuuuuuuuuuuuuuuuuuuvvuuvvuuuuvvvvvvuv00000000uuuuuuuuvuuuuuvvuuvvu
+uuvvvuuuuuvvvv7uuvuvvuvuuuuvuvvvuvvvvvvvuuuuu7uu00000000uvuvvuvuuuvvvuuuuuvvvvuuuvuvvuvuuuuvuvvvuvv00000000uuuuuuuvuvuuuuvuvvuvu
+uvuvvvuuvvvvuvvvuvvuuvvuuvvuvuuuvvvvvvvuuuvuuuuu00000000uvvuuvvuuvuvvvuuvvvvuvvvuvvuuvvuuvvuvuuuvvv00000000uuuuuuuuvuuuuuvvuuvvu
+vvvvvvvvvvuvvuvuuvuvvuvuuuuvvvvvvvvvvvuuuvuvuuuv00000000uvuvvuvuvvvvvvvvvvuvvuvuuvuvvuvuuuuvvvvvvvv00000000vuuuvuuuuuuuuuvuvvuvu
+uuuvvvvvuvvuvvuuuvvuuvvuuuuuuuuuuuuuuuvuuuvuuuvu00000000uvvuuvvuuuuvvvvvuvvuvvuuuvvuuvvuuuuuuuuuuuu00000000uuuvuvuuvuuvuuvvuuvvu
+uuuvuvvvvuvvuuvuuvuvvuvuuuvuuuuuuvuuuvuvuuuuuuuv00000000uvuvvuvuuuuvuvvvvuvvuuvuuvuvvuvuuuvuuuuuuvu00000000uuuuvuuuvvvvuuvuvvuvu
+uuuuvvvvvvuuuvuvuvvuuvvuuvuvuuuuvuvuuuvuuuuuuuuu00000000uvvuuvvuuuuuvvvvvvuuuvuvuvvuuvvuuvuvuuuuvuv00000000uuuuuuuvuvvuvuvvuuvvu
+uuuvvvvvvvvuuuvuuvuvvuvuuuvuuuuuuvuuuuuuuuuuvv0000000000uvuvvuvuuuuvvvvvvvvuuuvuuvuvvuvuuuvuuuuuu0000000000uvvvvuuvvvvvvuvuvvuvu
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0000000000vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0000000000vvvvvvvvvvvvvvvvvvvvv
+uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu00000000000uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu00000000000uuuuuuuuuuuuuuuuuuuuu
+vvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvv00000000000vvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuv00000000000vvvuvvvvvvvuvvvvvvvuv
+vuvvvuvuvuvvvuvuvuvvvuvuvuvvvuvuvuvvvuvuvuvvv00000000000vuvvvuvuvuvvvuvuvuvvvuvuvuvvvuvuvuvvvuvu00000000000vvuvuvuvvvuvuvuvvvuvu
+uvuvvvuvuvuvvvuvuvuvvvuvuvuvvvuvuvuvvvuvuvuvvv0000000000uvuvvvuvuvuvvvuvuvuvvvuvuvuvvvuvuvuvvvuvu0000000000vvvuvuvuvvvuvuvuvvvuv
+vuvvuvvvvuvvuvvvvuvvuvvvvuvvuvvvvuvvuvvvvuvvuv0000000000vuvvuvvvvuvvuvvvvuvvuvvvvuvvuvvvvuvvuvvvv0000000000vuvvvvuvvuvvvvuvvuvvv
+vvvuvuvvvvvuvuvvvvvuvuvvvvvuvuvvvvvuvuvvvvvuvuvv000uvuvvvvvuvuvvvvvuvuvvvvvuvuvvvvvuvuvvvvvuvuvvvvv000vvvvvuvuvvvvvuvuvvvvvuvuvv
+vvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvvvvvvuvvv
+vuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvu
+uuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuv
+vuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuu
+uvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuv
+uuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvu
+uvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuv
+vuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvu
+uvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuu
+vuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvuvu
+uuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuv
+vuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuu
+uvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuv
+uuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvu
+uvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuv
+vuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvu
+uvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuuuvuvuvuu
+
+__map__
+6263425354524142626342535445464200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+7273424152454642727342415255564200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6566424344555642656642434452414200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+7576425354454642757642535445464200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6263424152555642626342415255564200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+7273424344524142727342434452414200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6566425354454642656642535445464200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+7576424152555642757642415255564200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6263424344524142626342434452414200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+7273425354454642727342535445464200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6566424152555642656642415255564200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+7576424344524142757642434452414200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+6263425354454642626342535445464200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+4747474747474747474747474747474700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+5757575757575757575757575757575700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+5757575757575757575757575757575700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+__sfx__
+00080000295012b5012b5112b5112d5212e5313153133531345413554135541355413553134531325212f5112c501005010050100501005010050100501005010050100501005010050100501005010050100501
+000900001d50121521225312554127551295512b5512b5412b5412b5312953127521245111e5111a501125010a501000000000100001000000000000000000000000000000000000000000000000000000000000
+0008000031501345113652138531395413a5513a5513a5313a5213851133501005010050100501005010050100501005010050100500005000050000500005000050000500005000050000500005000050000500
+000a0000000000450106501295012e521305213353133531335413354133541305312e5212a5013a50137501355012f5012e50129501245012250122501095010850107501000000000000000000000000000000
+001200000f5550f5550f5550f555165551655516555165550f5550f5550f5550f5551b5551d55522555245552b5552e5553355535555355553a5553a5553a555295552955527555275551b5551b5551b50527505
+001200000c5550c5550c5550c55518555185551855518555135551355513555135551655513555115550f5550c55511555115550f5550f55518555185551b5551b55522555295552e5552b5550a5550a5550a555
+001200000c5550c5550c5550c55518555185551855518555135551355513555135551655513555115550f5550c55511555115550f5550f55518555185551b5551b55522555295552e5551b5550a5050a5050a505
+90020000056110761107611056113a600336012f6012e601236010260127601006000060100601006000060000600006000060000600006000060000600006000060000600006000060000600006000060000600
+92060000071130311307113031130711303113071130312307123031230712303123071230312307113031130c113071130c113071130c113071230c123071230c123071230c123071230c113071130c11307113
+900800000070100711007110171101711017110171101711017110171101711017110271103711047110572106721057210471103711037110371103711037110271102711027110171101711017110171100701
+060900003e6013c6013c6113c6113c6213c6213c6313c6313c6413c6413c6413c6513c6513c6513c6513c6513c6513c6413c6313c6313c6213c6213c6113c6112b60127601266010060100601006010060200602
+001000001d05023000230002300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00100000010502b00028000250002400024000260002e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+001000003e05017000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003300000000000000000000000000000000000000000000000000000
+__music__
+01 04424344
+00 05424344
+00 04424344
+02 06424344
+03 08094344
+

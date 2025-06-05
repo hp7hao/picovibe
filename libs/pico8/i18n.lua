@@ -3,6 +3,7 @@ i18n.lang=nil
 i18n.texts={}
 
 function _p(str,x,y,fc,bc)
+	if #str==0 then return end
 	local fgc=fc or 7
 	local hex=i18n.texts[i18n.lang][str]
 	local bs=h2b(hex)
@@ -64,6 +65,7 @@ function _p(str,x,y,fc,bc)
 end
 
 function h2b(h)
+	if not h then return "" end
 	local bs=""
 	for i=1,#h do
 		bs=bs..n2b(tonum(sub(h,i,i),"0x1"))
