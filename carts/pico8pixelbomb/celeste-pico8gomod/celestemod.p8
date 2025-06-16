@@ -4,6 +4,7 @@ __lua__
 -- ~celeste~
 -- matt thorson + noel berry
 
+#include ../../../libs/pico8/pico8go.lua
 
 -- globals --
 -------------
