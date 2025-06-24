@@ -109,77 +109,6 @@ check_required_tools() {
     fi
 }
 
-###########################################
-# Configuration Functions
-###########################################
-
-# Function to read PICO-8 path from config file
-get_pico8_path() {
-    local config_file="pico8config.json"
-    local example_file="pico8config.json.example"
-    
-    # Check if config file exists
-    if [ ! -f "$config_file" ]; then
-        # Check if example file exists
-        if [ ! -f "$example_file" ]; then
-            echo "Error: Neither $config_file nor $example_file found!"
-            echo "Please create $config_file with your PICO-8 path configuration."
-            exit 1
-        fi
-        
-        # Copy example file to config file
-        echo "Creating $config_file from example file..."
-        cp "$example_file" "$config_file"
-        
-        echo "======================================================="
-        echo "Please edit $config_file and set your PICO-8 path first!"
-        echo "The file has been created from $example_file"
-        echo "After setting the path, run this script again."
-        echo "======================================================="
-        exit 1
-    fi
-    
-    # Read path from config file using Python
-    local pico8_path=$(python3 -c "
-import json
-try:
-    with open('$config_file', 'r') as f:
-        config = json.load(f)
-        path = config.get('pico8path')
-        if not path or path == '<<your pico8 path>>':
-            print('ERROR: PICO-8 path not properly configured in $config_file')
-            exit(1)
-        print(path)
-except Exception as e:
-    print(f'ERROR: Failed to read $config_file: {str(e)}')
-    exit(1)
-")
-    
-    # Check if we got an error message
-    if [[ "$pico8_path" == ERROR:* ]]; then
-        echo "$pico8_path"
-        exit 1
-    fi
-    
-    # Check if PICO-8 executable exists
-    if [ ! -f "$pico8_path" ]; then
-        echo "Error: PICO-8 executable not found at: $pico8_path"
-        echo "Please check your PICO-8 installation and update the path in $config_file"
-        echo "Make sure the path points to the actual PICO-8 executable file"
-        exit 1
-    fi
-    
-    # Check if the file is executable
-    if [ ! -x "$pico8_path" ]; then
-        echo "Error: PICO-8 executable is not executable: $pico8_path"
-        echo "Please make sure the file has execute permissions:"
-        echo "  chmod +x \"$pico8_path\""
-        exit 1
-    fi
-    
-    echo "$pico8_path"
-}
-
 # Function to get list of configured languages
 get_configured_langs() {
     local cart_folder=$1
@@ -357,10 +286,6 @@ P8NAME="${P8NAME%.p8}"
 echo "Extracted values:"
 echo "  P8FOLDER: $P8FOLDER"
 echo "  P8NAME: $P8NAME"
-
-# Get PICO-8 path from config
-PICO8_PATH=$(get_pico8_path)
-echo "Using PICO-8 path: $PICO8_PATH"
 
 # Setup environment
 setup_environment

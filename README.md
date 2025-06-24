@@ -10,6 +10,7 @@
 本项目包含多个pico-8子项目，每个子项目的版权属于其署名的作者。
 请确保在使用或分发这些项目时遵守相应的版权协议。
 
+## 卡带
 | 标题 | 图片 | 状态 |
 |------|------|------|
 | i18ndemo<br/>多语言示例（中文） | ![i18ndemo](./carts/pico8pixelbomb/i18ndemo/release/i18ndemo.zhcn.p8.png) | - |
@@ -19,27 +20,45 @@
 | pico8go-wizard<br/>pico8go 致谢(掌机) | ![pico8go-wizard](./carts/pico8pixelbomb/pico8go-wizard/release/pico8go-wizard.zhcn.p8.png) | - |
 | splooshdemo | ![splooshdemo](./carts/pico8pixelbomb/splooshdemo/splooshdemo.p8.png) | - |
 | yxkl<br/>元宵节快乐 | ![yxkl](./carts/pico8pixelbomb/yxkl/yxkl.p8.png) | - |
+| bas-pico8gomod<br/>pico8go《小鸡蹦蹦跳》中文+振动| ![bas-pico8gomod](./carts/pico8pixelbomb/bas-pico8gomod/release/basmodcn.zhcn.p8.png) | - |
+| celeste-pico8gomod<br/>pico8go《蔚蓝经典版》中文+振动+PC音源| ![celeste-pico8gomod](./carts/pico8pixelbomb/celeste-pico8gomod/release/celestemodcn.zhcn.p8.png) | - |
+| justoneboss-pico8gomod<br/>pico8go《只此一敌》振动支持| ![justoneboss-pico8gomod](./carts/pico8pixelbomb/justoneboss-pico8gomod/release/justonebossmodcn.zhcn.p8.png) | - |
+| pet-the-cat-pico8gomod<br/>pico8go《撸猫》中文+振动 | ![pet-the-cat-pico8gomod](./carts/pico8pixelbomb/pet-the-cat-pico8gomod/release/pet-the-cat.zhcn.p8.png) | - |
+
+## 卡带模板
+| 标题 | 图片 | 作者 |
+|------|------|------|
+| e-zombie | ![e-zombie](./tools/resources/imgs/cart_templates/e-zombie.png) | 压缩文渐 |
+| e-zombie16 | ![e-zombie16](./tools/resources/imgs/cart_templates/e-zombie16.png) | 压缩文渐 |
+
+## 其它
+| 标题 | 说明 |
+|------|------|
+| pico8 中文手册 | [pico8manual](./docs/pico8manual/pico8手册v0.2.6c_rev1.pdf) |
 
 # 编译工具
 
+## 初始化
+
+下载所有依赖
+```cmd
+git submodule update --init --recursive
+```
+
 ## 使用方法
 
+Windows系统，打开命令行，在项目目录运行下面的命令进行编译（脚本通过LLM翻译自build_pico8cart.sh，还未测试）
+```cmd
+build_pico8cart.bat --cart carts/pico8pixelbomb/bas-pico8gomod/basmodcn.p8
+```
+
+如果你使用的是linux系统，通过下面的命令来编译卡带
 ```bash
-./build_pico8cart.sh <p8文件路径> [模板名称]
+./build_pico8cart.sh --cart carts/pico8pixelbomb/bas-pico8gomod/basmodcn.p8
 ```
 
 参数说明：
-- `p8文件路径`: 要编译的PICO-8游戏文件路径（.p8文件）
-- `模板名称`: 可选参数，指定要使用的卡带模板。如果不指定，将使用meta文件中配置的模板或默认模板
-
-示例：
-```bash
-# 使用默认模板
-./build_pico8cart.sh carts/pico8pixelbomb/pico8go-about/pico8go-about.p8
-
-# 指定使用特定模板
-./build_pico8cart.sh carts/pico8pixelbomb/pico8go-about/pico8go-about.p8 custom
-```
+- `--cart`: 要编译的PICO-8游戏文件路径（.p8文件）
 
 脚本会自动：
 1. 检测并构建所有配置的语言版本
@@ -53,6 +72,7 @@
 # 工具说明
 
 [pico8i18n](./tools/pico8i18n/README.md)
+
 [img2p8](./tools/img2p8/README.md)
 
 
