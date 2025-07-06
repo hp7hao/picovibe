@@ -1,0 +1,20 @@
+{
+    "title": "如何展示你的作品？",
+    "author": "hp7hao",
+    "version": "1.0.0",
+    "tags": ["慢像素", "教程"],
+    "date": "2025-07-03",
+    "games": [
+        "game:basmodcn.zhcn.p8.png"
+    ],
+    "contents": [
+        {
+            "file": "post.md",
+            "date": "2025-07-03"
+        },
+        {
+            "file": "post1.md",
+            "date": "2025-07-05"
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "title": "小鸡蹦蹦跳 (BAS) 中文 + 振动",
+    "author": "hp7hao",
+    "version": "1.0.0",
+    "tags": ["pico8", "bas", "pico8go", "振动", "游戏"],
+    "date": "2025-07-04",
+    "games": [
+        "game:basmodcn.zhcn.p8.png"
+    ],
+    "contents": [
+        {
+            "file": "post.md",
+            "date": "2025-07-03"
+        }
+    ]
+}
