@@ -1,2 +1,0 @@
-name="PICO-8 中文示例"
-author="hp7hao"

@@ -1,2 +1,0 @@
-name="PICO-8 I18N Demo"
-author="hp7hao"
