@@ -1,6 +1,34 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
+-- [lib:p8go] --
+-- p8go runtime v0
+p8go={}
+local _b=0x5f80
+local _s=0
+local function _w(cmd,ch,msg)
+ _s=(_s+1)%256
+ ch=ch or ""
+ msg=msg or ""
+ poke(_b,0)
+ poke(_b+1,_s)
+ poke(_b+2,112) poke(_b+3,56) poke(_b+4,103) poke(_b+5,111) poke(_b+6,33)
+ poke(_b+7,cmd)
+ poke(_b+8,#ch)
+ poke(_b+9,#msg)
+ for i=1,min(#ch,8) do poke(_b+9+i,ord(ch,i)) end
+ for i=1,min(#msg,13) do poke(_b+17+i,ord(msg,i)) end
+ local c=0
+ for i=0,30 do c=(c+peek(_b+i))%256 end
+ poke(_b+31,c)
+end
+function p8go.has(_) return peek(_b+2)==112 and peek(_b+3)==56 end
+function p8go.ipc_send(ch,msg) _w(1,ch,msg) end
+function p8go.vibe(ms,strength) p8go.ipc_send("haptic",chr(1)..chr(ms%256)..chr(flr((strength or 1)*255))) end
+function p8go.vibe_stop() p8go.ipc_send("haptic",chr(2)) end
+function p8go.ach_unlock(id) p8go.ipc_send("ach",chr(1)..id) end
+function p8go.ach_progress(id,v,t) p8go.ipc_send("ach",chr(2)..id..":"..v..":"..t) end
+-- [/lib:p8go] --
 --just one boss
 --by bridgs
 
@@ -31,10 +59,6 @@ thanks for playing!
 
 -->8
 
-function vibrate(s,d,delay)
-	de=delay or 0
-    printh("vibrate "..s.." "..d.." "..de,"vibrator")
-end
 
 cartdata("bridgs_justoneboss")
 
@@ -53,7 +77,7 @@ end,
 function(self)
 if self.frames_alive%15==0 then
 spawn_entity(3,self,nil,{vx=rnd_dir()*(1+rnd(2)),vy=-1-rnd(2)}):poof()
-vibrate(1,900)
+p8go.vibe(255,0.33)
 sfx(25,2)
 end
 end
@@ -379,7 +403,7 @@ self:get_hurt()
 end,
 get_hurt=function(self)
 if self.invincibility_frames<=0 then
-vibrate(2,300)
+p8go.vibe(255,0.66)
 sfx(17,0)
 self.render_layer=11
 freeze_and_shake_screen(6,10)
@@ -451,7 +475,7 @@ rainbow_frames=0
 {
 function(self,x,y,f,f2)
 if f2==10 then
-vibrate(1,300)
+p8go.vibe(255,0.33)
 sfx(8,3)
 end
 if f2<=10 then
@@ -480,7 +504,7 @@ hurtbox_channel=2,
 on_hurt=function(self)
 freeze_and_shake_screen(2,2)
 self.hurtbox_channel,self.frames_to_death,score_mult=0,6,min(score_mult+1,8)
-vibrate(2,500)
+p8go.vibe(255,0.66)
 sfx(9,3)
 score+=score_mult
 spawn_entity(29,self.x,self.y-7,{points=score_mult})
@@ -1051,7 +1075,7 @@ return self:promise_sequence(
 "pound",
 {"set_expression",1},
 function()
-vibrate(2,400)
+p8go.vibe(255,0.66)
 sfx(16,3)
 lh.is_holding_bouquet=true
 end,
@@ -1319,8 +1343,8 @@ shoot_laser=function(self,long_duration)
 return self:promise_sequence(
 ternary_hard_mode(2,12),
 function()
-vibrate(1,200)
-vibrate(3,700,200)
+p8go.vibe(200,0.33)
+p8go.vibe(255,1.0)
 sfx(ternary(long_duration,7,14),1)
 self.default_counter=ternary(long_duration,173,31)
 end,
@@ -1482,7 +1506,7 @@ return self:promise_sequence(
 {"set_pose",2},
 {"move",m.x+4*self.dir,m.y+20,15,ease_out,{d,0,d,0}},
 function()
-vibrate(2,300)
+p8go.vibe(255,0.66)
 sfx(12,2)
 freeze_and_shake_screen(0,2)
 end,
@@ -1907,7 +1931,7 @@ end
 end
 
 function start_game(phase)
-vibrate(2,500)
+p8go.vibe(255,0.66)
 curtains:promise_sequence(
 ternary(skip_title_screen,0,35),
 {"set_anim","open"},

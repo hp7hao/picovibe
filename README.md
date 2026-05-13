@@ -5,6 +5,8 @@
 * 提供一些简单的工具以及类库
 * 收集国内PICO-8爱好者开发的游戏作品
 
+> **设备 API（震动 / 成就）**：所有 mod 卡带统一使用 PICO8GO 的 `p8go.*` IPC（`p8go.vibe(ms, strength)`、`p8go.vibe_stop()`、`p8go.ach_unlock(id)` 等）。运行时源码与契约由 `projects/xwsdk` 维护，pico8ide 自动注入；详情见 [`docs/specs/picovibe_spec.md`](./docs/specs/picovibe_spec.md)。旧的 `printh "vibrator"` / `"pico8goapi"` 通道已废弃，不要在新卡带中再使用。
+
 # 项目版权说明
 
 本项目包含多个pico-8子项目，每个子项目的版权属于其署名的作者。
