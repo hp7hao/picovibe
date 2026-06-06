@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-Guidance for Claude Code when working in `projects/picovibe`.
+Guidance for AI coding agents when working in `projects/picovibe`.
 
 ## Project Overview
 
