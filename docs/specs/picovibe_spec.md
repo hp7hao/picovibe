@@ -2,9 +2,9 @@
 
 **Version**: 0.1.0
 **Status**: Active
-**Level**: project
+**Level**: product
 **Owner**: picovibe
-**Parent**: ../../../../docs/specs/GLOBAL_SPEC.md
+**Parent**: docs/specs/GLOBAL_SPEC.md
 **Last Reviewed**: 2026-05-12
 
 ## 1. Purpose
