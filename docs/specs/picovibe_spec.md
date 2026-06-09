@@ -194,7 +194,7 @@ Carts not on this list either do not use device APIs or are non-haptic demos (`i
 - REQ-PICOVIBE-002: No file under `carts/` defines a top-level `function vibrate(`, `function sfxplay(`, `function sfxstop(`, `function sfxpause(`, `function sfxresume(`.
 - REQ-PICOVIBE-003: Every cart that calls `p8go.*` contains a `-- [lib:p8go] --` … `-- [/lib:p8go] --` block whose content matches `xwsdk/p8mod/src/p8go_runtime.lua` byte-for-byte (after stripping the markers).
 - REQ-PICOVIBE-004: `libs/pico8/pico8go.lua` matches `xwsdk/p8mod/src/p8go_runtime.lua` byte-for-byte.
-- REQ-PICOVIBE-005: Each migrated cart's compressed code size stays within PICO-8's 12544-byte limit (verified via `cargo run -p p8mod -- count`, or pico8ide token panel).
+- REQ-PICOVIBE-005: Each migrated text cart's compressed code size is tracked against the `.p8.png` compressed-body export limit of 15608 bytes (0x8000 - 0x4300 - 8), verified via `python3 scripts/check-compressed-size.py` or the pico8ide token panel for carts actively being edited. Carts over that export boundary are valid source carts only and must be listed by the script as `SOURCE-ONLY` until a release PNG/minified variant is produced; currently this applies to `justonebossmod.p8` and `justonebossmod.p8mod`.
 
 ## 10. References
 

@@ -47,6 +47,9 @@ grep -rEn '^function (vibrate|sfxplay|sfxstop|sfxpause|sfxresume)\b' carts/
 # REQ-PICOVIBE-004: pico8go.lua mirrors xwsdk source (skip the 4-line picovibe header)
 diff <(tail -n +5 libs/pico8/pico8go.lua) \
      <(tail -n +2 ../xwsdk/p8mod/src/p8go_runtime.lua)
+
+# REQ-PICOVIBE-005: p8go text carts stay under compressed-code limit
+python3 scripts/check-compressed-size.py
 ```
 
 ## Build
