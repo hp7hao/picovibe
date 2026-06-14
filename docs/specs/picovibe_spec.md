@@ -203,3 +203,12 @@ Carts not on this list either do not use device APIs or are non-haptic demos (`i
 - `projects/pico8go/docs/specs/p8go_ipc_bridge_spec.md` — host-side haptic dispatch and achievement persistence
 - `projects/pico8ide/src/extension/libManager.ts` — `--#include` expansion that produces the cart shape required by §4.1
 - `projects/pico8ide/resources/libs/p8go.json` — bundled lib manifest
+
+## Agent Contract
+
+| Field | Contract |
+|---|---|
+| Governed files | `projects/picovibe/carts/**`, `libs/pico8/**`, cart build wrappers, and picovibe catalog tooling. |
+| Invariants | Treat cart sources as pico8ide-generated output; use canonical `p8go.*` runtime shape; do not reintroduce legacy `printh` device API shims. |
+| Validation | Picovibe REQ checks, compressed-size checks for release carts, p8go runtime byte-match checks, and per-cart build smoke tests. |
+| Parent specs | `docs/specs/GLOBAL_SPEC.md`, `projects/xwsdk/docs/specs/p8mod_spec.md`, `projects/pico8go/docs/specs/p8go_ipc_bridge_spec.md`. |
