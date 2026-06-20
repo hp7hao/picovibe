@@ -13,19 +13,19 @@
 请确保在使用或分发这些项目时遵守相应的版权协议。
 
 ## 卡带
-| 标题 | 图片 | 状态 |
-|------|------|------|
-| i18ndemo<br/>多语言示例（中文） | ![i18ndemo](./carts/pico8pixelbomb/i18ndemo/release/i18ndemo.zhcn.p8.png) | - |
-| nezhapoems<br/>《小爷集》要求全文背诵 | ![nezhapoems](./carts/pico8pixelbomb/nezhapoems/nezhapoems.zhcn.p8.png) | 开发中 |
-| pico8go-about<br/>pico8go 关于(掌机) | ![pico8go-systeminfo](./carts/pico8pixelbomb/pico8go-about/release/pico8go-about.zhcn.p8.png) | - |
-| pico8go-thanks<br/>pico8go 致谢(掌机) | ![pico8go-thanks](./carts/pico8pixelbomb/pico8go-thanks/release/pico8go-thanks.zhcn.p8.png) | - |
-| pico8go-wizard<br/>pico8go 致谢(掌机) | ![pico8go-wizard](./carts/pico8pixelbomb/pico8go-wizard/release/pico8go-wizard.zhcn.p8.png) | - |
-| splooshdemo | ![splooshdemo](./carts/pico8pixelbomb/splooshdemo/splooshdemo.p8.png) | - |
-| yxkl<br/>元宵节快乐 | ![yxkl](./carts/pico8pixelbomb/yxkl/yxkl.p8.png) | - |
-| bas-pico8gomod<br/>pico8go《小鸡蹦蹦跳》中文+振动| ![bas-pico8gomod](./carts/pico8pixelbomb/bas-pico8gomod/release/basmodcn.zhcn.p8.png) | - |
-| celeste-pico8gomod<br/>pico8go《蔚蓝经典版》中文+振动+PC音源| ![celeste-pico8gomod](./carts/pico8pixelbomb/celeste-pico8gomod/release/celestemodcn.zhcn.p8.png) | - |
-| justoneboss-pico8gomod<br/>pico8go《只此一敌》振动支持| ![justoneboss-pico8gomod](./carts/pico8pixelbomb/justoneboss-pico8gomod/release/justonebossmodcn.zhcn.p8.png) | - |
-| pet-the-cat-pico8gomod<br/>pico8go《撸猫》中文+振动 | ![pet-the-cat-pico8gomod](./carts/pico8pixelbomb/pet-the-cat-pico8gomod/release/pet-the-cat.zhcn.p8.png) | - |
+| 标题 | 源文件 | 状态 |
+|------|--------|------|
+| i18ndemo<br/>多语言示例（中文） | [i18ndemo.p8mod](./carts/pico8pixelbomb/i18ndemo/i18ndemo.p8mod) | - |
+| nezhapoems<br/>《小爷集》要求全文背诵 | [nezhapoems.p8mod](./carts/pico8pixelbomb/nezhapoems/nezhapoems.p8mod) | 开发中 |
+| pico8go-about<br/>pico8go 关于(掌机) | [pico8go-about.p8.png](./carts/pico8go/pico8go-about/pico8go-about.p8.png) | - |
+| pico8go-thanks<br/>pico8go 致谢(掌机) | [pico8go-thanks.p8.png](./carts/pico8go/pico8go-thanks/pico8go-thanks.p8.png) | - |
+| pico8go-wizard<br/>pico8go 致谢(掌机) | [pico8go-wizard.p8.png](./carts/pico8go/pico8go-wizard/pico8go-wizard.p8.png) | - |
+| splooshdemo | [splooshdemo.p8mod](./carts/pico8pixelbomb/splooshdemo/splooshdemo.p8mod) | - |
+| yxkl<br/>元宵节快乐 | [yxkl.p8mod](./carts/pico8pixelbomb/yxkl/yxkl.p8mod) | - |
+| bas-pico8gomod<br/>pico8go《小鸡蹦蹦跳》中文+振动| [basmod.p8mod](./carts/pico8pixelbomb/bas-pico8gomod/basmod.p8mod) | - |
+| celeste-pico8gomod<br/>pico8go《蔚蓝经典版》中文+振动+PC音源| [celestemod.p8mod](./carts/pico8pixelbomb/celeste-pico8gomod/celestemod.p8mod) | - |
+| justoneboss-pico8gomod<br/>pico8go《只此一敌》振动支持| [justonebossmod.p8mod](./carts/pico8pixelbomb/justoneboss-pico8gomod/justonebossmod.p8mod) | - |
+| pet-the-cat-pico8gomod<br/>pico8go《撸猫》中文+振动 | [pet-the-cat.p8mod](./carts/pico8pixelbomb/pet-the-cat-pico8gomod/pet-the-cat.p8mod) | - |
 
 ## 卡带模板
 | 标题 | 图片 | 作者 |
