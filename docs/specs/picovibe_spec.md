@@ -32,7 +32,13 @@ This spec defines:
 - The PICO8GO IPC packet format, manifest, and Lua runtime source — owned by `projects/xwsdk/docs/specs/p8mod_spec.md §5.4`.
 - Host-side haptic dispatch, achievement persistence, FCDB metadata mapping — owned by `projects/pico8go/docs/specs/p8go_ipc_bridge_spec.md`.
 - pico8ide editor behavior, library bundling, `--#include` resolution — owned by pico8ide.
-- The bundled PICO-8 manual translation under `docs/pico8manual/`.
+- The bundled PICO-8 manual translation under `docs/pico8manual/`. That tree is
+  a copied upstream/reference documentation payload for the manual cart and is
+  not Picovibe behavior authority. Availability limits described there, such as
+  host bytestream channels not being available in BBS or exported carts, must
+  not be read as Picovibe implementation TODOs; Picovibe's active device API
+  authority remains the `p8go.*` cart-source contract in this spec plus the
+  upstream xwsdk/pico8go specs named above.
 
 ## 3. Catalog Layout
 
