@@ -1,5 +1,0 @@
-Pillow
-markdown
-weasyprint
-BeautifulSoup4
-segno

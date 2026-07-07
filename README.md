@@ -2,7 +2,6 @@
 
 这是一个PICO-8的爱好者项目，为了方便国内爱好者相互交流，方便游戏分享，本项目致力于以下目标。
 
-* 提供一些简单的工具以及类库
 * 收集国内PICO-8爱好者开发的游戏作品
 
 > **设备 API（震动 / 成就）**：所有 mod 卡带统一使用 PICO8GO 的 `p8go.*` IPC（`p8go.vibe(ms, strength)`、`p8go.vibe_stop()`、`p8go.ach_unlock(id)` 等）。运行时源码与契约由 `projects/xwsdk` 维护，pico8ide 自动注入；详情见 [`docs/specs/picovibe_spec.md`](./docs/specs/picovibe_spec.md)。旧的 `printh "vibrator"` / `"pico8goapi"` 通道已废弃，不要在新卡带中再使用。
@@ -27,64 +26,23 @@
 | justoneboss-pico8gomod<br/>pico8go《只此一敌》振动支持| [justonebossmod.p8mod](./carts/pico8pixelbomb/justoneboss-pico8gomod/justonebossmod.p8mod) | - |
 | pet-the-cat-pico8gomod<br/>pico8go《撸猫》中文+振动 | [pet-the-cat.p8mod](./carts/pico8pixelbomb/pet-the-cat-pico8gomod/pet-the-cat.p8mod) | - |
 
-## 卡带模板
-| 标题 | 图片 | 作者 |
-|------|------|------|
-| e-zombie | ![e-zombie](./tools/resources/imgs/cart_templates/e-zombie.png) | 压缩文渐 |
-| e-zombie16 | ![e-zombie16](./tools/resources/imgs/cart_templates/e-zombie16.png) | 压缩文渐 |
-
 ## 其它
 | 标题 | 说明 |
 |------|------|
 | pico8 中文手册 | [pico8manual](./docs/pico8manual/pico8手册v0.2.6c_rev1.pdf) |
 
-# 编译工具
+# 构建说明
 
-## 初始化
+`.p8mod` / `.p8` 到 `.p8.png` 的发布导出由 `pico8ide` CLI / headless exporter 负责。本仓库不再维护本地转换脚本、Python 虚拟环境、`picotool` / `shrinko8` 子模块或自定义卡带图片工具。
 
-下载所有依赖
-```cmd
-git submodule update --init --recursive
-```
-
-## 使用方法
-
-Windows系统，打开命令行，在项目目录运行下面的命令进行编译（脚本通过LLM翻译自build_pico8cart.sh，还未测试）
-```cmd
-build_pico8cart.bat --cart carts/pico8pixelbomb/bas-pico8gomod/basmodcn.p8
-```
-
-如果你使用的是linux系统，通过下面的命令来编译卡带
 ```bash
-./build_pico8cart.sh --cart carts/pico8pixelbomb/bas-pico8gomod/basmodcn.p8
+scripts/export-p8mod.sh carts/pico8pixelbomb/i18ndemo/i18ndemo.p8mod
 ```
 
-参数说明：
-- `--cart`: 要编译的PICO-8游戏文件路径（.p8文件）
-
-脚本会自动：
-1. 检测并构建所有配置的语言版本
-2. 生成对应的翻译文件
-3. 使用PICO-8导出卡带图片
-4. 应用指定的卡带模板
-5. 生成最终的多语言卡带文件
-
-所有生成的文件将保存在 `release` 目录下。
-
-# 工具说明
-
-[pico8i18n](./tools/pico8i18n/README.md)
-
-[img2p8](./tools/img2p8/README.md)
+脚本会通过相对路径调用相邻仓库的 `../pico8ide/out/extension/p8modtool.js`，并在卡带目录的 `release/` 下生成同名 `.p8` 和 `.p8.png`。
 
 
 # 致谢
-
-#### deps/picotool
-	https://github.com/dansanderson/picotool.git
-
-#### tools/customcart/main.c
-	https://github.com/usrshare/pico8-customcart.git
 
 #### carts/pico8pixelbomb/pico8go-thanks
 	SPRWAR.p8 by randc0degen

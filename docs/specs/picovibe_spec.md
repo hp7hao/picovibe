@@ -16,7 +16,9 @@ This spec defines:
 - The catalog layout and per-cart artifact contract.
 - The integration contract between cart Lua source and the PICO8GO IPC runtime.
 - The migration rule from the legacy `printh "vibrator"` / `printh "pico8goapi"` pattern to the canonical `p8go.*` API.
-- Authoring expectations: cart sources are treated as **IDE-generated output** from `pico8ide`. Picovibe does not maintain a parallel runtime, build helpers, or shim libraries.
+- Authoring and release expectations: cart sources and release exports are
+  produced by `pico8ide`. Picovibe does not maintain a parallel runtime,
+  `.p8mod` conversion pipeline, or cart-image build toolchain.
 
 ## 2. Scope
 
@@ -28,7 +30,8 @@ This spec defines:
 - The release-build contract for Pico8 IDE exporter assets, including simple
   source include ids, optional `.p8mod` compatibility constraints, and exact
   release locks/provenance for generated artifacts.
-- Build wrappers (`build_pico8cart.sh`, `build_pico8cart.bat`) and tooling under `tools/` for packaging carts into releases.
+- Static support assets copied by downstream consumers, such as
+  `tools/resources/fonts/3x7-font.ttf`.
 
 **Out of scope:**
 
@@ -67,10 +70,11 @@ projects/picovibe/
 │   │   └── pico8mural/
 │   └── manxiangsu/               # Misc community carts
 ├── libs/pico8/                   # Mirror copies of pico8ide bundled libs (see §5)
-├── tools/                        # Build helpers (pico8i18n, img2p8, customcart)
-├── deps/picotool/                # Vendored picotool
+├── scripts/export-p8mod.sh       # Thin wrapper around ../pico8ide p8modtool
+├── scripts/check-export-p8mod-wrapper.sh
+├── tools/resources/              # Static support assets consumed downstream
 ├── docs/specs/                   # This spec
-└── build_pico8cart.{sh,bat}      # Per-cart build entrypoints
+└── README.md
 ```
 
 Each cart directory contains:
@@ -80,10 +84,10 @@ Each cart directory contains:
 | `<name>.p8` | one of | Plain `.p8` source (preferred for authoring) |
 | `<name>.p8mod` | one of | Extended format with `__meta__` / `__i18n__` (preferred for haptic/i18n carts) |
 | `<name>.p8.png` | optional | Steganographic export |
-| `<name>.texts.<locale>.lua` | per-locale | i18n string tables (consumed by `pico8i18n`) |
+| `<name>.texts.<locale>.lua` | per-locale | i18n string tables consumed by Pico8 IDE export |
 | `<name>.meta.<locale>.json` | per-locale | Per-locale title/author metadata |
 | `<name>.p8mod.lock.json` | release-only | Optional generated Pico8 IDE export provenance for reproducible `.p8mod` release builds |
-| `release/` | optional | Generated artifacts from `build_pico8cart.sh` |
+| `release/` | optional | Generated artifacts from Pico8 IDE export |
 
 ## 4. Cart Source Contract: IDE-Generated Shape
 
@@ -114,8 +118,8 @@ constraints, it records them in `__meta__.export` using semver-style constraints
 }
 ```
 
-Picovibe release builds that use the Pico8 IDE headless exporter must pin the
-exporter package through the package manager and should write a sidecar
+Picovibe release builds use the Pico8 IDE CLI/headless exporter. The exporter
+package must be pinned through the package manager and should write a sidecar
 `<name>.p8mod.lock.json` provenance file for generated release artifacts. The
 lock records exact exporter version, asset-pack version, per-asset versions,
 and content hashes. Frozen release rebuilds must fail if a locked asset is
@@ -128,6 +132,11 @@ exporter defaults, then explicit project asset directories only when the build
 command opts into them. Conflicting asset ids with incompatible versions or
 different hashes are build errors unless the command explicitly allows the
 override.
+
+Picovibe MUST NOT reintroduce local `.p8mod`/`.p8` to `.p8.png` conversion
+wrappers, vendored converter submodules, or Python/C cart-image toolchains such
+as `pico8i18n`, `customcart`, `img2p8`, `picotool`, or `shrinko8`. Those were
+retired in favor of the Pico8 IDE exporter path.
 
 ### 4.1 Expanded `p8go` Block Format
 
@@ -178,11 +187,11 @@ The block content is the verbatim `code` field of `pico8ide/resources/libs/p8go.
 
 Drift between `libs/pico8/pico8go.lua` and the xwsdk source is a bug.
 
-Long-term `.p8mod` release builds should treat Pico8 IDE's exporter package and
-its asset manifest as the default source of shared libs, templates, and fonts.
-Picovibe may keep project-specific templates and custom libraries, but those
-assets must be selected explicitly by the build command and recorded in the
-release lock/provenance when used.
+`.p8mod` release builds treat Pico8 IDE's exporter package and its asset
+manifest as the default source of shared libs, templates, and generated cart
+images. Picovibe may keep static assets only when they are consumed directly by
+downstream projects or selected explicitly by the Pico8 IDE exporter and
+recorded in release lock/provenance.
 
 ## 6. Legacy → p8go Migration Rules
 
@@ -214,23 +223,34 @@ Notes:
 - Inline `function vibrate(...)` definitions are removed entirely; `p8go.vibe` is the only callable.
 - Legacy `sfxplay` / `sfxstop` / `sfxpause` / `sfxresume` (printh on the `pico8goapi` channel) are not in active use in any cart. They are removed from `libs/pico8/pico8go.lua` and not re-exposed under `p8go`. If host-controlled music is wanted later, route it through `p8go.ipc_send("media", ...)` per the package conventions in `xwsdk/p8mod_spec §5.4`.
 
-## 7. Build Pipeline
+## 7. Release Export Pipeline
 
-`build_pico8cart.sh --cart <path>`:
+Picovibe release exports are produced through the Pico8 IDE CLI/headless export
+path. For `.p8mod` inputs, Pico8 IDE resolves simple include ids through the
+exporter asset contract, generates localized `.p8` or `.p8.png` artifacts, and
+writes exact asset provenance for release builds. Existing generated carts remain
+valid consumers of the Pico8 IDE-expanded shape described above.
 
-1. Detects locales from `*.texts.<locale>.lua` siblings.
-2. Generates per-locale Lua via `tools/pico8i18n`.
-3. Invokes PICO-8 to export `.p8.png` per locale.
-4. Optionally applies a cart template image (`tools/customcart`).
-5. Writes outputs to `<cart>/release/`.
+The Picovibe entrypoint is `scripts/export-p8mod.sh <cart.p8mod>`. The wrapper
+resolves the sibling Pico8 IDE checkout as `../pico8ide` relative to
+`projects/picovibe`, ensures Pico8 IDE package dependencies are installed when
+its required runtime modules are absent, compiles Pico8 IDE only when
+`../pico8ide/out/extension/p8modtool.js` is missing, then invokes:
 
-The build script does not expand bundled `--#include` libraries (those are pre-expanded per §4) and does not synthesize device-bridge stubs.
+```bash
+node ../pico8ide/out/extension/p8modtool.js <cart.p8mod> --format p8 --out <release>/<name>.p8 --workspace-root <picovibe-root>
+node ../pico8ide/out/extension/p8modtool.js <cart.p8mod> --format p8.png --out <release>/<name>.p8.png --workspace-root <picovibe-root> --write-provenance
+```
 
-For `.p8mod` inputs, the intended replacement path is Pico8 IDE headless
-export: resolve simple include ids through the exporter asset contract, generate
-localized `.p8` or `.p8.png` artifacts, and write exact asset provenance for
-release builds. Until the build wrapper grows that path, existing generated
-carts remain valid consumers of the Pico8 IDE-expanded shape described above.
+By default `<release>` is the input cart's sibling `release/` directory. The
+wrapper may accept an explicit `--out-dir`, but it must not synthesize cart data
+itself or call any retired local converter.
+
+Retired local wrappers and dependencies (`build_pico8cart.{sh,bat}`, `setup.*`,
+`requirements.txt`, `tools/pico8i18n`, `tools/customcart`, `tools/img2p8`,
+`deps/picotool`, and `deps/shrinko8`) are not part of the active Picovibe build
+surface. Do not add compatibility wrappers for those paths; update the Pico8 IDE
+exporter contract instead.
 
 ## 8. Catalog Inventory (Mod Carts using `p8go`)
 
@@ -250,7 +270,7 @@ Carts not on this list either do not use device APIs or are non-haptic demos (`i
 - REQ-PICOVIBE-002: No file under `carts/` defines a top-level `function vibrate(`, `function sfxplay(`, `function sfxstop(`, `function sfxpause(`, `function sfxresume(`.
 - REQ-PICOVIBE-003: Every cart that calls `p8go.*` contains a `-- [lib:p8go] --` … `-- [/lib:p8go] --` block whose content matches `xwsdk/p8mod/src/p8go_runtime.lua` byte-for-byte (after stripping the markers).
 - REQ-PICOVIBE-004: `libs/pico8/pico8go.lua` matches `xwsdk/p8mod/src/p8go_runtime.lua` byte-for-byte.
-- REQ-PICOVIBE-005: Each migrated text cart's compressed code size is tracked against the `.p8.png` compressed-body export limit of 15608 bytes (0x8000 - 0x4300 - 8), verified via `python3 scripts/check-compressed-size.py` or the pico8ide token panel for carts actively being edited. Carts over that export boundary are valid source carts only and must be listed by the script as `SOURCE-ONLY` until a release PNG/minified variant is produced; currently this applies to `justonebossmod.p8` and `justonebossmod.p8mod`.
+- REQ-PICOVIBE-005: Each migrated text cart's compressed code size is tracked against the `.p8.png` compressed-body export limit of 15608 bytes (0x8000 - 0x4300 - 8), verified through Pico8 IDE token/export validation for carts actively being edited. Carts over that export boundary are valid source carts only until Pico8 IDE can produce a release PNG/minified variant; currently this applies to `justonebossmod.p8` and `justonebossmod.p8mod`.
 - REQ-PICOVIBE-006: `.p8mod` release builds using Pico8 IDE headless export
   must preserve simple source include ids, enforce any `__meta__.export` asset
   constraints, and record exact exporter/asset versions plus hashes in a
@@ -271,7 +291,7 @@ Carts not on this list either do not use device APIs or are non-haptic demos (`i
 
 | Field | Contract |
 |---|---|
-| Governed files | `projects/picovibe/carts/**`, `libs/pico8/**`, cart build wrappers, and picovibe catalog tooling. |
-| Invariants | Treat generated cart outputs as pico8ide-generated; keep editable `.p8mod` includes simple; use release locks for exact exporter asset provenance; use canonical `p8go.*` runtime shape; do not reintroduce legacy `printh` device API shims. |
-| Validation | Picovibe REQ checks, compressed-size checks for release carts, p8go runtime byte-match checks, Pico8 IDE exporter lock/provenance checks for `.p8mod` release builds, and per-cart build smoke tests. |
+| Governed files | `projects/picovibe/carts/**`, `libs/pico8/**`, `scripts/export-p8mod.sh`, `scripts/check-export-p8mod-wrapper.sh`, `tools/resources/**`, and Picovibe catalog metadata. |
+| Invariants | Treat generated cart outputs as pico8ide-generated; keep editable `.p8mod` includes simple; call Pico8 IDE through the relative `../pico8ide/out/extension/p8modtool.js` path; use release locks/provenance for exact exporter asset provenance; use canonical `p8go.*` runtime shape; do not reintroduce local conversion wrappers, vendored converter submodules, or legacy `printh` device API shims. |
+| Validation | Picovibe REQ checks, `bash scripts/check-export-p8mod-wrapper.sh`, Pico8 IDE compressed-size/export checks for release carts, p8go runtime byte-match checks, and Pico8 IDE exporter lock/provenance checks for `.p8mod` release builds. |
 | Parent specs | `docs/specs/GLOBAL_SPEC.md`, `projects/xwsdk/docs/specs/p8mod_spec.md`, `projects/pico8go/docs/specs/p8go_ipc_bridge_spec.md`. |

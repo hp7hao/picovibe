@@ -4,7 +4,7 @@ Guidance for AI coding agents when working in `projects/picovibe`.
 
 ## Project Overview
 
-`picovibe` is a curated catalog of PICO-8 cartridges that run on the PICO8GO handheld, including community game mods that exercise device features (haptics, achievements). Cart sources here are treated as **IDE-generated output from `pico8ide`** — picovibe does not maintain a parallel runtime, shim libraries, or build helpers for the device API.
+`picovibe` is a curated catalog of PICO-8 cartridges that run on the PICO8GO handheld, including community game mods that exercise device features (haptics, achievements). Cart sources and release exports here are treated as **IDE-generated output from `pico8ide`** — picovibe does not maintain a parallel runtime, shim libraries, local `.p8mod` conversion pipeline, or cart-image build helpers.
 
 ## Authoritative Spec
 
@@ -23,7 +23,7 @@ Upstream runtime source: `projects/xwsdk/p8mod/src/p8go_runtime.lua`. `libs/pico
 - Carts MUST NOT define legacy globals `function vibrate(...)`, `function sfxplay(...)`, `function sfxstop(...)`, `function sfxpause(...)`, `function sfxresume(...)`. The `printh "vibrator"` / `"pico8goapi"` log channels are dead-letter and have no host consumer.
 - Carts that need device features MUST use `p8go.vibe`, `p8go.vibe_stop`, `p8go.ach_unlock`, `p8go.ach_progress`, `p8go.ipc_send`, exposed via the bundled p8go runtime block at the top of `__lua__`.
 - Do not hand-edit the embedded `p8go` runtime block in any cart. Re-run pico8ide's include resolver, or re-mirror from `projects/xwsdk/p8mod/src/p8go_runtime.lua`.
-- The picovibe build script (`build_pico8cart.sh`) does not expand bundled `--#include` libraries — those land here pre-expanded. It does still resolve per-cart `--#include ./<name>.texts.<locale>.lua` for i18n.
+- Use `scripts/export-p8mod.sh <cart.p8mod>` for `.p8mod` release exports. The wrapper must invoke Pico8 IDE through the relative sibling path `../pico8ide/out/extension/p8modtool.js` and write both `.p8` and `.p8.png` outputs. Do not reintroduce retired local wrappers or converter stacks such as `build_pico8cart.{sh,bat}`, `setup.*`, `requirements.txt`, `tools/pico8i18n`, `tools/customcart`, `tools/img2p8`, `deps/picotool`, or `deps/shrinko8`.
 
 ## Mod Cart Inventory (uses `p8go`)
 
@@ -49,11 +49,8 @@ diff <(tail -n +5 libs/pico8/pico8go.lua) \
      <(tail -n +2 ../xwsdk/p8mod/src/p8go_runtime.lua)
 
 # REQ-PICOVIBE-005: p8go text carts stay under compressed-code limit
-python3 scripts/check-compressed-size.py
-```
+# Use Pico8 IDE token/export validation for carts actively being edited.
 
-## Build
-
-```bash
-./build_pico8cart.sh --cart carts/pico8pixelbomb/bas-pico8gomod/basmod.p8
+# export wrapper uses sibling pico8ide CLI and no retired converters
+bash scripts/check-export-p8mod-wrapper.sh
 ```
