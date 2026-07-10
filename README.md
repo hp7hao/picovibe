@@ -17,6 +17,7 @@
 | i18ndemo<br/>多语言示例（中文） | [i18ndemo.p8mod](./carts/pico8pixelbomb/i18ndemo/i18ndemo.p8mod) | - |
 | nezhapoems<br/>《小爷集》要求全文背诵 | [nezhapoems.p8mod](./carts/pico8pixelbomb/nezhapoems/nezhapoems.p8mod) | 开发中 |
 | pico8go-about<br/>pico8go 关于(掌机) | [pico8go-about.p8.png](./carts/pico8go/pico8go-about/pico8go-about.p8.png) | - |
+| firework-simulators<br/>烟花模拟器 | [firework-simulators.p8mod](./carts/pico8go/firework-simulators/firework-simulators.p8mod) | 源码卡带 |
 | pico8go-thanks<br/>pico8go 致谢(掌机) | [pico8go-thanks.p8.png](./carts/pico8go/pico8go-thanks/pico8go-thanks.p8.png) | - |
 | pico8go-wizard<br/>pico8go 致谢(掌机) | [pico8go-wizard.p8.png](./carts/pico8go/pico8go-wizard/pico8go-wizard.p8.png) | - |
 | splooshdemo | [splooshdemo.p8mod](./carts/pico8pixelbomb/splooshdemo/splooshdemo.p8mod) | - |
