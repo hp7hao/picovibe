@@ -270,7 +270,8 @@ one-shot behavior; `--host` and `--port` override the loopback/dynamic-port
 defaults.
 
 The player converts the fetched `.p8mod` in browser memory through the shared
-`projects/xwsdk/p8mod` WASM API, then loads the generated `.p8.png` into the
+`projects/xwsdk/p8mod` playable-export WASM API, which prepends the generated
+i18n Lua runtime when `outputLocale` is selected, then loads the generated `.p8.png` into the
 PICO-8 web runtime. It must not invoke Pico8 IDE, import or boot Manxiangsu, write
 release artifacts, or depend on Manxiangsu paths at runtime. Copied runtime
 assets require an explicit synchronization/integrity guard.
@@ -287,6 +288,12 @@ If conversion fails, the last successful generation remains playable and the
 error is reported in the browser, terminal, and `/status`; a later save retries.
 Watch-mode cart errors remain recoverable. One-shot conversion/runtime failures
 exit nonzero after the browser reports the terminal state.
+
+After submitting the engine's cart-load command, the player must wait until the
+engine consumes that command, allow the console prompt to become ready, and only
+then submit `RUN`. It reports `running` after that ordered handoff, not after
+a fixed delay from cart submission. Browser verification must distinguish the
+loaded cart from the bundled template cart by an observable cart-specific frame.
 
 ## 8. Catalog Inventory (Mod Carts using `p8go`)
 

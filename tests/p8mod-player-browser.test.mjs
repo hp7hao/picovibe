@@ -33,6 +33,22 @@ test('a real p8mod converts and reaches running', async (t) => {
   }
   assert.equal(status.state, 'running');
   assert.equal(status.lastSuccessfulGeneration, 1);
+  const frameSignature = () => page.locator('#engine').evaluate((frame) => {
+    const canvas = frame.contentDocument.querySelector('#canvas');
+    const context = canvas.getContext('2d');
+    const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    let hash = 2166136261;
+    for (let i = 0; i < pixels.length; i += 16) {
+      hash ^= pixels[i] | (pixels[i + 1] << 8) | (pixels[i + 2] << 16);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  });
+  await page.waitForTimeout(300);
+  const firstFrame = await frameSignature();
+  await page.waitForTimeout(500);
+  const secondFrame = await frameSignature();
+  assert.notEqual(firstFrame, secondFrame, 'expected animated Firework frames, got static template cart');
 });
 
 test('failed watched reload preserves the last success and later recovers', async (t) => {
