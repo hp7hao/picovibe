@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "files": {
+    "p8mod.js": {
+      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8mod/p8mod.js",
+      "sha256": "cb54c4a02453988c19764767bb3a21ad4622c42ae1df15a512eb26e702a3e5c2"
+    },
+    "p8mod_bg.wasm": {
+      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8mod/p8mod_bg.wasm",
+      "sha256": "858fcba3d6d58b7cbc7215248050e2c0e19e10c2ad68dab2a94bb4934e705847"
+    },
+    "template.html": {
+      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/template/template.html",
+      "sha256": "88a4d7d5896dc548a02140bd1be3ae66dae78c7b2499ec1b16a0b09122dad01f"
+    },
+    "template.js": {
+      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/template/template.js",
+      "sha256": "5212de544a708feb484229785e8373c3bc90d4e4a0a677be92e87085d2d5e716"
+    }
+  }
+}

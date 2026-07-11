@@ -17,8 +17,10 @@ This spec defines:
 - The integration contract between cart Lua source and the PICO8GO IPC runtime.
 - The migration rule from the legacy `printh "vibrator"` / `printh "pico8goapi"` pattern to the canonical `p8go.*` API.
 - Authoring and release expectations: cart sources and release exports are
-  produced by `pico8ide`. Picovibe does not maintain a parallel runtime,
-  `.p8mod` conversion pipeline, or cart-image build toolchain.
+  produced by `pico8ide`. Picovibe does not maintain a parallel release runtime,
+  `.p8mod` release-conversion pipeline, or cart-image build toolchain. It may
+  provide a standalone browser preview runner for rapid authoring feedback; that
+  runner is not a release exporter.
 
 ## 2. Scope
 
@@ -32,6 +34,7 @@ This spec defines:
   release locks/provenance for generated artifacts.
 - Static support assets copied by downstream consumers, such as
   `tools/resources/fonts/3x7-font.ttf`.
+- A standalone local `.p8mod` browser preview workflow for humans and agents.
 
 **Out of scope:**
 
@@ -137,6 +140,11 @@ Picovibe MUST NOT reintroduce local `.p8mod`/`.p8` to `.p8.png` conversion
 wrappers, vendored converter submodules, or Python/C cart-image toolchains such
 as `pico8i18n`, `customcart`, `img2p8`, `picotool`, or `shrinko8`. Those were
 retired in favor of the Pico8 IDE exporter path.
+
+This release rule does not prohibit the authoring-only preview runner defined in
+§7.1. The preview runner converts in browser memory through the shared
+`xwsdk/p8mod` WASM implementation, does not write release artifacts or
+provenance, and must not be presented as equivalent to Pico8 IDE export.
 
 ### 4.1 Expanded `p8go` Block Format
 
@@ -252,6 +260,34 @@ Retired local wrappers and dependencies (`build_pico8cart.{sh,bat}`, `setup.*`,
 surface. Do not add compatibility wrappers for those paths; update the Pico8 IDE
 exporter contract instead.
 
+### 7.1 Standalone Authoring Preview
+
+Picovibe provides `scripts/run-p8mod.sh <cart.p8mod>` as the stable rapid-preview
+entrypoint. The command starts a loopback HTTP server and standalone player owned
+by `tools/p8mod-player`, opens the browser by default, and watches the source by
+default. `--no-open` supports agents and CI; `--no-watch` selects deterministic
+one-shot behavior; `--host` and `--port` override the loopback/dynamic-port
+defaults.
+
+The player converts the fetched `.p8mod` in browser memory through the shared
+`projects/xwsdk/p8mod` WASM API, then loads the generated `.p8.png` into the
+PICO-8 web runtime. It must not invoke Pico8 IDE, import or boot Manxiangsu, write
+release artifacts, or depend on Manxiangsu paths at runtime. Copied runtime
+assets require an explicit synchronization/integrity guard.
+
+The server exposes `/health`, `/status`, `/events`, and `/cart.p8mod`. Player
+status distinguishes `starting`, `converting`, `reloading`, `running`,
+`source_error`, `conversion_error`, `engine_error`, and `load_error`. `running`
+means conversion, engine initialization, and cart load/run handoff succeeded; it
+does not certify gameplay correctness.
+
+Every observed source change increments a generation. The browser converts the
+newest generation before replacing the active cart and coalesces rapid changes.
+If conversion fails, the last successful generation remains playable and the
+error is reported in the browser, terminal, and `/status`; a later save retries.
+Watch-mode cart errors remain recoverable. One-shot conversion/runtime failures
+exit nonzero after the browser reports the terminal state.
+
 ## 8. Catalog Inventory (Mod Carts using `p8go`)
 
 | Cart | Path | Migrated to p8go |
@@ -275,6 +311,10 @@ Carts not on this list either do not use device APIs or are non-haptic demos (`i
   must preserve simple source include ids, enforce any `__meta__.export` asset
   constraints, and record exact exporter/asset versions plus hashes in a
   sidecar lock/provenance file for reproducible release rebuilds.
+- REQ-PICOVIBE-007: The standalone preview runner converts through shared
+  `xwsdk/p8mod` WASM, reaches observable `running` for a valid cart, reports
+  phase-specific failures, preserves the last successful generation after a
+  failed watched reload, and neither invokes Pico8 IDE nor boots Manxiangsu.
 
 ## 10. References
 
@@ -291,7 +331,7 @@ Carts not on this list either do not use device APIs or are non-haptic demos (`i
 
 | Field | Contract |
 |---|---|
-| Governed files | `projects/picovibe/carts/**`, `libs/pico8/**`, `scripts/export-p8mod.sh`, `scripts/check-export-p8mod-wrapper.sh`, `tools/resources/**`, and Picovibe catalog metadata. |
-| Invariants | Treat generated cart outputs as pico8ide-generated; keep editable `.p8mod` includes simple; call Pico8 IDE through the relative `../pico8ide/out/extension/p8modtool.js` path; use release locks/provenance for exact exporter asset provenance; use canonical `p8go.*` runtime shape; do not reintroduce local conversion wrappers, vendored converter submodules, or legacy `printh` device API shims. |
-| Validation | Picovibe REQ checks, `bash scripts/check-export-p8mod-wrapper.sh`, Pico8 IDE compressed-size/export checks for release carts, p8go runtime byte-match checks, and Pico8 IDE exporter lock/provenance checks for `.p8mod` release builds. |
+| Governed files | `projects/picovibe/carts/**`, `libs/pico8/**`, `scripts/export-p8mod.sh`, `scripts/check-export-p8mod-wrapper.sh`, `scripts/run-p8mod.sh`, `tools/p8mod-player/**`, `tools/resources/**`, and Picovibe catalog metadata. |
+| Invariants | Treat generated release cart outputs as pico8ide-generated; keep editable `.p8mod` includes simple; call Pico8 IDE through the relative `../pico8ide/out/extension/p8modtool.js` path; use release locks/provenance for exact exporter asset provenance; keep preview conversion authoring-only and backed by shared `xwsdk/p8mod` WASM; use canonical `p8go.*` runtime shape; do not reintroduce release conversion wrappers, vendored converter submodules, or legacy `printh` device API shims. |
+| Validation | Picovibe REQ checks, `bash scripts/check-export-p8mod-wrapper.sh`, standalone runner HTTP/state/reload tests and runtime-asset integrity guard, Pico8 IDE compressed-size/export checks for release carts, p8go runtime byte-match checks, and Pico8 IDE exporter lock/provenance checks for `.p8mod` release builds. |
 | Parent specs | `docs/specs/GLOBAL_SPEC.md`, `projects/xwsdk/docs/specs/p8mod_spec.md`, `projects/pico8go/docs/specs/p8go_ipc_bridge_spec.md`. |

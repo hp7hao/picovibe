@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PicoVibe P8mod Player</title>
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; background: #111; color: #eee; font: 14px system-ui, sans-serif; }
+    body { display: grid; grid-template-rows: 1fr auto; }
+    iframe { width: 100%; height: 100%; border: 0; background: #000; }
+    #status { padding: 8px 12px; background: #191919; white-space: pre-wrap; }
+    #status.error { color: #ff7b72; }
+  </style>
+</head>
+<body>
+  <iframe id="engine" src="/runtime/template.html" allow="autoplay; gamepad"></iframe>
+  <div id="status" role="status">Starting…</div>
+  <script type="module" src="/public/player.js"></script>
+</body>
+</html>

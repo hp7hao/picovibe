@@ -34,6 +34,22 @@
 
 # 构建说明
 
+## 快速预览 .p8mod
+
+开发或由 agent 直接生成 .p8mod 时，可以启动独立的浏览器播放器：
+
+    scripts/run-p8mod.sh carts/pico8go/firework-simulators/firework-simulators.p8mod
+
+播放器默认监听文件并在保存后重新转换、运行。自动化场景可以增加
+`--no-open`，确定性单次运行可以增加 `--no-watch`。`/health` 只表示本地
+服务就绪，`/status` 中的 `running` 表示转换、PICO-8 引擎初始化和卡带
+加载已完成。
+
+快速预览在浏览器内使用共享的 `xwsdk/p8mod` WASM，不产生发布文件或
+provenance。正式发布仍必须使用下面的 Pico8 IDE 导出流程。
+
+## 发布导出
+
 `.p8mod` / `.p8` 到 `.p8.png` 的发布导出由 `pico8ide` CLI / headless exporter 负责。本仓库不再维护本地转换脚本、Python 虚拟环境、`picotool` / `shrinko8` 子模块或自定义卡带图片工具。
 
 ```bash
