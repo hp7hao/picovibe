@@ -24,7 +24,7 @@ Upstream runtime source: `projects/xwsdk/p8mod/src/p8go_runtime.lua`. `libs/pico
 - Carts that need device features MUST use `p8go.vibe`, `p8go.vibe_stop`, `p8go.ach_unlock`, `p8go.ach_progress`, `p8go.ipc_send`, exposed via the bundled p8go runtime block at the top of `__lua__`.
 - Do not hand-edit the embedded `p8go` runtime block in any cart. Re-run pico8ide's include resolver, or re-mirror from `projects/xwsdk/p8mod/src/p8go_runtime.lua`.
 - Use `scripts/export-p8mod.sh <cart.p8mod>` for `.p8mod` release exports. The wrapper must invoke Pico8 IDE through the relative sibling path `../pico8ide/out/extension/p8modtool.js` and write both `.p8` and `.p8.png` outputs. Do not reintroduce retired local wrappers or converter stacks such as `build_pico8cart.{sh,bat}`, `setup.*`, `requirements.txt`, `tools/pico8i18n`, `tools/customcart`, `tools/img2p8`, `deps/picotool`, or `deps/shrinko8`.
-- Use `scripts/run-p8mod.sh <cart.p8mod>` for rapid authoring preview. It converts in browser memory through shared `xwsdk/p8mod` WASM and must not be described as release export.
+- Use `scripts/run-p8mod.sh <cart.p8mod>` for rapid authoring preview. It opens a dedicated Electron window, converts in renderer memory through shared `xwsdk/p8mod` WASM, and must not be described as release export.
 - After changing copied player assets, run `scripts/sync-p8mod-player-assets.sh`; verification uses `--check`.
 
 ## Mod Cart Inventory (uses `p8go`)

@@ -264,8 +264,9 @@ exporter contract instead.
 
 Picovibe provides `scripts/run-p8mod.sh <cart.p8mod>` as the stable rapid-preview
 entrypoint. The command starts a loopback HTTP server and standalone player owned
-by `tools/p8mod-player`, opens the browser by default, and watches the source by
-default. `--no-open` supports agents and CI; `--no-watch` selects deterministic
+by `tools/p8mod-player`, opens a dedicated Electron window by default, and watches
+the source by default. The preview must not use the system web browser or boot the
+Manxiangsu application. `--no-open` supports agents and CI; `--no-watch` selects deterministic
 one-shot behavior; `--host` and `--port` override the loopback/dynamic-port
 defaults.
 

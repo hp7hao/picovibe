@@ -8,6 +8,8 @@ import { spawn } from 'node:child_process';
 const here = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(here, 'public');
 const runtimeDir = join(here, 'runtime');
+const electronMain = join(here, 'electron-main.cjs');
+const electronBin = join(here, '..', '..', 'node_modules', '.bin', process.platform === 'win32' ? 'electron.cmd' : 'electron');
 const terminalStates = new Set(['conversion_error', 'engine_error', 'load_error', 'running']);
 const playerStates = new Set(['starting', 'converting', 'reloading', 'running', 'source_error', 'conversion_error', 'engine_error', 'load_error']);
 
@@ -116,9 +118,13 @@ server.listen(port, host, () => {
   console.log('PicoVibe player: ' + url);
   console.log('Source: ' + input);
   if (shouldOpen) {
-    const command = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'cmd' : 'xdg-open';
-    const openArgs = process.platform === 'win32' ? ['/c', 'start', '', url] : [url];
-    spawn(command, openArgs, { detached: true, stdio: 'ignore' }).unref();
+    if (!existsSync(electronBin)) usage('Electron is not installed; run npm install in projects/picovibe or use --no-open');
+    const linuxFlags = process.platform === 'linux'
+      ? ['--no-sandbox', ...(process.env.WAYLAND_DISPLAY ? ['--ozone-platform=wayland'] : [])]
+      : [];
+    const electronArgs = [...linuxFlags, electronMain, url];
+    const electron = spawn(electronBin, electronArgs, { stdio: 'ignore' });
+    electron.on('exit', () => shutdown());
   }
 });
 const watcher = shouldWatch ? watch(input, sourceChanged) : null;

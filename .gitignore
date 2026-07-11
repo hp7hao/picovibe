@@ -10,3 +10,4 @@ references
 pico8config.json
 
 deps/ImgToP8
+/node_modules/

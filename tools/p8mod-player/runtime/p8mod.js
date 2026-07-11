@@ -630,6 +630,21 @@ export class WasmCart {
         }
     }
     /**
+     * @param {Uint8Array | null} [cover]
+     * @returns {Uint8Array}
+     */
+    to_playable_p8_png(cover) {
+        var ptr0 = isLikeNone(cover) ? 0 : passArray8ToWasm0(cover, wasm.__wbindgen_malloc);
+        var len0 = WASM_VECTOR_LEN;
+        const ret = wasm.wasmcart_to_playable_p8_png(this.__wbg_ptr, ptr0, len0);
+        if (ret[3]) {
+            throw takeFromExternrefTable0(ret[2]);
+        }
+        var v2 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+        return v2;
+    }
+    /**
      * @returns {number}
      */
     get version() {

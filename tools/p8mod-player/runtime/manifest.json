@@ -2,20 +2,24 @@
   "schemaVersion": 1,
   "files": {
     "p8mod.js": {
-      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8mod/p8mod.js",
-      "sha256": "cb54c4a02453988c19764767bb3a21ad4622c42ae1df15a512eb26e702a3e5c2"
+      "source": "projects/xwsdk/p8mod (wasm-pack release build)",
+      "sha256": "d4877e3f8398f9ff0b8f58439d9986bc8a413c2f75d69dffab6c53c3b3251bf6"
     },
     "p8mod_bg.wasm": {
-      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8mod/p8mod_bg.wasm",
-      "sha256": "858fcba3d6d58b7cbc7215248050e2c0e19e10c2ad68dab2a94bb4934e705847"
+      "source": "projects/xwsdk/p8mod (wasm-pack release build)",
+      "sha256": "a61f2f938a6a0af3b96b4a7eb6f07e818cbe69a7e5882eeaf5da427091352d9d"
     },
-    "template.html": {
-      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/template/template.html",
-      "sha256": "88a4d7d5896dc548a02140bd1be3ae66dae78c7b2499ec1b16a0b09122dad01f"
+    "p8edu.html": {
+      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8edu/p8edu.html",
+      "sha256": "922e74968206783f57cd72746f548f09ded5bd381bc8e604af08031b37b9a6d8"
     },
-    "template.js": {
-      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/template/template.js",
-      "sha256": "5212de544a708feb484229785e8373c3bc90d4e4a0a677be92e87085d2d5e716"
+    "pico8_edu_0206c_dev8.js": {
+      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8edu/pico8_edu_0206c_dev8.js",
+      "sha256": "66c92f894dd312d2e82921ea75444e0b0ac3ba49eff0d1865c81ca7e19ddb423"
+    },
+    "src/browsersetup.css": {
+      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8edu/src/browsersetup.css",
+      "sha256": "104a6b3315e238f44469dfa63e9ea0397552ccd05f4656497f2ed4049a2e8b93"
     }
   }
 }

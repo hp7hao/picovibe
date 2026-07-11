@@ -1,0 +1,209 @@
+/* Disable Double-Tap Zoom CSS
+ * Standalone file to prevent accidental zooming on touch devices
+ * Usage: <link rel="stylesheet" href="disable-zoom.css">
+ */
+
+/* Apply to all elements */
+* {
+  /* Disable double-tap zoom */
+  touch-action: manipulation;
+  
+  /* Disable text selection to prevent zoom triggers */
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  
+  /* Disable touch callouts and highlights */
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  
+  /* Prevent pull-to-refresh and overscroll behaviors */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
+  -webkit-overscroll-behavior: none;
+  -webkit-overscroll-behavior-y: none;
+  -webkit-overscroll-behavior-x: none;
+}
+
+/* Root HTML element */
+html {
+  /* Primary zoom prevention */
+  touch-action: manipulation;
+  
+  /* Prevent iOS zoom on orientation change */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  
+  /* Disable user selection */
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  
+  /* Disable touch callouts */
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  
+  /* Prevent pull-to-refresh and overscroll behaviors */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
+  -webkit-overscroll-behavior: none;
+  -webkit-overscroll-behavior-y: none;
+  -webkit-overscroll-behavior-x: none;
+  
+  /* Prevent iOS bounce scrolling */
+  -webkit-overflow-scrolling: auto;
+  overflow: hidden;
+}
+
+/* Body element */
+body {
+  /* Ensure zoom prevention on body */
+  touch-action: manipulation;
+  
+  /* Disable text selection */
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  
+  /* Disable touch callouts and highlights */
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  
+  /* Prevent iOS zoom on double-tap */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  
+  /* Prevent pull-to-refresh and overscroll behaviors */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
+  -webkit-overscroll-behavior: none;
+  -webkit-overscroll-behavior-y: none;
+  -webkit-overscroll-behavior-x: none;
+  
+  /* Prevent iOS bounce scrolling */
+  -webkit-overflow-scrolling: auto;
+  overflow: hidden;
+  
+  /* Fixed positioning to prevent pull-to-refresh */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Canvas and game elements - allow some interactions but prevent zoom */
+canvas {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Input elements - allow text selection but prevent zoom */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea {
+  /* Allow text selection in inputs */
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  
+  /* But still prevent zoom */
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  
+  /* Prevent iOS zoom on input focus */
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Buttons - prevent zoom but allow normal interaction */
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+/* Links - prevent zoom but allow normal interaction */
+a {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* PICO-8 specific elements */
+#canvas,
+#p8_container,
+#p8_playarea,
+#p8_frame,
+#p8_frame_0 {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+/* Virtual keyboard and control elements */
+[id*="controls"],
+[class*="controls"],
+[id*="keyboard"],
+[class*="keyboard"],
+[id*="gamepad"],
+[class*="gamepad"] {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+/* Viewport meta tag equivalent CSS (for reference) */
+/* Add this to your HTML head:
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+*/
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Additional iOS-specific zoom prevention */
+  html, body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Prevent iOS zoom on input focus */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
+/* Android Chrome specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  html, body {
+    touch-action: manipulation;
+  }
+} 

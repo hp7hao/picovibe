@@ -1,0 +1,7 @@
+{
+  "name": "picovibe",
+  "private": true,
+  "devDependencies": {
+    "electron": "^37.2.0"
+  }
+}
