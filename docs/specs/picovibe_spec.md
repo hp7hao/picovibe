@@ -35,6 +35,8 @@ This spec defines:
 - Static support assets copied by downstream consumers, such as
   `tools/resources/fonts/3x7-font.ttf`.
 - A standalone local `.p8mod` browser preview workflow for humans and agents.
+- First-party cart-specific presentation behavior, including the Firework
+  Simulators selection preview defined in §8.
 
 **Out of scope:**
 
@@ -296,7 +298,25 @@ then submit `RUN`. It reports `running` after that ordered handoff, not after
 a fixed delay from cart submission. Browser verification must distinguish the
 loaded cart from the bundled template cart by an observable cart-specific frame.
 
-## 8. Catalog Inventory (Mod Carts using `p8go`)
+## 8. Firework Simulators Physical Preview
+
+`carts/pico8go/firework-simulators/firework-simulators.p8mod` provides a large
+physical-product preview while the player selects a firework. Each of its ten
+firework types has a distinct procedural low-poly model representing the casing
+or launcher rather than the aerial burst pattern. The model rotates continuously
+around its vertical axis and uses projected, depth-sorted polygon faces with
+palette shading, an outline, and a ground shadow to communicate volume within
+PICO-8 constraints.
+
+The preview replaces the sky area while selection is idle. Left and right change
+the selected model without launching it. Firing immediately hides the preview
+and restores the unobstructed sky for the particle simulation. The preview
+returns when the launched effect and its scheduled jobs have completed. Changing
+selection during an active effect clears it and returns directly to the newly
+selected model. The existing name, power, description, and control panel remain
+visible in both modes.
+
+## 9. Catalog Inventory (Mod Carts using `p8go`)
 
 | Cart | Path | Migrated to p8go |
 |------|------|------------------|
@@ -308,7 +328,7 @@ loaded cart from the bundled template cart by an observable cart-specific frame.
 
 Carts not on this list either do not use device APIs or are non-haptic demos (`i18ndemo`, `nezhapoems`, `splooshdemo`, `yxkl`, `pico8mural`).
 
-## 9. Testing Criteria
+## 10. Testing Criteria
 
 - REQ-PICOVIBE-001: No file under `carts/` contains `printh(..., "vibrator")` or `printh(..., "pico8goapi")`.
 - REQ-PICOVIBE-002: No file under `carts/` defines a top-level `function vibrate(`, `function sfxplay(`, `function sfxstop(`, `function sfxpause(`, `function sfxresume(`.
@@ -323,8 +343,11 @@ Carts not on this list either do not use device APIs or are non-haptic demos (`i
   `xwsdk/p8mod` WASM, reaches observable `running` for a valid cart, reports
   phase-specific failures, preserves the last successful generation after a
   failed watched reload, and neither invokes Pico8 IDE nor boots Manxiangsu.
+- REQ-PICOVIBE-008: Firework Simulators maps every selectable firework to a
+  distinct physical model, rotates the selected model in preview mode, hides it
+  during launch simulation, and restores it after particles and jobs drain.
 
-## 10. References
+## 11. References
 
 - `projects/xwsdk/docs/specs/p8mod_spec.md` — IPC packet format, manifest, runtime source (authoritative)
 - `projects/xwsdk/p8mod/src/p8go_runtime.lua` — runtime source mirrored here

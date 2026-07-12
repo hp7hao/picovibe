@@ -5,16 +5,16 @@ __lua__
 -- by hp7hao and codex
 
 fw={
- {"fountain",8,"fan jets from ground","d_fountain"},
- {"roman",10,"repeating colored shots","d_roman"},
- {"shell",9,"rise then burst","d_shell"},
- {"peony",14,"round floral burst","d_peony"},
- {"chrys",7,"long glitter spokes","d_chrys"},
- {"willow",6,"falling golden trails","d_willow"},
- {"palm",12,"thick comet arms","d_palm"},
- {"ring",11,"hollow circle burst","d_ring"},
- {"crackle",15,"small noisy stars","d_crackle"},
- {"finale",13,"many cakes at once","d_finale"}
+ {"fountain",8,"fan jets from ground","d_fountain","m_fountain"},
+ {"roman",10,"repeating colored shots","d_roman","m_roman"},
+ {"shell",9,"rise then burst","d_shell","m_shell"},
+ {"peony",14,"round floral burst","d_peony","m_peony"},
+ {"chrys",7,"long glitter spokes","d_chrys","m_chrys"},
+ {"willow",6,"falling golden trails","d_willow","m_willow"},
+ {"palm",12,"thick comet arms","d_palm","m_palm"},
+ {"ring",11,"hollow circle burst","d_ring","m_ring"},
+ {"crackle",15,"small noisy stars","d_crackle","m_crackle"},
+ {"finale",13,"many cakes at once","d_finale","m_finale"}
 }
 
 function _init()
@@ -22,6 +22,8 @@ function _init()
  sel=1
  pow=2
  t=0
+ mode="preview"
+ spin=0
  show_info=true
  ps={}
  jobs={}
@@ -29,26 +31,35 @@ function _init()
  for i=1,46 do
   add(stars,{rnd(128),rnd(66),rnd(2)})
  end
- launch(sel)
 end
 
 function _update()
  t+=1
- if btnp(0) then sel=(sel+8)%10+1 end
- if btnp(1) then sel=sel%10+1 end
+ if btnp(0) then
+  sel=(sel+8)%10+1
+  mode="preview"
+  ps={}
+  jobs={}
+ end
+ if btnp(1) then
+  sel=sel%10+1
+  mode="preview"
+  ps={}
+  jobs={}
+ end
  if btnp(2) then pow=min(3,pow+1) end
  if btnp(3) then pow=max(1,pow-1) end
- if btnp(4) then launch(sel) end
+ if btnp(4) then mode="launched" launch(sel) end
  if btnp(5) then show_info=not show_info end
  update_jobs()
  update_particles()
- if t%90==0 and #ps<90 then sparkle(rnd(128),20+rnd(50),1,5,1) end
+ if mode=="launched" and #ps==0 and #jobs==0 then mode="preview" end
+ spin=(spin+.006)%1
 end
 
 function _draw()
  cls(0)
- draw_sky()
- draw_particles()
+ if mode=="preview" then draw_preview() else draw_sky() draw_particles() end
  rectfill(0,100,127,127,1)
  line(0,100,127,100,5)
  tx("title",2,2,7)
@@ -59,6 +70,100 @@ function _draw()
  print("o",101,111,12)
  tx("inspect",110,111,12)
  draw_panel()
+end
+
+-- compact low-poly casing renderer
+function draw_preview()
+ spin=(time()*.15)%1
+ rectfill(0,9,127,81,1)
+ for y=10,80,12 do line(0,y,127,y,0) end
+ ovalfill(34,73,94,79,0)
+ draw_mesh(sel)
+end
+
+function p3(x,y,z)
+ local xx=x*cos(spin)-z*sin(spin)
+ local zz=x*sin(spin)+z*cos(spin)
+ return {64+xx,46+y*.72-zz*.22,zz}
+end
+function filltri(a,b,c,col)
+ local ya=flr(min(a[2],min(b[2],c[2])))
+ local yb=-flr(-max(a[2],max(b[2],c[2])))
+ for y=max(9,ya),min(81,yb) do
+  local q={}
+  local e={{a,b},{b,c},{c,a}}
+  for z in all(e) do
+   local u=z[1]
+   local v=z[2]
+   if y>=min(u[2],v[2]) and y<max(u[2],v[2]) and u[2]!=v[2] then add(q,u[1]+(y-u[2])*(v[1]-u[1])/(v[2]-u[2])) end
+  end
+  if #q==2 then line(min(q[1],q[2]),y,max(q[1],q[2]),y,col) end
+ end
+end
+function face4(a,b,c,d,col)
+ filltri(a,b,c,col)
+ filltri(a,c,d,col)
+ line(a[1],a[2],b[1],b[2],0)
+ line(b[1],b[2],c[1],c[2],0)
+end
+function prism(y1,y2,r1,r2,col,n)
+ local a={}
+ local b={}
+ local f={}
+ n=n or 6
+ for i=0,n-1 do
+  add(a,p3(cos(i/n)*r1,y1,sin(i/n)*r1))
+  add(b,p3(cos(i/n)*r2,y2,sin(i/n)*r2))
+ end
+ for i=1,n do
+  local j=i%n+1
+  add(f,{a[i],a[j],b[j],b[i],(a[i][3]+a[j][3]+b[j][3]+b[i][3])/4,col+(i%3==0 and 1 or 0)})
+ end
+ for i=1,#f do
+  for j=i+1,#f do
+   if f[i][5]>f[j][5] then
+    local q=f[i]
+    f[i]=f[j]
+    f[j]=q
+   end
+  end
+ end
+ for q in all(f) do face4(q[1],q[2],q[3],q[4],q[6]) end
+ filltri(b[1],b[3],b[5],col+2)
+ filltri(b[1],b[5],b[n],col+2)
+end
+function draw_mesh(i)
+ if i==1 then
+  prism(-22,20,6,22,8,8)
+  prism(-29,-22,3,6,10,6)
+ elseif i==2 then prism(-29,27,11,11,8,8)
+ elseif i==3 then
+  prism(-14,20,10,10,8,6)
+  prism(-28,-14,1,10,9,6)
+  line(67,60,67,79,4)
+ elseif i==4 then
+  prism(-22,0,5,18,13,8)
+  prism(0,24,18,4,13,8)
+ elseif i==5 then
+  prism(-23,0,5,19,6,8)
+  prism(0,24,19,4,6,8)
+  prism(-2,2,20,20,9,8)
+ elseif i==6 then
+  prism(-28,5,6,17,5,8)
+  prism(5,27,17,5,5,8)
+ elseif i==7 then
+  prism(-29,29,10,10,11,8)
+  prism(-17,-13,11,11,9,8)
+  prism(13,17,11,11,9,8)
+ elseif i==8 then prism(-9,9,23,23,10,10)
+ elseif i==9 then
+  prism(-21,21,16,16,14,6)
+  prism(-12,-8,17,17,8,6)
+  prism(8,12,17,17,8,6)
+ else
+  prism(-18,22,25,20,12,4)
+  prism(-29,-14,18,18,9,8)
+ end
 end
 
 function draw_sky()

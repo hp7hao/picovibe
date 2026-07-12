@@ -33,22 +33,17 @@ test('a real p8mod converts and reaches running', async (t) => {
   }
   assert.equal(status.state, 'running');
   assert.equal(status.lastSuccessfulGeneration, 1);
-  const frameSignature = () => page.locator('#engine').evaluate((frame) => {
-    const canvas = frame.contentDocument.querySelector('#canvas');
-    const context = canvas.getContext('2d');
-    const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
-    let hash = 2166136261;
-    for (let i = 0; i < pixels.length; i += 16) {
-      hash ^= pixels[i] | (pixels[i + 1] << 8) | (pixels[i + 2] << 16);
-      hash = Math.imul(hash, 16777619);
-    }
-    return hash >>> 0;
-  });
-  await page.waitForTimeout(300);
-  const firstFrame = await frameSignature();
+  const runtime = page.frames().find(frame => frame.url().includes('/runtime/p8edu.html'));
+  const canvas = runtime.locator('#canvas');
+  let firstFrame = await canvas.screenshot();
+  for (let i = 0; i < 20; i += 1) {
+    await page.waitForTimeout(250);
+    const next = await canvas.screenshot();
+    if (!next.equals(firstFrame)) { firstFrame = next; break; }
+  }
   await page.waitForTimeout(500);
-  const secondFrame = await frameSignature();
-  assert.notEqual(firstFrame, secondFrame, 'expected animated Firework frames, got static template cart');
+  const secondFrame = await canvas.screenshot();
+  assert.ok(!secondFrame.equals(firstFrame), 'expected animated Firework frames, got static template cart');
 });
 
 test('failed watched reload preserves the last success and later recovers', async (t) => {
@@ -83,4 +78,24 @@ test('failed watched reload preserves the last success and later recovers', asyn
   await writeFile(watched, valid);
   const recovered = await waitState('running', 3);
   assert.equal(recovered.lastSuccessfulGeneration, 3);
+});
+test('firework simulator defines ten physical models and preview launch modes', async () => {
+  const cart = await readFile(new URL('../carts/pico8go/firework-simulators/firework-simulators.p8mod', import.meta.url), 'utf8');
+  const mappings = [...cart.matchAll(/\{"(?:fountain|roman|shell|peony|chrys|willow|palm|ring|crackle|finale)",\d+,"[^"]+","d_[^"]+","(m_[^"]+)"\}/g)];
+  assert.equal(mappings.length, 10);
+  assert.equal(new Set(mappings.map(match => match[1])).size, 10);
+  assert.match(cart, /mode="preview"/);
+  assert.match(cart, /mode="launched"/);
+  assert.match(cart, /function draw_mesh/);
+});
+
+test('firework low-poly renderer uses projected mesh faces without scanline silhouettes', async () => {
+  const cart = await readFile(new URL('../carts/pico8go/firework-simulators/firework-simulators.p8mod', import.meta.url), 'utf8');
+  assert.match(cart, /function draw_mesh/);
+  assert.match(cart, /function face4/);
+  assert.match(cart, /function filltri/);
+  assert.doesNotMatch(cart, /sel=.* mode=.* ps=\{\} jobs=\{\}/);
+  assert.doesNotMatch(cart, /function draw_solid_model/);
+  assert.doesNotMatch(cart, /for y=35,66 do/);
+  assert.doesNotMatch(cart, /local [^\n]+ local /);
 });
