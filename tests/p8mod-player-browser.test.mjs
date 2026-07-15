@@ -79,11 +79,12 @@ test('failed watched reload preserves the last success and later recovers', asyn
   const recovered = await waitState('running', 3);
   assert.equal(recovered.lastSuccessfulGeneration, 3);
 });
-test('firework simulator defines ten physical models and preview launch modes', async () => {
+test('firework simulator defines reusable carrier models and preview launch modes', async () => {
   const cart = await readFile(new URL('../carts/pico8go/firework-simulators/firework-simulators.p8mod', import.meta.url), 'utf8');
-  const mappings = [...cart.matchAll(/\{"(?:fountain|roman|shell|peony|chrys|willow|palm|ring|crackle|finale)",\d+,"[^"]+","d_[^"]+","(m_[^"]+)"\}/g)];
-  assert.equal(mappings.length, 10);
-  assert.equal(new Set(mappings.map(match => match[1])).size, 10);
+  const mappings = [...cart.matchAll(/\{"n\d{2}","s\d{2}","e\d{2}",\d+,(\d+),(\d+)\}/g)];
+  assert.equal(mappings.length, 50);
+  assert.equal(new Set(mappings.map(match => match[1])).size, 14);
+  assert.equal(new Set(mappings.map(match => match[2])).size, 50);
   assert.match(cart, /mode="preview"/);
   assert.match(cart, /mode="launched"/);
   assert.match(cart, /function draw_mesh/);

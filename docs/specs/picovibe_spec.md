@@ -1,11 +1,11 @@
 # PICOVIBE Cart Catalog Specification
 
-**Version**: 0.1.0
+**Version**: 0.2.0
 **Status**: Active
 **Level**: product
 **Owner**: picovibe
 **Parent**: docs/specs/GLOBAL_SPEC.md
-**Last Reviewed**: 2026-05-12
+**Last Reviewed**: 2026-07-15
 
 ## 1. Purpose
 
@@ -298,15 +298,30 @@ then submit `RUN`. It reports `running` after that ordered handoff, not after
 a fixed delay from cart submission. Browser verification must distinguish the
 loaded cart from the bundled template cart by an observable cart-specific frame.
 
-## 8. Firework Simulators Physical Preview
+## 8. Firework Simulators Catalog And Physical Preview
 
 `carts/pico8go/firework-simulators/firework-simulators.p8mod` provides a large
-physical-product preview while the player selects a firework. Each of its ten
-firework types has a distinct procedural low-poly model representing the casing
-or launcher rather than the aerial burst pattern. The model rotates continuously
-around its vertical axis and uses projected, depth-sorted polygon faces with
-palette shading, an outline, and a ground shadow to communicate volume within
-PICO-8 constraints.
+physical-product preview while the player selects one of 50 curated fireworks.
+The catalog is ordered from small, local, and mechanically simple products to
+large, layered, and choreographed displays. This order is a game-content
+progression, not a safety ranking or an official Chinese classification count.
+The non-authoritative research evidence for the names and ordering is recorded
+in `projects/picovibe/docs/notes/2026-07-15-chinese-firework-taxonomy-and-effects.md`.
+
+Every selection separates the physical carrier from its visible and audible
+effect profile. Carrier models may be reused when several effects use the same
+external shell, tube, cake, or frame. Every selection must still have an
+authored launch profile that distinguishes it through at least one of geometry,
+motion, colour sequence, trail, strobe, crackle, break count, timing, sound, or
+choreography. The UI provides localized English and Chinese names and concise
+effect descriptions for all 50 entries. Product-class terminology must not
+present curated combinations or show vocabulary as official GB categories.
+
+The carrier preview is a procedural low-poly model representing the external
+casing or launcher rather than an unsupported guess about internal construction.
+It rotates continuously around its vertical axis and uses projected,
+depth-sorted polygon faces with palette shading, an outline, and a ground shadow
+to communicate volume within PICO-8 constraints.
 
 The preview replaces the sky area while selection is idle. Left and right change
 the selected model without launching it. Firing immediately hides the preview
@@ -343,9 +358,11 @@ Carts not on this list either do not use device APIs or are non-haptic demos (`i
   `xwsdk/p8mod` WASM, reaches observable `running` for a valid cart, reports
   phase-specific failures, preserves the last successful generation after a
   failed watched reload, and neither invokes Pico8 IDE nor boots Manxiangsu.
-- REQ-PICOVIBE-008: Firework Simulators maps every selectable firework to a
-  distinct physical model, rotates the selected model in preview mode, hides it
-  during launch simulation, and restores it after particles and jobs drain.
+- REQ-PICOVIBE-008: Firework Simulators exposes exactly 50 localized selections
+  in small/simple-to-large/complex order; maps each to a truthful reusable
+  external carrier and a distinct authored launch profile; rotates the selected
+  carrier in preview mode; hides it during launch simulation; and restores it
+  after particles and jobs drain.
 
 ## 11. References
 

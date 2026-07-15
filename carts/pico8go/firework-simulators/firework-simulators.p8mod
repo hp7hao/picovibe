@@ -5,16 +5,56 @@ __lua__
 -- by hp7hao and codex
 
 fw={
- {"fountain",8,"fan jets from ground","d_fountain","m_fountain"},
- {"roman",10,"repeating colored shots","d_roman","m_roman"},
- {"shell",9,"rise then burst","d_shell","m_shell"},
- {"peony",14,"round floral burst","d_peony","m_peony"},
- {"chrys",7,"long glitter spokes","d_chrys","m_chrys"},
- {"willow",6,"falling golden trails","d_willow","m_willow"},
- {"palm",12,"thick comet arms","d_palm","m_palm"},
- {"ring",11,"hollow circle burst","d_ring","m_ring"},
- {"crackle",15,"small noisy stars","d_crackle","m_crackle"},
- {"finale",13,"many cakes at once","d_finale","m_finale"}
+ {"n01","s01","e01",8,1,1},
+ {"n02","s02","e02",10,2,2},
+ {"n03","s03","e03",9,3,3},
+ {"n04","s04","e04",12,4,4},
+ {"n05","s05","e05",10,5,5},
+ {"n06","s06","e06",8,5,6},
+ {"n07","s07","e07",9,2,7},
+ {"n08","s08","e08",10,6,8},
+ {"n09","s09","e09",9,6,9},
+ {"n10","s10","e10",8,7,10},
+ {"n11","s11","e11",10,7,11},
+ {"n12","s12","e12",11,7,12},
+ {"n13","s13","e13",15,7,13},
+ {"n14","s14","e14",12,8,14},
+ {"n15","s15","e15",14,8,15},
+ {"n16","s16","e16",9,8,16},
+ {"n17","s17","e17",14,8,17},
+ {"n18","s18","e18",7,8,18},
+ {"n19","s19","e19",10,8,19},
+ {"n20","s20","e20",8,9,20},
+ {"n21","s21","e21",11,9,21},
+ {"n22","s22","e22",9,3,22},
+ {"n23","s23","e23",10,10,23},
+ {"n24","s24","e24",7,8,24},
+ {"n25","s25","e25",14,11,25},
+ {"n26","s26","e26",10,11,26},
+ {"n27","s27","e27",9,11,27},
+ {"n28","s28","e28",12,11,28},
+ {"n29","s29","e29",11,11,29},
+ {"n30","s30","e30",9,11,30},
+ {"n31","s31","e31",7,11,31},
+ {"n32","s32","e32",15,11,32},
+ {"n33","s33","e33",14,11,33},
+ {"n34","s34","e34",10,11,34},
+ {"n35","s35","e35",11,11,35},
+ {"n36","s36","e36",12,11,36},
+ {"n37","s37","e37",14,11,37},
+ {"n38","s38","e38",10,11,38},
+ {"n39","s39","e39",8,11,39},
+ {"n40","s40","e40",10,11,40},
+ {"n41","s41","e41",12,11,41},
+ {"n42","s42","e42",11,11,42},
+ {"n43","s43","e43",14,11,43},
+ {"n44","s44","e44",8,11,44},
+ {"n45","s45","e45",7,11,45},
+ {"n46","s46","e46",14,12,46},
+ {"n47","s47","e47",10,12,47},
+ {"n48","s48","e48",8,13,48},
+ {"n49","s49","e49",9,14,49},
+ {"n50","s50","e50",14,12,50}
 }
 
 function _init()
@@ -24,7 +64,7 @@ function _init()
  t=0
  mode="preview"
  spin=0
- show_info=true
+ info=1
  ps={}
  jobs={}
  stars={}
@@ -36,21 +76,21 @@ end
 function _update()
  t+=1
  if btnp(0) then
-  sel=(sel+8)%10+1
+  sel=(sel+48)%50+1
   mode="preview"
   ps={}
   jobs={}
  end
  if btnp(1) then
-  sel=sel%10+1
+  sel=sel%50+1
   mode="preview"
   ps={}
   jobs={}
  end
  if btnp(2) then pow=min(3,pow+1) end
  if btnp(3) then pow=max(1,pow-1) end
- if btnp(4) then mode="launched" launch(sel) end
- if btnp(5) then show_info=not show_info end
+ if btnp(4) then mode="launched" launch(fw[sel][6]) end
+ if btnp(5) then info=3-info end
  update_jobs()
  update_particles()
  if mode=="launched" and #ps==0 and #jobs==0 then mode="preview" end
@@ -78,7 +118,7 @@ function draw_preview()
  rectfill(0,9,127,81,1)
  for y=10,80,12 do line(0,y,127,y,0) end
  ovalfill(34,73,94,79,0)
- draw_mesh(sel)
+ draw_mesh(fw[sel][5])
 end
 
 function p3(x,y,z)
@@ -134,35 +174,61 @@ function prism(y1,y2,r1,r2,col,n)
 end
 function draw_mesh(i)
  if i==1 then
-  prism(-22,20,6,22,8,8)
-  prism(-29,-22,3,6,10,6)
- elseif i==2 then prism(-29,27,11,11,8,8)
+  prism(-5,5,7,7,8,6)
+ elseif i==2 then
+  prism(-8,8,8,8,10,6)
+  local a=p3(-8,8,0)
+  local b=p3(-26,25,0)
+  local c=p3(8,-8,0)
+  local d=p3(27,-24,0)
+  line(a[1],a[2],b[1],b[2],7)
+  line(c[1],c[2],d[1],d[2],7)
  elseif i==3 then
-  prism(-14,20,10,10,8,6)
-  prism(-28,-14,1,10,9,6)
-  line(67,60,67,79,4)
+  prism(-20,20,8,8,8,6)
+  prism(-22,-19,5,8,10,6)
  elseif i==4 then
-  prism(-22,0,5,18,13,8)
-  prism(0,24,18,4,13,8)
+  prism(-10,10,17,17,5,8)
+  prism(-13,-10,14,17,6,8)
  elseif i==5 then
-  prism(-23,0,5,19,6,8)
-  prism(0,24,19,4,6,8)
-  prism(-2,2,20,20,9,8)
+  prism(-29,29,2,2,10,6)
  elseif i==6 then
-  prism(-28,5,6,17,5,8)
-  prism(5,27,17,5,5,8)
+  prism(-3,3,22,22,10,8)
+  prism(-22,22,3,3,7,6)
  elseif i==7 then
-  prism(-29,29,10,10,11,8)
-  prism(-17,-13,11,11,9,8)
-  prism(13,17,11,11,9,8)
- elseif i==8 then prism(-9,9,23,23,10,10)
+  prism(-24,20,7,20,8,8)
+  prism(-28,-24,3,7,10,6)
+ elseif i==8 then
+  prism(-25,25,12,12,8,8)
+  prism(-28,-24,15,15,10,8)
  elseif i==9 then
-  prism(-21,21,16,16,14,6)
-  prism(-12,-8,17,17,8,6)
-  prism(8,12,17,17,8,6)
- else
+  prism(-12,17,10,10,8,6)
+  prism(-26,-12,2,10,9,6)
+  local a=p3(0,17,0)
+  local b=p3(0,34,0)
+  line(a[1],a[2],b[1],b[2],7)
+ elseif i==10 then
+  prism(-8,8,8,8,10,6)
+  local a=p3(-27,0,0)
+  local b=p3(27,0,0)
+  line(a[1],a[2],b[1],b[2],7)
+ elseif i==11 then
+  prism(-28,5,15,15,5,8)
+  prism(5,22,15,5,8,8)
+ elseif i==12 then
   prism(-18,22,25,20,12,4)
   prism(-29,-14,18,18,9,8)
+ elseif i==13 then
+  prism(-4,4,25,25,8,12)
+  prism(-29,29,3,3,5,6)
+ else
+  local a=p3(-28,-25,0)
+  local b=p3(-22,25,0)
+  local c=p3(28,-25,0)
+  local d=p3(22,25,0)
+  line(a[1],a[2],b[1],b[2],5)
+  line(b[1],b[2],d[1],d[2],5)
+  line(d[1],d[2],c[1],c[2],5)
+  for x=-18,18,9 do prism(-18,18,2,2,9,6) end
  end
 end
 
@@ -179,17 +245,14 @@ function draw_panel()
  local f=fw[sel]
  rectfill(0,82,127,99,0)
  rect(0,82,127,99,5)
- tx(f[1],3,85,f[2])
- print("lv "..pow,104,85,7)
- if show_info then
-  tx(f[4],3,93,6)
- else
-  print(f[3],3,93,6)
- end
+ tx(f[1],3,85,f[4])
+ print(sel.."/50",101,85,7)
+ tx(info==1 and f[2] or f[3],3,93,6)
+ print(info==1 and "s" or "fx",118,93,5)
 end
 
 function part(x,y,dx,dy,c,life,g,kind)
- if #ps<180 then
+ if #ps<220 then
   add(ps,{x=x,y=y,dx=dx,dy=dy,c=c,l=life,g=g or .04,k=kind or 0})
  end
 end
@@ -200,8 +263,8 @@ function update_particles()
   p.y+=p.dy
   p.dy+=p.g
   p.l-=1
-  if p.k==1 and p.l%5==0 then part(p.x,p.y,rnd(1)-.5,rnd(1)-.5,7,8,.02) end
-  if p.k==2 and p.l%3==0 then part(p.x,p.y,rnd(2)-1,rnd(2)-1,flr(10+rnd(5)),6,.03) end
+  if p.k==1 and p.l%6==0 then part(p.x,p.y,rnd(1)-.5,rnd(1)-.5,7,8,.02) end
+  if p.k==2 and p.l%4==0 then part(p.x,p.y,rnd(2)-1,rnd(2)-1,flr(10+rnd(5)),6,.03) end
   if p.l<=0 or p.y>104 then del(ps,p) end
  end
 end
@@ -210,8 +273,12 @@ function draw_particles()
  for p in all(ps) do
   if p.l<8 and p.l%2<1 then
    pset(p.x,p.y,5)
+  elseif p.k==4 then
+   circfill(p.x,p.y,2,p.c)
   elseif p.k==3 then
    circfill(p.x,p.y,1,p.c)
+  elseif p.k==5 then
+   if p.l%6<3 then circfill(p.x,p.y,1,p.c) end
   else
    pset(p.x,p.y,p.c)
    pset(p.x-p.dx,p.y-p.dy,5)
@@ -233,94 +300,165 @@ function update_jobs()
 end
 
 function launch(i)
- local x=18+((i-1)%5)*23+rnd(6)
- if i==1 then fountain(x)
- elseif i==2 then roman(x)
- elseif i==3 then rocket(x,0)
- elseif i==4 then
-  burst(64,40,30+pow*8,fw[i][2],0,.04)
-  sfx(1)
- elseif i==5 then
-  burst(64,39,38,fw[i][2],1,.025)
-  sfx(1)
- elseif i==6 then
-  burst(64,34,34,10,1,.09)
-  sfx(1)
- elseif i==7 then palm(64,38)
- elseif i==8 then ring(64,40)
- elseif i==9 then crackle(64,40)
- else finale() end
+ local x=32+rnd(64)
+ if i<=3 then snapper(x,i)
+ elseif i==4 then smoke(x)
+ elseif i<=7 then stickfx(x,i)
+ elseif i<=9 then wheel(i)
+ elseif i<=13 then fountain(x,i)
+ elseif i<=16 then battery(x,i)
+ elseif i<=19 then mine(x,i)
+ elseif i<=24 then lift(i,x)
+ elseif i==46 then shell_combo()
+ elseif i==47 then fan_cake()
+ elseif i==48 then wheel(i)
+ elseif i==49 then waterfall()
+ elseif i==50 then finale()
+ else shell(i,x) end
 end
 
-function fountain(x)
- sfx(0)
- for n=0,24+pow*10 do
-  job(n,function()
-   part(x,96,rnd(2)-1,-(1.5+rnd(2.4)+pow*.4),flr(8+rnd(7)),22+rnd(14),.08,1)
-  end)
- end
-end
-
-function roman(x)
- for n=0,3+pow do
-  job(n*14,function()
-   sfx(0)
-   part(x,94,rnd(.8)-.4,-3.1-rnd(1.6),flr(8+rnd(7)),35,.02,3)
-   job(24,function()
-    burst(x+rnd(20)-10,32+rnd(20),14,flr(8+rnd(7)),0,.05)
-    sfx(1)
-   end)
-  end)
- end
-end
-
-function rocket(x,mode)
- sfx(0)
- for n=0,18 do
-  job(n,function() part(x,96,rnd(.7)-.35,-2.5-rnd(.5),7,20,.03) end)
- end
- job(34,function()
-  local y=25+rnd(24)
-  if mode==1 then
-   ring(x,y)
-  else
-   burst(x,y,24+pow*7,flr(8+rnd(7)),0,.045)
-   sfx(1)
+function snapper(x,k)
+ sfx(2)
+ for i=1,5+k*3 do part(x,92,rnd(2)-1,-rnd(2),8+k,8+rnd(8),.12,k==2 and 3 or 0) end
+ if k==3 then
+  for q=1,4+pow do
+   job(q*6,function() sfx(2) sparkle(x+rnd(20)-10,90,5,9,0) end)
   end
- end)
+ end
 end
 
-function burst(x,y,n,c,kind,g)
+function smoke(x)
+ sfx(0)
+ for q=0,55 do
+  local n=q
+  job(n,function() part(x+rnd(8)-4,92-n*.35,rnd(.5)-.25,-.15-rnd(.2),flr(5+rnd(2)),30+rnd(18),-.01,4) end)
+ end
+end
+
+function stickfx(x,k)
+ sfx(0)
+ for q=0,35+pow*6 do
+  local n=q
+  job(n,function()
+   local xx=k==7 and 24+n*2.1 or x
+   part(xx,84+(k==7 and sin(n/12)*5 or 0),rnd(2)-1,-rnd(1.4),k==6 and flr(8+n/8%6) or 10,10+rnd(10),.05,k==7 and 2 or 1)
+  end)
+ end
+end
+
+function wheel(k)
+ sfx(0)
+ local dur=k==48 and 90 or 45
+ for q=0,dur do
+  local n=q
+  job(n,function()
+   local a=n/18
+   local x=64+(k==9 and sin(n/31)*35 or 0)
+   local y=k==48 and 53 or 86
+   for r=0,(k==48 and 3 or 1) do
+    part(x+cos(a+r/4)*12,y+sin(a+r/4)*12,cos(a+r/4)*1.4,sin(a+r/4)*1.4,8+r*2,16,.03,1)
+   end
+  end)
+ end
+end
+
+function fountain(x,k)
+ sfx(0)
+ for q=0,28+pow*10 do
+  local n=q
+  job(n,function()
+   local c=k==12 and flr(8+n/9%7) or (k==13 and 15 or 10)
+   part(x,96,rnd(2.4)-1.2,-(1.5+rnd(2.5)+pow*.35),c,20+rnd(12),.09,k==13 and 2 or 1)
+   if k==13 and n%12==0 then sfx(2) end
+  end)
+ end
+end
+
+function battery(x,k)
+ if k==16 then
+  for p=-1,1 do fountain(64+p*24,11+p%2) end
+ else
+  local count=k==15 and 7+pow*2 or 4+pow
+  for q=0,count do
+   local n=q
+   job(n*12,function()
+    local xx=k==15 and 36+(n%3)*28 or x
+    sfx(0)
+    comet(xx,94,24,flr(8+n%7))
+    job(19,function() boom(xx,36+rnd(18),12,flr(8+rnd(7)),0,.05,1) end)
+   end)
+  end
+ end
+end
+
+function mine(x,k)
+ sfx(0)
+ if k==18 then
+  for a=0,1,.08 do part(x,65,cos(a)*1.3,-.5+abs(sin(a))*.7,7,48,.035,4) end
+ elseif k==17 then
+  for i=1,36 do part(x,92,rnd(3)-1.5,-2-rnd(2),flr(8+rnd(7)),30+rnd(15),.09,3) end
+ else
+  for i=1,28 do part(x,92,rnd(2.8)-1.4,-2-rnd(2.6),flr(8+rnd(7)),28+rnd(18),.08,1) end
+ end
+end
+
+function lift(k,x)
+ sfx(0)
+ if k==22 then snapper(x,1) end
+ for q=0,27 do
+  local n=q
+  job(n,function()
+   local a=k==23 and n/10 or .75
+   local xx=x+(k==23 and cos(a)*12 or 0)
+   part(xx,96-n*2.2,rnd(.6)-.3,.2,7,16,.02,k==23 and 1 or 0)
+   if k==21 and n%8==0 then sfx(0) end
+  end)
+ end
+ if k!=24 then
+  job(30,function()
+   if k==23 then air(29,x,35)
+   elseif k==22 then air(25,x,38)
+   else air(k==21 and 31 or 25,x,34) end
+  end)
+ end
+end
+
+function comet(x,y,n,c)
+ for i=1,n do part(x+rnd(3)-1.5,y-i*2,rnd(.4)-.2,.2,c,18+i/2,.025,1) end
+end
+
+function shell(k,x)
+ sfx(0)
+ comet(x,96,27,k==45 and 9 or 7)
+ job(28,function() air(k,x,28+rnd(20)) end)
+end
+
+function boom(x,y,n,c,k,g,v)
+ sfx(k==2 and 2 or 1)
  for a=1,n do
-  local r=.7+rnd(1.8)+pow*.25
-  local ang=a/n
-  part(x,y,cos(ang)*r,sin(ang)*r,c,30+rnd(18),g,kind)
+  local r=(.65+rnd(1.1))*(v or 1)+pow*.12
+  part(x,y,cos(a/n)*r,sin(a/n)*r,c,28+rnd(18),g or .04,k or 0)
  end
 end
 
-function ring(x,y)
+function ring(x,y,n,c,v,k)
  sfx(1)
- for a=1,38 do
-  local ang=a/38
-  part(x,y,cos(ang)*1.9,sin(ang)*1.9,11,34,.035,0)
- end
+ for a=1,n do part(x,y,cos(a/n)*v,sin(a/n)*v,c,38,.035,k or 0) end
 end
 
-function palm(x,y)
+function palm(x,y,c)
  sfx(1)
  for a=.05,.95,.18 do
-  for n=1,7 do
-   part(x,y,cos(a)*(1+n*.24),sin(a)*(1+n*.24),12,34+n*2,.05,3)
-  end
+  for n=1,7 do part(x,y,cos(a)*(1+n*.23),sin(a)*(1+n*.23),c,34+n*2,.055,3) end
  end
 end
 
 function crackle(x,y)
  sfx(2)
- burst(x,y,18+pow*10,15,2,.04)
- for n=1,6+pow*3 do
-  job(n*5,function()
-   sparkle(x+rnd(50)-25,y+rnd(36)-18,8,flr(7+rnd(8)),2)
+ boom(x,y,18+pow*8,15,2,.04,1)
+ for q=1,5+pow*2 do
+  job(q*5,function()
+   sparkle(x+rnd(46)-23,y+rnd(32)-16,7,flr(8+rnd(7)),2)
    sfx(2)
   end)
  end
@@ -330,38 +468,123 @@ function sparkle(x,y,n,c,kind)
  for i=1,n do part(x,y,rnd(2)-1,rnd(2)-1,c,10+rnd(8),.03,kind) end
 end
 
-function finale()
- for n=0,6+pow*2 do
-  job(n*8,function() rocket(16+rnd(96),n%2) end)
+function air(k,x,y)
+ if k==25 then boom(x,y,30+pow*6,14,0,.04,1)
+ elseif k==26 then boom(x,y,38+pow*5,10,1,.025,1.05)
+ elseif k==27 then boom(x,y,34+pow*5,9,1,.09,.9)
+ elseif k==28 then palm(x,y,12)
+ elseif k==29 then ring(x,y,38,11,1.9,0)
+ elseif k==30 then boom(x,y,44+pow*5,9,1,.075,1.1)
+ elseif k==31 then boom(x,y,34+pow*5,7,5,.035,1)
+ elseif k==32 then
+  boom(x,y,26,14,0,.04,1)
+  job(8,function() crackle(x,y) end)
+ elseif k==33 then
+  boom(x,y,24,8,0,.04,.8)
+  job(7,function() ring(x,y,30,14,1.8,0) end)
+ elseif k==34 then
+  boom(x,y,30,14,0,.04,1.1)
+  boom(x,y,24,10,1,.025,.65)
+ elseif k==35 then
+  ring(x,y,34,8,1.3,0)
+  ring(x,y,42,11,2.1,0)
+ elseif k==36 then
+  ring(x,y,26,12,.8,0)
+  ring(x,y,32,10,1.45,1)
+  ring(x,y,38,14,2.1,0)
+ elseif k==37 then
+  boom(x,y,28,14,0,.04,1)
+  job(18,function() boom(x+12,y+10,30,10,1,.04,1.1) end)
+ elseif k==38 then
+  boom(x,y,24,8,0,.04,.8)
+  job(14,function() boom(x-12,y+8,28,10,1,.04,1) end)
+  job(28,function() boom(x+12,y+14,34,14,0,.04,1.2) end)
+ elseif k==39 then heart(x,y)
+ elseif k==40 then smiley(x,y)
+ elseif k==41 then cube(x,y)
+ elseif k==42 then jelly(x,y)
+ elseif k==43 then phoenix(x,y)
+ elseif k==44 then
+  ring(x,y,42,8,2,2)
+  job(5,function() ring(x,y,34,10,1.55,1) end)
+ elseif k==45 then
+  boom(x,y,42,9,1,.075,1.1)
+  job(6,function() boom(x,y,32,7,5,.035,.9) end)
  end
 end
 
-function _i18n_refs()
- if false then
-  tx("title",0,0,0)
-  tx("select",0,0,0)
-  tx("fire",0,0,0)
-  tx("inspect",0,0,0)
-  tx("fountain",0,0,0)
-  tx("roman",0,0,0)
-  tx("shell",0,0,0)
-  tx("peony",0,0,0)
-  tx("chrys",0,0,0)
-  tx("willow",0,0,0)
-  tx("palm",0,0,0)
-  tx("ring",0,0,0)
-  tx("crackle",0,0,0)
-  tx("finale",0,0,0)
-  tx("d_fountain",0,0,0)
-  tx("d_roman",0,0,0)
-  tx("d_shell",0,0,0)
-  tx("d_peony",0,0,0)
-  tx("d_chrys",0,0,0)
-  tx("d_willow",0,0,0)
-  tx("d_palm",0,0,0)
-  tx("d_ring",0,0,0)
-  tx("d_crackle",0,0,0)
-  tx("d_finale",0,0,0)
+function heart(x,y)
+ sfx(1)
+ for a=0,1,.035 do
+  local xx=sin(a)^3*2.1
+  local yy=-(13*cos(a)-5*cos(a*2)-2*cos(a*3)-cos(a*4))*.12
+  part(x,y,xx,yy,8,40,.025,1)
+ end
+end
+
+function smiley(x,y)
+ ring(x,y,36,10,2,0)
+ for i=-1,1,2 do part(x,y,i*.65,-.65,7,38,.035,3) end
+ for a=.1,.4,.05 do part(x,y,cos(a)*1.2,.9+sin(a)*.6,7,38,.035,3) end
+end
+
+function cube(x,y)
+ sfx(1)
+ for xx=-1,1,2 do
+  for yy=-1,1,2 do
+   part(x,y,xx*1.45+yy*.4,yy*1.45,12,42,.03,3)
+   part(x,y,xx*1.45-yy*.4,yy*.7,12,42,.03,1)
+  end
+ end
+end
+
+function jelly(x,y)
+ sfx(1)
+ for a=0,.5,.035 do part(x,y,cos(a)*2,sin(a)*1.5,11,36,.045,1) end
+ for xx=-2,2 do
+  for n=1,5 do part(x+xx*7,y,xx*.12,n*.35,10,34+n*3,.055,1) end
+ end
+end
+
+function phoenix(x,y)
+ sfx(1)
+ for side=-1,1,2 do
+  for n=1,11 do part(x,y,side*(.3+n*.18),-1.5+abs(6-n)*.2,14,32+n,.045,1) end
+ end
+ for n=1,8 do part(x,y,(n%2-.5)*.4,1+n*.18,8,34+n,.06,1) end
+end
+
+function shell_combo()
+ for q=0,6+pow do
+  local n=q
+  job(n*12,function() shell(25+n%6,18+(n%4)*30) end)
+ end
+end
+
+function fan_cake()
+ for q=0,7+pow do
+  local n=q
+  job(n*9,function() shell(25+n%5,64+(n%3-1)*(22+n*2)) end)
+ end
+end
+
+function waterfall()
+ sfx(0)
+ for q=0,85 do
+  local n=q
+  job(n,function()
+   for x=8,120,14 do part(x,18,rnd(.6)-.3,.6+rnd(1.1),9,50,.025,1) end
+  end)
+ end
+end
+
+function finale()
+ for q=0,10+pow*2 do
+  local n=q
+  job(n*8,function()
+   shell(25+n%21,14+rnd(100))
+   if n>7 and n%2==0 then crackle(20+rnd(88),28+rnd(35)) end
+  end)
  end
 end
 __gfx__
@@ -667,35 +890,164 @@ __meta__
 }
 __i18n__
 {
-  "locales": [
-    "en",
-    "zh"
-  ],
+  "locales": ["en", "zh"],
   "entries": [
     { "key": "title", "translations": { "en": "firework simulators", "zh": "烟花模拟器" } },
     { "key": "select", "translations": { "en": "select", "zh": "选择" } },
     { "key": "fire", "translations": { "en": "fire", "zh": "点火" } },
     { "key": "inspect", "translations": { "en": "info", "zh": "说明" } },
-    { "key": "fountain", "translations": { "en": "fountain", "zh": "喷泉" } },
-    { "key": "roman", "translations": { "en": "roman candle", "zh": "罗马烛" } },
-    { "key": "shell", "translations": { "en": "rocket shell", "zh": "升空礼花" } },
-    { "key": "peony", "translations": { "en": "peony", "zh": "牡丹花" } },
-    { "key": "chrys", "translations": { "en": "chrysanthemum", "zh": "菊花型" } },
-    { "key": "willow", "translations": { "en": "willow", "zh": "柳树型" } },
-    { "key": "palm", "translations": { "en": "palm", "zh": "棕榈型" } },
-    { "key": "ring", "translations": { "en": "ring", "zh": "圆环" } },
-    { "key": "crackle", "translations": { "en": "crackle", "zh": "爆裂星" } },
-    { "key": "finale", "translations": { "en": "finale cake", "zh": "组合终场" } },
-    { "key": "d_fountain", "translations": { "en": "ground jets; no aerial burst", "zh": "地面喷射,不升空" } },
-    { "key": "d_roman", "translations": { "en": "one tube fires many stars", "zh": "单管连续发射星弹" } },
-    { "key": "d_shell", "translations": { "en": "rocket lift, timed burst", "zh": "升空后定时开花" } },
-    { "key": "d_peony", "translations": { "en": "round even flower burst", "zh": "圆形均匀花束" } },
-    { "key": "d_chrys", "translations": { "en": "bright spokes with glitter", "zh": "放射星线带闪光" } },
-    { "key": "d_willow", "translations": { "en": "gold trails droop downward", "zh": "金色轨迹向下垂落" } },
-    { "key": "d_palm", "translations": { "en": "few thick comet branches", "zh": "粗亮彗星枝条" } },
-    { "key": "d_ring", "translations": { "en": "stars form a hollow ring", "zh": "星点组成空心圆" } },
-    { "key": "d_crackle", "translations": { "en": "many tiny noisy pops", "zh": "密集细小爆裂声" } },
-    { "key": "d_finale", "translations": { "en": "rapid mixed cake volley", "zh": "组合烟花密集齐射" } }
+    { "key": "n01", "translations": { "en": "sand popper", "zh": "砂炮" } },
+    { "key": "n02", "translations": { "en": "pull popper", "zh": "拉炮" } },
+    { "key": "n03", "translations": { "en": "firecracker", "zh": "爆竹" } },
+    { "key": "n04", "translations": { "en": "smoke toy", "zh": "烟雾玩具" } },
+    { "key": "n05", "translations": { "en": "sparkler", "zh": "电光花" } },
+    { "key": "n06", "translations": { "en": "morning glory", "zh": "晨光花" } },
+    { "key": "n07", "translations": { "en": "magic whip", "zh": "魔鞭" } },
+    { "key": "n08", "translations": { "en": "fixed pinwheel", "zh": "固定轴火轮" } },
+    { "key": "n09", "translations": { "en": "ground spinner", "zh": "地面陀螺" } },
+    { "key": "n10", "translations": { "en": "hand fountain", "zh": "手持喷花" } },
+    { "key": "n11", "translations": { "en": "ground fountain", "zh": "地面喷花" } },
+    { "key": "n12", "translations": { "en": "color fountain", "zh": "变色喷花" } },
+    { "key": "n13", "translations": { "en": "crackle fountain", "zh": "爆裂喷花" } },
+    { "key": "n14", "translations": { "en": "star tube", "zh": "吐珠" } },
+    { "key": "n15", "translations": { "en": "star battery", "zh": "吐珠组合" } },
+    { "key": "n16", "translations": { "en": "fountain battery", "zh": "喷花组合" } },
+    { "key": "n17", "translations": { "en": "color paper display", "zh": "彩纸小礼花" } },
+    { "key": "n18", "translations": { "en": "umbrella display", "zh": "纸伞小礼花" } },
+    { "key": "n19", "translations": { "en": "bouquet display", "zh": "花束小礼花" } },
+    { "key": "n20", "translations": { "en": "small rocket", "zh": "小火箭" } },
+    { "key": "n21", "translations": { "en": "whistle rocket", "zh": "哨音火箭" } },
+    { "key": "n22", "translations": { "en": "double report", "zh": "双响" } },
+    { "key": "n23", "translations": { "en": "rotor lift", "zh": "旋转升空" } },
+    { "key": "n24", "translations": { "en": "comet tail", "zh": "彗星彗尾" } },
+    { "key": "n25", "translations": { "en": "peony", "zh": "牡丹型" } },
+    { "key": "n26", "translations": { "en": "chrysanthemum", "zh": "菊花型" } },
+    { "key": "n27", "translations": { "en": "willow", "zh": "垂柳型" } },
+    { "key": "n28", "translations": { "en": "palm", "zh": "棕榈型" } },
+    { "key": "n29", "translations": { "en": "ring effect", "zh": "环状效果" } },
+    { "key": "n30", "translations": { "en": "brocade crown", "zh": "锦冠" } },
+    { "key": "n31", "translations": { "en": "white strobe", "zh": "白闪" } },
+    { "key": "n32", "translations": { "en": "crackle core", "zh": "爆裂芯花" } },
+    { "key": "n33", "translations": { "en": "color peony", "zh": "牡丹变色" } },
+    { "key": "n34", "translations": { "en": "peony chrys core", "zh": "牡丹带菊芯" } },
+    { "key": "n35", "translations": { "en": "concentric rings", "zh": "多重圆环" } },
+    { "key": "n36", "translations": { "en": "double pistil", "zh": "双层芯花" } },
+    { "key": "n37", "translations": { "en": "double break", "zh": "双开礼花弹" } },
+    { "key": "n38", "translations": { "en": "triple break", "zh": "三开礼花弹" } },
+    { "key": "n39", "translations": { "en": "heart", "zh": "心形" } },
+    { "key": "n40", "translations": { "en": "smiley", "zh": "笑脸" } },
+    { "key": "n41", "translations": { "en": "cube", "zh": "立方体" } },
+    { "key": "n42", "translations": { "en": "jellyfish", "zh": "水母型" } },
+    { "key": "n43", "translations": { "en": "phoenix", "zh": "凤凰型" } },
+    { "key": "n44", "translations": { "en": "fire ring", "zh": "火圈型" } },
+    { "key": "n45", "translations": { "en": "brocade tail strobe", "zh": "锦冠尾白闪" } },
+    { "key": "n46", "translations": { "en": "shell combination", "zh": "礼花弹组合" } },
+    { "key": "n47", "translations": { "en": "fan cake", "zh": "扇形组合烟花" } },
+    { "key": "n48", "translations": { "en": "frame wheel", "zh": "火轮架子烟花" } },
+    { "key": "n49", "translations": { "en": "waterfall frame", "zh": "瀑布架子烟花" } },
+    { "key": "n50", "translations": { "en": "synchronized finale", "zh": "大型同步终场" } },
+
+    { "key": "s01", "translations": { "en": "paper-wrapped bead", "zh": "纸包小丸" } },
+    { "key": "s02", "translations": { "en": "cord and paper ends", "zh": "拉绳与纸头" } },
+    { "key": "s03", "translations": { "en": "short paper cylinder", "zh": "短纸筒" } },
+    { "key": "s04", "translations": { "en": "small puck canister", "zh": "小罐或圆饼" } },
+    { "key": "s05", "translations": { "en": "slender coated wire", "zh": "药层金属丝" } },
+    { "key": "s06", "translations": { "en": "slim effect stick", "zh": "细长效果棒" } },
+    { "key": "s07", "translations": { "en": "flexible snap cord", "zh": "柔性响鞭" } },
+    { "key": "s08", "translations": { "en": "hub on fixed axle", "zh": "固定轴轮盘" } },
+    { "key": "s09", "translations": { "en": "squat spinning puck", "zh": "矮圆旋转体" } },
+    { "key": "s10", "translations": { "en": "slim hand tube", "zh": "细长手持管" } },
+    { "key": "s11", "translations": { "en": "cone or cylinder", "zh": "锥筒或圆筒" } },
+    { "key": "s12", "translations": { "en": "cone or cylinder", "zh": "锥筒或圆筒" } },
+    { "key": "s13", "translations": { "en": "cone or small box", "zh": "锥筒或小盒" } },
+    { "key": "s14", "translations": { "en": "secured tall tube", "zh": "固定长管" } },
+    { "key": "s15", "translations": { "en": "box of star tubes", "zh": "吐珠管束盒" } },
+    { "key": "s16", "translations": { "en": "fountain tube tray", "zh": "喷花管托盘" } },
+    { "key": "s17", "translations": { "en": "upright display tube", "zh": "直立小礼花管" } },
+    { "key": "s18", "translations": { "en": "upright display tube", "zh": "直立小礼花管" } },
+    { "key": "s19", "translations": { "en": "single display tube", "zh": "单管小礼花" } },
+    { "key": "s20", "translations": { "en": "guide-stick rocket", "zh": "带导向杆火箭" } },
+    { "key": "s21", "translations": { "en": "guide-stick rocket", "zh": "带导向杆火箭" } },
+    { "key": "s22", "translations": { "en": "segmented cylinder", "zh": "分段圆筒" } },
+    { "key": "s23", "translations": { "en": "winged rotor body", "zh": "带翼旋转体" } },
+    { "key": "s24", "translations": { "en": "star tube or mortar", "zh": "星管或发射筒" } },
+    { "key": "s25", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s26", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s27", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s28", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s29", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s30", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s31", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s32", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s33", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s34", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s35", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s36", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s37", "translations": { "en": "staged shell, mortar", "zh": "分段礼花弹与筒" } },
+    { "key": "s38", "translations": { "en": "long staged shell", "zh": "长分段礼花弹" } },
+    { "key": "s39", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s40", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s41", "translations": { "en": "shell and mortar", "zh": "礼花弹与发射筒" } },
+    { "key": "s42", "translations": { "en": "show shell carrier", "zh": "表演礼花弹载体" } },
+    { "key": "s43", "translations": { "en": "show shell carrier", "zh": "表演礼花弹载体" } },
+    { "key": "s44", "translations": { "en": "show shell carrier", "zh": "表演礼花弹载体" } },
+    { "key": "s45", "translations": { "en": "pro shell and mortar", "zh": "专业礼花弹与筒" } },
+    { "key": "s46", "translations": { "en": "installed mortar bank", "zh": "成组安装发射筒" } },
+    { "key": "s47", "translations": { "en": "angled tube cake", "zh": "斜置管组合箱" } },
+    { "key": "s48", "translations": { "en": "wheel support frame", "zh": "大型火轮支架" } },
+    { "key": "s49", "translations": { "en": "elevated line frame", "zh": "高架线形框架" } },
+    { "key": "s50", "translations": { "en": "cakes, racks, frames", "zh": "组合箱筒架与框架" } },
+
+    { "key": "e01", "translations": { "en": "point flash; dry snap", "zh": "点状闪光与干脆响声" } },
+    { "key": "e02", "translations": { "en": "local flash; one pop", "zh": "局部闪光与单次脆响" } },
+    { "key": "e03", "translations": { "en": "flash; chain reports", "zh": "闪光与连续爆响" } },
+    { "key": "e04", "translations": { "en": "slow smoke; soft hiss", "zh": "缓慢烟雾与轻嘶声" } },
+    { "key": "e05", "translations": { "en": "tight spark halo; fizz", "zh": "近身火花环与细响" } },
+    { "key": "e06", "translations": { "en": "color flame and sparks", "zh": "彩色火焰与火花" } },
+    { "key": "e07", "translations": { "en": "traveling line of snaps", "zh": "沿线移动的密集脆响" } },
+    { "key": "e08", "translations": { "en": "rotating spray; whirr", "zh": "旋转喷射与呼呼声" } },
+    { "key": "e09", "translations": { "en": "erratic spin and sparks", "zh": "不规则旋转与火花" } },
+    { "key": "e10", "translations": { "en": "short upward plume", "zh": "短小向上喷流" } },
+    { "key": "e11", "translations": { "en": "steady vertical plume", "zh": "稳定竖直喷流" } },
+    { "key": "e12", "translations": { "en": "staged color plume", "zh": "分阶段变色喷流" } },
+    { "key": "e13", "translations": { "en": "plume with crackle", "zh": "喷流叠加密集爆裂" } },
+    { "key": "e14", "translations": { "en": "rhythmic rising stars", "zh": "节奏升起的彩星" } },
+    { "key": "e15", "translations": { "en": "patterned star shots", "zh": "成组交替发射彩星" } },
+    { "key": "e16", "translations": { "en": "wide layered plumes", "zh": "多管宽幅分层喷流" } },
+    { "key": "e17", "translations": { "en": "airborne paper cloud", "zh": "升空彩纸云团" } },
+    { "key": "e18", "translations": { "en": "small drifting canopy", "zh": "缓慢飘落的小伞盖" } },
+    { "key": "e19", "translations": { "en": "instant star bouquet", "zh": "瞬间升起的彩星花束" } },
+    { "key": "e20", "translations": { "en": "bright tail then pop", "zh": "明亮上升尾迹后爆响" } },
+    { "key": "e21", "translations": { "en": "rising whistle then pop", "zh": "上升哨音后爆响" } },
+    { "key": "e22", "translations": { "en": "two separated reports", "zh": "前后分离的两次爆响" } },
+    { "key": "e23", "translations": { "en": "spiral lift and whirr", "zh": "螺旋升空与呼呼声" } },
+    { "key": "e24", "translations": { "en": "bright head, long tail", "zh": "明亮头部与长彗尾" } },
+    { "key": "e25", "translations": { "en": "round points; one boom", "zh": "圆形短星点与单次爆响" } },
+    { "key": "e26", "translations": { "en": "long radial spokes", "zh": "长放射星线与持续细响" } },
+    { "key": "e27", "translations": { "en": "long drooping trails", "zh": "长而下垂的光迹" } },
+    { "key": "e28", "translations": { "en": "thick comet branches", "zh": "粗亮彗星枝条" } },
+    { "key": "e29", "translations": { "en": "expanding hollow ring", "zh": "扩张的空心光环" } },
+    { "key": "e30", "translations": { "en": "dense falling gold crown", "zh": "浓密下落的金色锦冠" } },
+    { "key": "e31", "translations": { "en": "blinking white points", "zh": "反复明灭的白色星点" } },
+    { "key": "e32", "translations": { "en": "bloom then crackle core", "zh": "花束后出现爆裂内芯" } },
+    { "key": "e33", "translations": { "en": "peony changes color", "zh": "牡丹花束分阶段变色" } },
+    { "key": "e34", "translations": { "en": "peony around long core", "zh": "牡丹外层包围菊花长芯" } },
+    { "key": "e35", "translations": { "en": "two expanding rings", "zh": "两层同步扩张圆环" } },
+    { "key": "e36", "translations": { "en": "three nested layers", "zh": "外花与双层内芯" } },
+    { "key": "e37", "translations": { "en": "two delayed blooms", "zh": "前后两次延时开花" } },
+    { "key": "e38", "translations": { "en": "three delayed blooms", "zh": "前后三次延时开花" } },
+    { "key": "e39", "translations": { "en": "planar heart pattern", "zh": "视角敏感的平面心形" } },
+    { "key": "e40", "translations": { "en": "ring face and smile", "zh": "圆脸眼睛与笑口" } },
+    { "key": "e41", "translations": { "en": "experimental cube lines", "zh": "实验性立方体光线" } },
+    { "key": "e42", "translations": { "en": "dome with long tendrils", "zh": "伞盖与长下垂光丝" } },
+    { "key": "e43", "translations": { "en": "sweeping wings and tail", "zh": "展开双翼与扫动尾羽" } },
+    { "key": "e44", "translations": { "en": "layered crackling ring", "zh": "分层爆裂火圈" } },
+    { "key": "e45", "translations": { "en": "gold tail, crown, strobe", "zh": "金尾开锦冠并叠加白闪" } },
+    { "key": "e46", "translations": { "en": "coordinated high breaks", "zh": "多位置协调高空开花" } },
+    { "key": "e47", "translations": { "en": "widening fan volleys", "zh": "逐渐展开的扇形齐射" } },
+    { "key": "e48", "translations": { "en": "large rotating fire arms", "zh": "大型旋转火焰轮臂" } },
+    { "key": "e49", "translations": { "en": "broad falling spark wall", "zh": "宽阔下落的火花瀑布" } },
+    { "key": "e50", "translations": { "en": "all layers converge", "zh": "多高度多层效果同步汇聚" } }
   ],
   "outputLocale": "en"
 }
