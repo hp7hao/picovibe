@@ -2343,3 +2343,9 @@ __meta__
   "author": "bridgs",
   "template": "default"
 }
+__i18n__
+{
+  "locales": ["zh-CN"],
+  "entries": [],
+  "outputLocale": "zh-CN"
+}

@@ -1422,45 +1422,45 @@ __meta__
 __i18n__
 {
   "locales": [
-    "zh",
-    "en"
+    "zh-CN",
+    "en-US"
   ],
   "entries": [
     {
       "key": "best",
       "translations": {
-        "zh": "最高分",
-        "en": "best"
+        "zh-CN": "最高分",
+        "en-US": "best"
       }
     },
     {
       "key": "game over",
       "translations": {
-        "zh": "游戏结束",
-        "en": "game over"
+        "zh-CN": "游戏结束",
+        "en-US": "game over"
       }
     },
     {
       "key": "highscore",
       "translations": {
-        "zh": "最高分",
-        "en": "highscore"
+        "zh-CN": "最高分",
+        "en-US": "highscore"
       }
     },
     {
       "key": "new",
       "translations": {
-        "zh": "新纪录",
-        "en": "new"
+        "zh-CN": "新纪录",
+        "en-US": "new"
       }
     },
     {
       "key": "score",
       "translations": {
-        "zh": "得分",
-        "en": "score"
+        "zh-CN": "得分",
+        "en-US": "score"
       }
     }
   ],
-  "outputLocale": "zh"
+  "outputLocale": "zh-CN"
 }

@@ -297,45 +297,45 @@ __meta__
 __i18n__
 {
   "locales": [
-    "zh"
+    "zh-CN"
   ],
   "entries": [
     {
       "key": "title1",
       "translations": {
-        "zh": "《小爷集》"
+        "zh-CN": "《小爷集》"
       }
     },
     {
       "key": "title2",
       "translations": {
-        "zh": "陈塘关大诗人哪吒全集"
+        "zh-CN": "陈塘关大诗人哪吒全集"
       }
     },
     {
       "key": "poem1",
       "translations": {
-        "zh": "第一首"
+        "zh-CN": "第一首"
       }
     },
     {
       "key": "poem2",
       "translations": {
-        "zh": "第二首"
+        "zh-CN": "第二首"
       }
     },
     {
       "key": "poem3",
       "translations": {
-        "zh": "第三首"
+        "zh-CN": "第三首"
       }
     },
     {
       "key": "poem4",
       "translations": {
-        "zh": "第四首"
+        "zh-CN": "第四首"
       }
     }
   ],
-  "outputLocale": "zh"
+  "outputLocale": "zh-CN"
 }

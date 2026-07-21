@@ -1860,269 +1860,269 @@ __meta__
 __i18n__
 {
   "locales": [
-    "zh",
-    "en"
+    "zh-CN",
+    "en-US"
   ],
   "entries": [
     {
       "key": "0",
       "translations": {
-        "zh": "-",
-        "en": "0"
+        "zh-CN": "-",
+        "en-US": "0"
       }
     },
     {
       "key": "1",
       "translations": {
-        "zh": "-",
-        "en": "1"
+        "zh-CN": "-",
+        "en-US": "1"
       }
     },
     {
       "key": "2",
       "translations": {
-        "zh": " ",
-        "en": "2"
+        "zh-CN": " ",
+        "en-US": "2"
       }
     },
     {
       "key": "3",
       "translations": {
-        "zh": "蔚",
-        "en": "3"
+        "zh-CN": "蔚",
+        "en-US": "3"
       }
     },
     {
       "key": "4",
       "translations": {
-        "zh": "蓝",
-        "en": "4"
+        "zh-CN": "蓝",
+        "en-US": "4"
       }
     },
     {
       "key": "5",
       "translations": {
-        "zh": "之",
-        "en": "5"
+        "zh-CN": "之",
+        "en-US": "5"
       }
     },
     {
       "key": "6",
       "translations": {
-        "zh": "巅",
-        "en": "6"
+        "zh-CN": "巅",
+        "en-US": "6"
       }
     },
     {
       "key": "7",
       "translations": {
-        "zh": " ",
-        "en": "7"
+        "zh-CN": " ",
+        "en-US": "7"
       }
     },
     {
       "key": "8",
       "translations": {
-        "zh": "-",
-        "en": "8"
+        "zh-CN": "-",
+        "en-US": "8"
       }
     },
     {
       "key": "9",
       "translations": {
-        "zh": "-",
-        "en": "9"
+        "zh-CN": "-",
+        "en-US": "9"
       }
     },
     {
       "key": "a",
       "translations": {
-        "zh": "以",
-        "en": "a"
+        "zh-CN": "以",
+        "en-US": "a"
       }
     },
     {
       "key": "b",
       "translations": {
-        "zh": "此",
-        "en": "b"
+        "zh-CN": "此",
+        "en-US": "b"
       }
     },
     {
       "key": "c",
       "translations": {
-        "zh": "碑",
-        "en": "c"
+        "zh-CN": "碑",
+        "en-US": "c"
       }
     },
     {
       "key": "d",
       "translations": {
-        "zh": "铭",
-        "en": "d"
+        "zh-CN": "铭",
+        "en-US": "d"
       }
     },
     {
       "key": "e",
       "translations": {
-        "zh": "记",
-        "en": "e"
+        "zh-CN": "记",
+        "en-US": "e"
       }
     },
     {
       "key": "f",
       "translations": {
-        "zh": "那",
-        "en": "f"
+        "zh-CN": "那",
+        "en-US": "f"
       }
     },
     {
       "key": "g",
       "translations": {
-        "zh": "些",
-        "en": "g"
+        "zh-CN": "些",
+        "en-US": "g"
       }
     },
     {
       "key": "h",
       "translations": {
-        "zh": "在",
-        "en": "h"
+        "zh-CN": "在",
+        "en-US": "h"
       }
     },
     {
       "key": "i",
       "translations": {
-        "zh": "攀",
-        "en": "i"
+        "zh-CN": "攀",
+        "en-US": "i"
       }
     },
     {
       "key": "j",
       "translations": {
-        "zh": "登",
-        "en": "j"
+        "zh-CN": "登",
+        "en-US": "j"
       }
     },
     {
       "key": "k",
       "translations": {
-        "zh": "路",
-        "en": "k"
+        "zh-CN": "路",
+        "en-US": "k"
       }
     },
     {
       "key": "l",
       "translations": {
-        "zh": "上",
-        "en": "l"
+        "zh-CN": "上",
+        "en-US": "l"
       }
     },
     {
       "key": "m",
       "translations": {
-        "zh": "消",
-        "en": "m"
+        "zh-CN": "消",
+        "en-US": "m"
       }
     },
     {
       "key": "n",
       "translations": {
-        "zh": "逝",
-        "en": "n"
+        "zh-CN": "逝",
+        "en-US": "n"
       }
     },
     {
       "key": "o",
       "translations": {
-        "zh": "的",
-        "en": "o"
+        "zh-CN": "的",
+        "en-US": "o"
       }
     },
     {
       "key": "p",
       "translations": {
-        "zh": "灵",
-        "en": "p"
+        "zh-CN": "灵",
+        "en-US": "p"
       }
     },
     {
       "key": "q",
       "translations": {
-        "zh": "魂",
-        "en": "q"
+        "zh-CN": "魂",
+        "en-US": "q"
       }
     },
     {
       "key": "deaths",
       "translations": {
-        "zh": "死亡",
-        "en": "deaths:"
+        "zh-CN": "死亡",
+        "en-US": "deaths:"
       }
     },
     {
       "key": "level",
       "translations": {
-        "zh": "高度",
-        "en": "level"
+        "zh-CN": "高度",
+        "en-US": "level"
       }
     },
     {
       "key": "meter",
       "translations": {
-        "zh": "米",
-        "en": "meter"
+        "zh-CN": "米",
+        "en-US": "meter"
       }
     },
     {
       "key": "matt_thorson",
       "translations": {
-        "zh": "matt thorson",
-        "en": "matt thorson"
+        "zh-CN": "matt thorson",
+        "en-US": "matt thorson"
       }
     },
     {
       "key": "noel_berry",
       "translations": {
-        "zh": "noel berry",
-        "en": "noel berry"
+        "zh-CN": "noel berry",
+        "en-US": "noel berry"
       }
     },
     {
       "key": "old_site",
       "translations": {
-        "zh": "旧址",
-        "en": "old site"
+        "zh-CN": "旧址",
+        "en-US": "old site"
       }
     },
     {
       "key": "summit",
       "translations": {
-        "zh": "峰顶",
-        "en": "summit"
+        "zh-CN": "峰顶",
+        "en-US": "summit"
       }
     },
     {
       "key": "score",
       "translations": {
-        "zh": "得分:",
-        "en": "score:"
+        "zh-CN": "得分:",
+        "en-US": "score:"
       }
     },
     {
       "key": "translator",
       "translations": {
-        "zh": "hp7hao(翻译)",
-        "en": "translator(hp7hao)"
+        "zh-CN": "hp7hao(翻译)",
+        "en-US": "translator(hp7hao)"
       }
     },
     {
       "key": "start",
       "translations": {
-        "zh": "开始",
-        "en": "x+c"
+        "zh-CN": "开始",
+        "en-US": "x+c"
       }
     }
   ],
-  "outputLocale": "zh"
+  "outputLocale": "zh-CN"
 }

@@ -939,15 +939,15 @@ __meta__
 }
 __i18n__
 {
-  "locales": ["zh", "en"],
+  "locales": ["zh-CN", "en-US"],
   "entries": [
     {
       "key": "pet_kitty",
       "translations": {
-        "zh": "~撸猫~",
-        "en": "pet the kitty"
+        "zh-CN": "~撸猫~",
+        "en-US": "pet the kitty"
       }
     }
   ],
-  "outputLocale": "zh"
+  "outputLocale": "zh-CN"
 }

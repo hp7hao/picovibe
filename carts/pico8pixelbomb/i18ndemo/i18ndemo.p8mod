@@ -321,17 +321,17 @@ __meta__
 __i18n__
 {
   "locales": [
-    "zh",
-    "en"
+    "zh-CN",
+    "en-US"
   ],
   "entries": [
     {
       "key": "t0",
       "translations": {
-        "zh": "关关雎鸠，在河之洲。\n窈窕淑女，君子好逑。\n——佚名《关雎》",
-        "en": "By riverside a pair\nOf turtledoves are cooing;\nThere is a maiden fair\nWhom a young man is wooing.\n--Cooing and Wooing"
+        "zh-CN": "关关雎鸠，在河之洲。\n窈窕淑女，君子好逑。\n——佚名《关雎》",
+        "en-US": "By riverside a pair\nOf turtledoves are cooing;\nThere is a maiden fair\nWhom a young man is wooing.\n--Cooing and Wooing"
       }
     }
   ],
-  "outputLocale": "zh"
+  "outputLocale": "zh-CN"
 }

@@ -680,3 +680,9 @@ __meta__
   "author": "icegeek",
   "template": "default"
 }
+__i18n__
+{
+  "locales": ["zh-CN"],
+  "entries": [],
+  "outputLocale": "zh-CN"
+}

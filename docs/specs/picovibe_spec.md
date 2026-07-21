@@ -1,11 +1,11 @@
 # PICOVIBE Cart Catalog Specification
 
-**Version**: 0.2.0
+**Version**: 0.4.0
 **Status**: Active
 **Level**: product
 **Owner**: picovibe
 **Parent**: docs/specs/GLOBAL_SPEC.md
-**Last Reviewed**: 2026-07-15
+**Last Reviewed**: 2026-07-20
 
 ## 1. Purpose
 
@@ -241,20 +241,52 @@ exporter asset contract, generates localized `.p8` or `.p8.png` artifacts, and
 writes exact asset provenance for release builds. Existing generated carts remain
 valid consumers of the Pico8 IDE-expanded shape described above.
 
-The Picovibe entrypoint is `scripts/export-p8mod.sh <cart.p8mod>`. The wrapper
+The Picovibe entrypoint is
+`scripts/export-p8mod.sh --lang <locale> <cart.p8mod>`. The wrapper
 resolves the sibling Pico8 IDE checkout as `../pico8ide` relative to
 `projects/picovibe`, ensures Pico8 IDE package dependencies are installed when
 its required runtime modules are absent, compiles Pico8 IDE only when
 `../pico8ide/out/extension/p8modtool.js` is missing, then invokes:
 
 ```bash
-node ../pico8ide/out/extension/p8modtool.js <cart.p8mod> --format p8 --out <release>/<name>.p8 --workspace-root <picovibe-root>
-node ../pico8ide/out/extension/p8modtool.js <cart.p8mod> --format p8.png --out <release>/<name>.p8.png --workspace-root <picovibe-root> --write-provenance
+node ../pico8ide/out/extension/p8modtool.js <cart.p8mod> --format p8 --lang <locale> --out <release>/<name>.p8 --workspace-root <picovibe-root>
+node ../pico8ide/out/extension/p8modtool.js <cart.p8mod> --format p8.png --lang <locale> --template default --out <release>/<name>.p8.png --workspace-root <picovibe-root> --write-provenance
 ```
 
 By default `<release>` is the input cart's sibling `release/` directory. The
 wrapper may accept an explicit `--out-dir`, but it must not synthesize cart data
 itself or call any retired local converter.
+PicoVibe exports MUST pass Pico8 IDE's named `default` cart template explicitly
+for `.p8.png`; Pico8 IDE remains the template asset owner. Successful localized
+artifacts under `release/fcdb/` are tracked release outputs, not ignored scratch
+files, so FCDB can consume the reviewed PicoVibe snapshot without requiring a
+fresh export. The batch still recreates that directory to prune stale variants.
+
+For catalog builds, `scripts/export-fcdb-carts.mjs` reads the FCDB
+`sources/pico8/pico8pixelbomb.json` manifest from the sibling `projects/fcdb`
+checkout. Each entry's `extension.source_path` identifies an editable Picovibe
+`.p8mod` source. Picovibe source locales MUST use correctly cased BCP-47 tags
+matching FCDB (`zh-CN`, `en-US`, and similar), not short or underscore aliases.
+For a localized source, the primary target is declared by FCDB's scalar
+`cart_file`, `cart_path`, and `cart_locale`; `cart_variants` declares only
+additional targets. A normal scalar game without a `.p8mod` source or locale
+fields remains outside this optional batch compilation path. The batch exporter invokes `scripts/export-p8mod.sh` independently for every
+locale declared by `__i18n__.locales` and stages each successful artifact under
+`release/fcdb/<base>.<locale>.p8.png`. A locale failure skips only that locale;
+other locales and later games continue. This keeps FCDB's game metadata and
+distributed names authoritative without teaching FCDB how to compile the
+extended source format.
+
+The batch exporter recreates `release/fcdb/` on each run so failed carts cannot
+leave stale runtime artifacts in the staged snapshot. It treats manifest
+loading, manifest shape, output-directory setup, and exporter availability as
+build-level failures. A missing source cart
+or a failed cart export, including Pico8 cartridge size-limit failures, is a
+per-locale skip: the batch continues with later locales and games and prints a
+final list of successful and skipped `<game-id>[<locale>]` variants. Per-locale
+skips do not make the batch command fail; FCDB packaging can subsequently
+collect the successful `.p8.png` files
+and retain `.p8mod` as an additional editor-capable source artifact.
 
 Retired local wrappers and dependencies (`build_pico8cart.{sh,bat}`, `setup.*`,
 `requirements.txt`, `tools/pico8i18n`, `tools/customcart`, `tools/img2p8`,
@@ -363,6 +395,17 @@ Carts not on this list either do not use device APIs or are non-haptic demos (`i
   external carrier and a distinct authored launch profile; rotates the selected
   carrier in preview mode; hides it during launch simulation; and restores it
   after particles and jobs drain.
+- REQ-PICOVIBE-009: The FCDB catalog batch exporter resolves `.p8mod` sources
+  only from FCDB `extension.source_path`, exports every correctly cased BCP-47
+  locale declared in `__i18n__.locales`, writes deterministic
+  `<base>.<locale>.p8.png` names matching FCDB's scalar primary cart and optional
+  `cart_variants`,
+  continues after missing or unexportable locale variants, and reports
+  successful and skipped game/locale pairs while reserving nonzero exit status
+  for build-level failures.
+- REQ-PICOVIBE-010: PicoVibe `.p8.png` release exports explicitly select Pico8
+  IDE's named `default` template, and successful `release/fcdb/*.p8.png` locale
+  variants are tracked as the producer's reviewable release snapshot.
 
 ## 11. References
 
@@ -379,7 +422,7 @@ Carts not on this list either do not use device APIs or are non-haptic demos (`i
 
 | Field | Contract |
 |---|---|
-| Governed files | `projects/picovibe/carts/**`, `libs/pico8/**`, `scripts/export-p8mod.sh`, `scripts/check-export-p8mod-wrapper.sh`, `scripts/run-p8mod.sh`, `tools/p8mod-player/**`, `tools/resources/**`, and Picovibe catalog metadata. |
+| Governed files | `projects/picovibe/carts/**`, `libs/pico8/**`, `scripts/export-p8mod.sh`, `scripts/export-fcdb-carts.mjs`, `scripts/check-export-p8mod-wrapper.sh`, `scripts/run-p8mod.sh`, `tools/p8mod-player/**`, `tools/resources/**`, and Picovibe catalog metadata. |
 | Invariants | Treat generated release cart outputs as pico8ide-generated; keep editable `.p8mod` includes simple; call Pico8 IDE through the relative `../pico8ide/out/extension/p8modtool.js` path; use release locks/provenance for exact exporter asset provenance; keep preview conversion authoring-only and backed by shared `xwsdk/p8mod` WASM; use canonical `p8go.*` runtime shape; do not reintroduce release conversion wrappers, vendored converter submodules, or legacy `printh` device API shims. |
-| Validation | Picovibe REQ checks, `bash scripts/check-export-p8mod-wrapper.sh`, standalone runner HTTP/state/reload tests and runtime-asset integrity guard, Pico8 IDE compressed-size/export checks for release carts, p8go runtime byte-match checks, and Pico8 IDE exporter lock/provenance checks for `.p8mod` release builds. |
+| Validation | Picovibe REQ checks, `bash scripts/check-export-p8mod-wrapper.sh`, FCDB catalog batch-export tests, standalone runner HTTP/state/reload tests and runtime-asset integrity guard, Pico8 IDE compressed-size/export checks for release carts, p8go runtime byte-match checks, and Pico8 IDE exporter lock/provenance checks for `.p8mod` release builds. |
 | Parent specs | `docs/specs/GLOBAL_SPEC.md`, `projects/xwsdk/docs/specs/p8mod_spec.md`, `projects/pico8go/docs/specs/p8go_ipc_bridge_spec.md`. |

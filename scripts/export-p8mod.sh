@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<'USAGE'
-Usage: scripts/export-p8mod.sh [--out-dir <dir>] [--dry-run] <cart.p8mod>
+Usage: scripts/export-p8mod.sh --lang <locale> [--out-dir <dir>] [--dry-run] <cart.p8mod>
 
 Exports a Picovibe .p8mod source cart to both .p8 and .p8.png by invoking the
 Pico8 IDE p8modtool CLI through the sibling ../pico8ide checkout.
@@ -19,6 +19,7 @@ P8MODTOOL_PATH="$PICOVIBE_ROOT/$P8MODTOOL_REL"
 PICO8IDE_REQUIRED_MODULE="$PICO8IDE_ROOT/node_modules/opentype.js"
 
 OUT_DIR=""
+LANGUAGE=""
 DRY_RUN=0
 INPUT=""
 
@@ -27,6 +28,11 @@ while [[ $# -gt 0 ]]; do
     --out-dir)
       [[ $# -ge 2 ]] || { echo "--out-dir requires a value" >&2; exit 2; }
       OUT_DIR=$2
+      shift 2
+      ;;
+    --lang)
+      [[ $# -ge 2 ]] || { echo "--lang requires a value" >&2; exit 2; }
+      LANGUAGE=$2
       shift 2
       ;;
     --dry-run)
@@ -51,6 +57,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ -n "$INPUT" ]] || { usage >&2; exit 2; }
+[[ -n "$LANGUAGE" ]] || { echo "--lang is required" >&2; usage >&2; exit 2; }
 
 if [[ "$INPUT" != /* ]]; then
   INPUT="$PWD/$INPUT"
@@ -102,11 +109,14 @@ fi
 
 run_from_picovibe node "$P8MODTOOL_REL" "$INPUT" \
   --format p8 \
+  --lang "$LANGUAGE" \
   --out "$out_p8" \
   --workspace-root "$PICOVIBE_ROOT"
 
 run_from_picovibe node "$P8MODTOOL_REL" "$INPUT" \
   --format p8.png \
+  --lang "$LANGUAGE" \
+  --template default \
   --out "$out_png" \
   --workspace-root "$PICOVIBE_ROOT" \
   --write-provenance

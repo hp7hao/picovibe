@@ -53,10 +53,25 @@ provenance。正式发布仍必须使用下面的 Pico8 IDE 导出流程。
 `.p8mod` / `.p8` 到 `.p8.png` 的发布导出由 `pico8ide` CLI / headless exporter 负责。本仓库不再维护本地转换脚本、Python 虚拟环境、`picotool` / `shrinko8` 子模块或自定义卡带图片工具。
 
 ```bash
-scripts/export-p8mod.sh carts/pico8pixelbomb/i18ndemo/i18ndemo.p8mod
+scripts/export-p8mod.sh --lang zh-CN carts/pico8pixelbomb/i18ndemo/i18ndemo.p8mod
 ```
 
-脚本会通过相对路径调用相邻仓库的 `../pico8ide/out/extension/p8modtool.js`，并在卡带目录的 `release/` 下生成同名 `.p8` 和 `.p8.png`。
+脚本会通过相对路径调用相邻仓库的 `../pico8ide/out/extension/p8modtool.js`，明确选择 Pico8 IDE 的 `default` 卡带模板，并在卡带目录的 `release/` 下生成同名 `.p8` 和 `.p8.png`。模板资源仍由 Pico8 IDE 维护。
+
+构建 FCDB 清单中提供的全部 Picovibe 游戏：
+
+```bash
+npm run build
+```
+
+批量构建读取相邻 `projects/fcdb/sources/pico8/pico8pixelbomb.json`，为
+`.p8mod` 中每个 BCP-47 语言（例如 `zh-CN`、`en-US`）分别导出
+`release/fcdb/<game>.<locale>.p8.png`。单个语言版本因容量限制等原因无法
+导出时会标记为 `SKIP`，但不会阻止同一游戏的其它语言或后续游戏；命令
+最后按 `<game>[<locale>]` 列出成功和跳过项。`.p8mod` 仍作为 Pico8 IDE、
+Manxiangsu 等支持扩展格式的应用可用的附加源码。
+成功生成的 `release/fcdb/*.p8.png` 会提交到 PicoVibe，作为 FCDB 可直接
+收集并审查的发布快照；每次构建会先清理目录，避免保留失败语言的旧文件。
 
 
 # 致谢

@@ -693,38 +693,38 @@ __meta__
 __i18n__
 {
   "locales": [
-    "zh",
-    "en"
+    "zh-CN",
+    "en-US"
   ],
   "entries": [
     {
       "key": "try_again",
       "translations": {
-        "zh": "再试一次!",
-        "en": "try again!"
+        "zh-CN": "再试一次!",
+        "en-US": "try again!"
       }
     },
     {
       "key": "press_start",
       "translations": {
-        "zh": "按 ❎ 开始",
-        "en": "press ❎"
+        "zh-CN": "按 ❎ 开始",
+        "en-US": "press ❎"
       }
     },
     {
       "key": "you_win",
       "translations": {
-        "zh": "你赢了!",
-        "en": "you win!"
+        "zh-CN": "你赢了!",
+        "en-US": "you win!"
       }
     },
     {
       "key": "point",
       "translations": {
-        "zh": "剩余: ",
-        "en": "point: "
+        "zh-CN": "剩余: ",
+        "en-US": "point: "
       }
     }
   ],
-  "outputLocale": "zh"
+  "outputLocale": "zh-CN"
 }

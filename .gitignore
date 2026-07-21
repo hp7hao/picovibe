@@ -1,6 +1,9 @@
 carts/demos
 /**/venv
 /**/tests
+!/tests/
+!/tests/export-fcdb-carts.test.mjs
+
 /**/*.orig.p8.png
 /**/*.preview.p8.png
 /**/*.p8l

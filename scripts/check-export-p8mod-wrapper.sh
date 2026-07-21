@@ -10,7 +10,7 @@ if [[ ! -x "$SCRIPT" ]]; then
   exit 1
 fi
 
-output=$("$SCRIPT" --dry-run "$INPUT")
+output=$("$SCRIPT" --dry-run --lang zh-CN "$INPUT")
 
 [[ "$output" == *"../pico8ide/out/extension/p8modtool.js"* ]] || {
   echo "wrapper must invoke p8modtool through ../pico8ide" >&2
@@ -24,6 +24,16 @@ output=$("$SCRIPT" --dry-run "$INPUT")
 
 [[ "$output" == *"--format p8.png"* ]] || {
   echo "wrapper must export a .p8.png artifact" >&2
+  exit 1
+}
+
+[[ "$output" == *"--lang zh-CN"* ]] || {
+  echo "wrapper must select one declared output language" >&2
+  exit 1
+}
+
+[[ "$output" == *"--template default"* ]] || {
+  echo "wrapper must explicitly select Pico8 IDE's default cart template" >&2
   exit 1
 }
 
