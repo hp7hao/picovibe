@@ -15,7 +15,7 @@ Guidance for AI coding agents when working in `projects/picovibe`.
 - The legacy → `p8go.*` migration rules.
 - Validation requirements (REQ-PICOVIBE-001..007).
 
-Upstream IPC contract: `projects/xwsdk/docs/specs/p8mod_spec.md §5.4`.
+Upstream IPC contract: `projects/xwsdk/docs/specs/p8go_ipc_spec.md`.
 Upstream runtime source: `projects/xwsdk/p8mod/src/p8go_runtime.lua`. `libs/pico8/pico8go.lua` mirrors it byte-for-byte (REQ-PICOVIBE-004).
 
 ## Discipline

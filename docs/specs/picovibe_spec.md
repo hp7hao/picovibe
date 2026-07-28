@@ -363,51 +363,26 @@ selection during an active effect clears it and returns directly to the newly
 selected model. The existing name, power, description, and control panel remain
 visible in both modes.
 
-## 9. Catalog Inventory (Mod Carts using `p8go`)
+## 9. Validation Contract
 
-| Cart | Path | Migrated to p8go |
-|------|------|------------------|
-| pet-the-cat | `carts/pico8pixelbomb/pet-the-cat-pico8gomod/` | required |
-| justoneboss | `carts/pico8pixelbomb/justoneboss-pico8gomod/` | required (drop `delay` arg) |
-| celeste | `carts/pico8pixelbomb/celeste-pico8gomod/` | required |
-| bas | `carts/pico8pixelbomb/bas-pico8gomod/` | required |
-| pico8go-about | `carts/pico8go/pico8go-about/` | required |
+The cart tree and FCDB metadata own the current catalog inventory. Static guards
+reject legacy `printh` device shims and local copies of vibration/audio helpers;
+every `p8go.*` consumer and the authoring library must match the canonical XWSDK
+runtime. Pico8 IDE validation enforces the 15,608-byte compressed-body boundary
+for release PNGs. Headless release export preserves simple include ids, enforces
+declared asset constraints, records exporter/asset hashes, and selects the named
+`default` template.
 
-Carts not on this list either do not use device APIs or are non-haptic demos (`i18ndemo`, `nezhapoems`, `splooshdemo`, `yxkl`, `pico8mural`).
+The preview runner uses shared XWSDK WASM, publishes phase-specific state, and
+keeps the last successful generation across failed watched reloads without
+invoking Pico8 IDE or Manxiangsu. The FCDB exporter resolves sources from
+`extension.source_path`, exports declared BCP-47 locales to deterministic names,
+continues across per-locale omissions, and fails only for build-level errors.
+Firework Simulators must retain its 50 localized, ordered selections and the
+carrier/effect behavior defined above. Executable cases and cart names stay in
+tests and catalog data rather than this contract.
 
-## 10. Testing Criteria
-
-- REQ-PICOVIBE-001: No file under `carts/` contains `printh(..., "vibrator")` or `printh(..., "pico8goapi")`.
-- REQ-PICOVIBE-002: No file under `carts/` defines a top-level `function vibrate(`, `function sfxplay(`, `function sfxstop(`, `function sfxpause(`, `function sfxresume(`.
-- REQ-PICOVIBE-003: Every cart that calls `p8go.*` contains a `-- [lib:p8go] --` … `-- [/lib:p8go] --` block whose content matches `xwsdk/p8mod/src/p8go_runtime.lua` byte-for-byte (after stripping the markers).
-- REQ-PICOVIBE-004: `libs/pico8/pico8go.lua` matches `xwsdk/p8mod/src/p8go_runtime.lua` byte-for-byte.
-- REQ-PICOVIBE-005: Each migrated text cart's compressed code size is tracked against the `.p8.png` compressed-body export limit of 15608 bytes (0x8000 - 0x4300 - 8), verified through Pico8 IDE token/export validation for carts actively being edited. Carts over that export boundary are valid source carts only until Pico8 IDE can produce a release PNG/minified variant; currently this applies to `justonebossmod.p8` and `justonebossmod.p8mod`.
-- REQ-PICOVIBE-006: `.p8mod` release builds using Pico8 IDE headless export
-  must preserve simple source include ids, enforce any `__meta__.export` asset
-  constraints, and record exact exporter/asset versions plus hashes in a
-  sidecar lock/provenance file for reproducible release rebuilds.
-- REQ-PICOVIBE-007: The standalone preview runner converts through shared
-  `xwsdk/p8mod` WASM, reaches observable `running` for a valid cart, reports
-  phase-specific failures, preserves the last successful generation after a
-  failed watched reload, and neither invokes Pico8 IDE nor boots Manxiangsu.
-- REQ-PICOVIBE-008: Firework Simulators exposes exactly 50 localized selections
-  in small/simple-to-large/complex order; maps each to a truthful reusable
-  external carrier and a distinct authored launch profile; rotates the selected
-  carrier in preview mode; hides it during launch simulation; and restores it
-  after particles and jobs drain.
-- REQ-PICOVIBE-009: The FCDB catalog batch exporter resolves `.p8mod` sources
-  only from FCDB `extension.source_path`, exports every correctly cased BCP-47
-  locale declared in `__i18n__.locales`, writes deterministic
-  `<base>.<locale>.p8.png` names matching FCDB's scalar primary cart and optional
-  `cart_variants`,
-  continues after missing or unexportable locale variants, and reports
-  successful and skipped game/locale pairs while reserving nonzero exit status
-  for build-level failures.
-- REQ-PICOVIBE-010: PicoVibe `.p8.png` release exports explicitly select Pico8
-  IDE's named `default` template, and successful `release/fcdb/*.p8.png` locale
-  variants are tracked as the producer's reviewable release snapshot.
-
-## 11. References
+## 10. References
 
 - `projects/xwsdk/docs/specs/p8mod_spec.md` — IPC packet format, manifest, runtime source (authoritative)
 - `projects/xwsdk/p8mod/src/p8go_runtime.lua` — runtime source mirrored here
