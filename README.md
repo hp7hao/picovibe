@@ -64,7 +64,7 @@ scripts/export-p8mod.sh --lang zh-CN carts/pico8pixelbomb/i18ndemo/i18ndemo.p8mo
 npm run build
 ```
 
-批量构建读取相邻 `projects/fcdb/sources/pico8/pico8pixelbomb.json`，为
+批量构建读取相邻 `projects/fcdb/platforms/pico8/metadata/sources/pico8pixelbomb.json`，为
 `.p8mod` 中每个 BCP-47 语言（例如 `zh-CN`、`en-US`）分别导出
 `release/fcdb/<game>.<locale>.p8.png`。单个语言版本因容量限制等原因无法
 导出时会标记为 `SKIP`，但不会阻止同一游戏的其它语言或后续游戏；命令

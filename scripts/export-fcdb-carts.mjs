@@ -29,7 +29,7 @@ Options:
 
 function parseArgs(argv) {
   const options = {
-    manifest: resolve(projectRoot, '../fcdb/sources/pico8/pico8pixelbomb.json'),
+    manifest: resolve(projectRoot, '../fcdb/platforms/pico8/metadata/sources/pico8pixelbomb.json'),
     sourceRoot: projectRoot,
     outDir: resolve(projectRoot, 'release/fcdb'),
     exporter: resolve(projectRoot, 'scripts/export-p8mod.sh'),
