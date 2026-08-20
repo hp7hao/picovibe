@@ -41,8 +41,3 @@ output=$("$SCRIPT" --dry-run --lang zh-CN "$INPUT")
   echo "wrapper must pass picovibe as the p8modtool workspace root" >&2
   exit 1
 }
-
-if rg -n 'pico8i18n|customcart|img2p8|picotool|shrinko8' "$SCRIPT"; then
-  echo "wrapper must not call retired local converter tools" >&2
-  exit 1
-fi

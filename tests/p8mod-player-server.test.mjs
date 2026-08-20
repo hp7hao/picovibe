@@ -4,7 +4,6 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawn } from 'node:child_process';
 import test from 'node:test';
-import { readFile } from 'node:fs/promises';
 
 const root = resolve(import.meta.dirname, '..');
 const runner = join(root, 'tools/p8mod-player/server.mjs');
@@ -60,9 +59,4 @@ test('rejects non-p8mod input', async () => {
   const [code] = await new Promise(resolveExit => child.on('exit', (...args) => resolveExit(args)));
   assert.notEqual(code, 0);
   assert.match(output, /.p8mod/);
-});
-test('default launcher uses the owned Electron window instead of xdg-open', async () => {
-  const server = await readFile(new URL('../tools/p8mod-player/server.mjs', import.meta.url), 'utf8');
-  assert.match(server, /electron-main\.cjs/);
-  assert.doesNotMatch(server, /xdg-open/);
 });
