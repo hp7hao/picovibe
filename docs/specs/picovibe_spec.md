@@ -365,8 +365,8 @@ visible in both modes.
 
 ## 9. Validation Contract
 
-The cart tree and FCDB metadata own the current catalog inventory. Static guards
-reject legacy `printh` device shims and local copies of vibration/audio helpers;
+The cart tree and FCDB metadata own the current catalog inventory. Parsed Lua
+imports/calls or executable cart tests reject legacy `printh` device shims and local copies of vibration/audio helpers;
 every `p8go.*` consumer and the authoring library must match the canonical XWSDK
 runtime. Pico8 IDE validation enforces the 15,608-byte compressed-body boundary
 for release PNGs. Headless release export preserves simple include ids, enforces
