@@ -3,11 +3,11 @@
   "files": {
     "p8mod.js": {
       "source": "projects/xwsdk/p8mod (wasm-pack release build)",
-      "sha256": "d4877e3f8398f9ff0b8f58439d9986bc8a413c2f75d69dffab6c53c3b3251bf6"
+      "sha256": "afd7b1386d8009a234447f366209ac28a005a3ea835af961d6fa76e1052e1d86"
     },
     "p8mod_bg.wasm": {
       "source": "projects/xwsdk/p8mod (wasm-pack release build)",
-      "sha256": "a61f2f938a6a0af3b96b4a7eb6f07e818cbe69a7e5882eeaf5da427091352d9d"
+      "sha256": "a7ac11def1ad3c52b17563f7732c24dc59d755d654c055a8d4457b43e0313ec7"
     },
     "p8edu.html": {
       "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8edu/p8edu.html",
