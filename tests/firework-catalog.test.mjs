@@ -42,6 +42,22 @@ test('firework catalog contains 50 ordered cards with reusable carriers and uniq
   assert.match(cart, /mode="launched"/);
 });
 
+test('firework controls stay in a compact 16-pixel footer below the details panel', async () => {
+  const { cart } = await readCatalog();
+
+  assert.match(cart, /rectfill\(0,94,127,111,0\)/);
+  assert.match(cart, /rectfill\(0,112,127,127,1\)/);
+  assert.match(cart, /print\("< >",2,119,6\)/);
+});
+
+test('four-sided firework carriers use bounds-safe cap triangulation', async () => {
+  const { cart } = await readCatalog();
+
+  assert.match(cart, /prism\(-18,22,25,20,12,4\)/);
+  assert.match(cart, /for i=2,n-1 do filltri\(b\[1\],b\[i\],b\[i\+1\],col\+2\) end/);
+  assert.doesNotMatch(cart, /filltri\(b\[1\],b\[3\],b\[5\],col\+2\)/);
+});
+
 test('every firework card localizes its name, physical shape, and effect in English and Chinese', async () => {
   const { records, translations } = await readCatalog();
 

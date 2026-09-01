@@ -100,36 +100,36 @@ end
 function _draw()
  cls(0)
  if mode=="preview" then draw_preview() else draw_sky() draw_particles() end
- rectfill(0,100,127,127,1)
- line(0,100,127,100,5)
+ rectfill(0,112,127,127,1)
+ line(0,112,127,112,5)
  tx("title",2,2,7)
- print("< >",2,111,6)
- tx("select",17,111,6)
- print("x",64,111,8)
- tx("fire",73,111,8)
- print("o",101,111,12)
- tx("inspect",110,111,12)
+ print("< >",2,119,6)
+ tx("select",17,119,6)
+ print("x",64,119,8)
+ tx("fire",73,119,8)
+ print("o",101,119,12)
+ tx("inspect",110,119,12)
  draw_panel()
 end
 
 -- compact low-poly casing renderer
 function draw_preview()
  spin=(time()*.15)%1
- rectfill(0,9,127,81,1)
- for y=10,80,12 do line(0,y,127,y,0) end
- ovalfill(34,73,94,79,0)
+ rectfill(0,9,127,93,1)
+ for y=10,92,12 do line(0,y,127,y,0) end
+ ovalfill(34,80,94,86,0)
  draw_mesh(fw[sel][5])
 end
 
 function p3(x,y,z)
  local xx=x*cos(spin)-z*sin(spin)
  local zz=x*sin(spin)+z*cos(spin)
- return {64+xx,46+y*.72-zz*.22,zz}
+ return {64+xx,51+y*.72-zz*.22,zz}
 end
 function filltri(a,b,c,col)
  local ya=flr(min(a[2],min(b[2],c[2])))
  local yb=-flr(-max(a[2],max(b[2],c[2])))
- for y=max(9,ya),min(81,yb) do
+ for y=max(9,ya),min(93,yb) do
   local q={}
   local e={{a,b},{b,c},{c,a}}
   for z in all(e) do
@@ -169,8 +169,7 @@ function prism(y1,y2,r1,r2,col,n)
   end
  end
  for q in all(f) do face4(q[1],q[2],q[3],q[4],q[6]) end
- filltri(b[1],b[3],b[5],col+2)
- filltri(b[1],b[5],b[n],col+2)
+ for i=2,n-1 do filltri(b[1],b[i],b[i+1],col+2) end
 end
 function draw_mesh(i)
  if i==1 then
@@ -243,12 +242,12 @@ end
 
 function draw_panel()
  local f=fw[sel]
- rectfill(0,82,127,99,0)
- rect(0,82,127,99,5)
- tx(f[1],3,85,f[4])
- print(sel.."/50",101,85,7)
- tx(info==1 and f[2] or f[3],3,93,6)
- print(info==1 and "s" or "fx",118,93,5)
+ rectfill(0,94,127,111,0)
+ rect(0,94,127,111,5)
+ tx(f[1],3,97,f[4])
+ print(sel.."/50",101,97,7)
+ tx(info==1 and f[2] or f[3],3,105,6)
+ print(info==1 and "s" or "fx",118,105,5)
 end
 
 function part(x,y,dx,dy,c,life,g,kind)
