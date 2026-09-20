@@ -26,7 +26,7 @@ function waitForEngine() {
     const start = () => {
       try {
         const runtime = engineFrame.contentWindow;
-        runtime.p8_run_cart('/runtime/pico8_edu_0206c_dev8.js', '0', '');
+        runtime.p8_run_cart('/runtime/pico8_edu_0207.js', '0', '');
         const poll = setInterval(() => {
           if (runtime.Module && typeof runtime.Module._main !== 'undefined') {
             clearInterval(poll);

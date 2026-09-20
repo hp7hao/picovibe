@@ -9,10 +9,10 @@ DEST="$PICOVIBE_ROOT/tools/p8mod-player/runtime"
 MODE=sync
 [[ "${1:-}" == "--check" ]] && MODE=check
 
-names=(p8edu.html pico8_edu_0206c_dev8.js src/browsersetup.css)
+names=(p8edu.html pico8_edu_0207.js src/browsersetup.css)
 sources=(
   "$SOURCE_ROOT/p8edu/p8edu.html"
-  "$SOURCE_ROOT/p8edu/pico8_edu_0206c_dev8.js"
+  "$SOURCE_ROOT/p8edu/pico8_edu_0207.js"
   "$SOURCE_ROOT/p8edu/src/browsersetup.css"
 )
 

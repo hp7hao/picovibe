@@ -11,11 +11,11 @@
     },
     "p8edu.html": {
       "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8edu/p8edu.html",
-      "sha256": "922e74968206783f57cd72746f548f09ded5bd381bc8e604af08031b37b9a6d8"
+      "sha256": "fc386487e6b537ca902a705a453e76fb59035b7e711a29ab07f9e4fe3de48cf6"
     },
-    "pico8_edu_0206c_dev8.js": {
-      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8edu/pico8_edu_0206c_dev8.js",
-      "sha256": "66c92f894dd312d2e82921ea75444e0b0ac3ba49eff0d1865c81ca7e19ddb423"
+    "pico8_edu_0207.js": {
+      "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8edu/pico8_edu_0207.js",
+      "sha256": "e657e14c1cda226bf1c9875981170eb79551f141f428c6fc12d06b9b2a69442c"
     },
     "src/browsersetup.css": {
       "source": "projects/manxiangsu.web/packages/webdata/public/pico8/tools/p8edu/src/browsersetup.css",

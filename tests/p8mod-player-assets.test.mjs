@@ -8,7 +8,7 @@ const root = resolve(import.meta.dirname, '..');
 
 test('runtime manifest covers required assets with matching hashes', async () => {
   const manifest = JSON.parse(await readFile(resolve(root, 'tools/p8mod-player/runtime/manifest.json'), 'utf8'));
-  const required = ['p8mod.js', 'p8mod_bg.wasm', 'p8edu.html', 'pico8_edu_0206c_dev8.js', 'src/browsersetup.css'];
+  const required = ['p8mod.js', 'p8mod_bg.wasm', 'p8edu.html', 'pico8_edu_0207.js', 'src/browsersetup.css'];
   assert.deepEqual(Object.keys(manifest.files).sort(), required.sort());
   for (const [name, metadata] of Object.entries(manifest.files)) {
     assert.ok(metadata.source.startsWith('projects/manxiangsu.web/') || metadata.source.startsWith('projects/xwsdk/p8mod'));
