@@ -337,8 +337,6 @@ physical-product preview while the player selects one of 50 curated fireworks.
 The catalog is ordered from small, local, and mechanically simple products to
 large, layered, and choreographed displays. This order is a game-content
 progression, not a safety ranking or an official Chinese classification count.
-The non-authoritative research evidence for the names and ordering is recorded
-in `projects/picovibe/docs/notes/2026-07-15-chinese-firework-taxonomy-and-effects.md`.
 
 Every selection separates the physical carrier from its visible and audible
 effect profile. Carrier models may be reused when several effects use the same
