@@ -118,7 +118,7 @@ server.listen(port, host, () => {
   console.log('PicoVibe player: ' + url);
   console.log('Source: ' + input);
   if (shouldOpen) {
-    if (!existsSync(electronBin)) usage('Electron is not installed; run npm install in projects/picovibe or use --no-open');
+    if (!existsSync(electronBin)) usage('Electron is not installed; run npm install in this repository or use --no-open');
     const linuxFlags = process.platform === 'linux'
       ? ['--no-sandbox', ...(process.env.WAYLAND_DISPLAY ? ['--ozone-platform=wayland'] : [])]
       : [];

@@ -4,7 +4,7 @@
 
 * 收集国内PICO-8爱好者开发的游戏作品
 
-> **设备 API（震动 / 成就）**：所有 mod 卡带统一使用 PICO8GO 的 `p8go.*` IPC（`p8go.vibe(ms, strength)`、`p8go.vibe_stop()`、`p8go.ach_unlock(id)` 等）。运行时源码与契约由 `projects/xwsdk` 维护，pico8ide 自动注入；详情见 [`docs/specs/picovibe_spec.md`](./docs/specs/picovibe_spec.md)。旧的 `printh "vibrator"` / `"pico8goapi"` 通道已废弃，不要在新卡带中再使用。
+> **设备 API（震动 / 成就）**：所有 mod 卡带统一使用 PICO8GO 的 `p8go.*` IPC（`p8go.vibe(ms, strength)`、`p8go.vibe_stop()`、`p8go.ach_unlock(id)` 等）。运行时源码与契约由 P8Mod 维护，pico8ide 自动注入；详情见 [`docs/specs/picovibe_spec.md`](./docs/specs/picovibe_spec.md)。旧的 `printh "vibrator"` / `"pico8goapi"` 通道已废弃，不要在新卡带中再使用。
 
 # 项目版权说明
 
@@ -64,7 +64,7 @@ scripts/export-p8mod.sh --lang zh-CN carts/pico8pixelbomb/i18ndemo/i18ndemo.p8mo
 npm run build
 ```
 
-批量构建读取相邻 `projects/fcdb/platforms/pico8/metadata/sources/pico8pixelbomb.json`，为
+批量构建读取相邻 pico8pixelbomb.json，为
 `.p8mod` 中每个 BCP-47 语言（例如 `zh-CN`、`en-US`）分别导出
 `release/fcdb/<game>.<locale>.p8.png`。单个语言版本因容量限制等原因无法
 导出时会标记为 `SKIP`，但不会阻止同一游戏的其它语言或后续游戏；命令

@@ -4,7 +4,7 @@
 **Status**: Active
 **Level**: product
 **Owner**: picovibe
-**Parent**: docs/specs/GLOBAL_SPEC.md
+**Parent**: none
 **Last Reviewed**: 2026-07-20
 
 ## 1. Purpose
@@ -40,8 +40,8 @@ This spec defines:
 
 **Out of scope:**
 
-- The PICO8GO IPC packet format, manifest, and Lua runtime source — owned by `projects/xwsdk/docs/specs/p8mod_spec.md §5.4`.
-- Host-side haptic dispatch, achievement persistence, FCDB metadata mapping — owned by `projects/pico8go/docs/specs/p8go_ipc_bridge_spec.md`.
+- The PICO8GO IPC packet format, manifest, and Lua runtime source — owned by the P8Mod contract.
+- Host-side haptic dispatch, achievement persistence, FCDB metadata mapping — owned by the PICO8GO IPC bridge contract.
 - pico8ide editor behavior, library bundling, `--#include` resolution, and
   exporter asset-pack semantics — owned by pico8ide.
 - The bundled PICO-8 manual translation under `docs/pico8manual/`. That tree is
@@ -55,7 +55,7 @@ This spec defines:
 ## 3. Catalog Layout
 
 ```
-projects/picovibe/
+
 ├── carts/
 │   ├── pico8go/                  # First-party carts shipped on the PICO8GO handheld
 │   │   ├── pico8go-about/
@@ -244,7 +244,7 @@ valid consumers of the Pico8 IDE-expanded shape described above.
 The Picovibe entrypoint is
 `scripts/export-p8mod.sh --lang <locale> <cart.p8mod>`. The wrapper
 resolves the sibling Pico8 IDE checkout as `../pico8ide` relative to
-`projects/picovibe`, ensures Pico8 IDE package dependencies are installed when
+this repository, ensures Pico8 IDE package dependencies are installed when
 its required runtime modules are absent, compiles Pico8 IDE only when
 `../pico8ide/out/extension/p8modtool.js` is missing, then invokes:
 
@@ -263,8 +263,7 @@ files, so FCDB can consume the reviewed PicoVibe snapshot without requiring a
 fresh export. The batch still recreates that directory to prune stale variants.
 
 For catalog builds, `scripts/export-fcdb-carts.mjs` reads the FCDB
-`sources/pico8/pico8pixelbomb.json` manifest from the sibling `projects/fcdb`
-checkout. Each entry's `extension.source_path` identifies an editable Picovibe
+`sources/pico8/pico8pixelbomb.json` manifest. Each entry's `extension.source_path` identifies an editable Picovibe
 `.p8mod` source. Picovibe source locales MUST use correctly cased BCP-47 tags
 matching FCDB (`zh-CN`, `en-US`, and similar), not short or underscore aliases.
 For a localized source, the primary target is declared by FCDB's scalar
@@ -305,7 +304,7 @@ one-shot behavior; `--host` and `--port` override the loopback/dynamic-port
 defaults.
 
 The player converts the fetched `.p8mod` in browser memory through the shared
-`projects/xwsdk/p8mod` playable-export WASM API, which prepends the generated
+P8Mod playable-export WASM API, which prepends the generated
 i18n Lua runtime when `outputLocale` is selected, then loads the generated `.p8.png` into the
 PICO-8 web runtime. It must not invoke Pico8 IDE, import or boot Manxiangsu, write
 release artifacts, or depend on Manxiangsu paths at runtime. Copied runtime
@@ -382,12 +381,12 @@ tests and catalog data rather than this contract.
 
 ## 10. References
 
-- `projects/xwsdk/docs/specs/p8mod_spec.md` — IPC packet format, manifest, runtime source (authoritative)
-- `projects/xwsdk/p8mod/src/p8go_runtime.lua` — runtime source mirrored here
-- `projects/pico8go/docs/specs/p8go_ipc_bridge_spec.md` — host-side haptic dispatch and achievement persistence
-- `projects/pico8ide/src/extension/libManager.ts` — `--#include` expansion that produces the cart shape required by §4.1
-- `projects/pico8ide/resources/libs/p8go.json` — bundled lib manifest
-- `projects/pico8ide/docs/SPEC.md` — reference documentation for the headless
+- the P8Mod contract — IPC packet format, manifest, runtime source (authoritative)
+- p8go_runtime.lua — runtime source mirrored here
+- the PICO8GO IPC bridge contract — host-side haptic dispatch and achievement persistence
+- the Pico8IDE include resolver — `--#include` expansion that produces the cart shape required by §4.1
+- the bundled p8go lib manifest — bundled lib manifest
+- the Pico8IDE reference — reference documentation for the headless
   export asset contract; root `docs/specs/spec_index.md` classifies it as
   reference-only for monorepo SDD purposes.
 
@@ -395,7 +394,7 @@ tests and catalog data rather than this contract.
 
 | Field | Contract |
 |---|---|
-| Governed files | `projects/picovibe/carts/**`, `libs/pico8/**`, `scripts/export-p8mod.sh`, `scripts/export-fcdb-carts.mjs`, `scripts/check-export-p8mod-wrapper.sh`, `scripts/run-p8mod.sh`, `tools/p8mod-player/**`, `tools/resources/**`, and Picovibe catalog metadata. |
+| Governed files | `carts/**`, `libs/pico8/**`, `scripts/export-p8mod.sh`, `scripts/export-fcdb-carts.mjs`, `scripts/check-export-p8mod-wrapper.sh`, `scripts/run-p8mod.sh`, `tools/p8mod-player/**`, `tools/resources/**`, and Picovibe catalog metadata. |
 | Invariants | Treat generated release cart outputs as pico8ide-generated; keep editable `.p8mod` includes simple; call Pico8 IDE through the relative `../pico8ide/out/extension/p8modtool.js` path; use release locks/provenance for exact exporter asset provenance; keep preview conversion authoring-only and backed by shared `xwsdk/p8mod` WASM; use canonical `p8go.*` runtime shape; do not reintroduce release conversion wrappers, vendored converter submodules, or legacy `printh` device API shims. |
 | Validation | Picovibe REQ checks, `bash scripts/check-export-p8mod-wrapper.sh`, FCDB catalog batch-export tests, standalone runner HTTP/state/reload tests and runtime-asset integrity guard, Pico8 IDE compressed-size/export checks for release carts, p8go runtime byte-match checks, and Pico8 IDE exporter lock/provenance checks for `.p8mod` release builds. |
-| Parent specs | `docs/specs/GLOBAL_SPEC.md`, `projects/xwsdk/docs/specs/p8mod_spec.md`, `projects/pico8go/docs/specs/p8go_ipc_bridge_spec.md`. |
+| Parent specs | the P8Mod contract, the PICO8GO IPC bridge contract |

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Guidance for AI coding agents when working in `projects/picovibe`.
+Guidance for AI coding agents when working in this repository.
 
 ## Project Overview
 
@@ -15,14 +15,14 @@ Guidance for AI coding agents when working in `projects/picovibe`.
 - The legacy → `p8go.*` migration rules.
 - Validation requirements (REQ-PICOVIBE-001..007).
 
-Upstream IPC contract: `projects/xwsdk/docs/specs/p8go_ipc_spec.md`.
-Upstream runtime source: `projects/xwsdk/p8mod/src/p8go_runtime.lua`. `libs/pico8/pico8go.lua` mirrors it byte-for-byte (REQ-PICOVIBE-004).
+Upstream IPC contract: the PICO8GO IPC contract.
+Upstream runtime source: p8go_runtime.lua. `libs/pico8/pico8go.lua` mirrors it byte-for-byte (REQ-PICOVIBE-004).
 
 ## Discipline
 
 - Carts MUST NOT define legacy globals `function vibrate(...)`, `function sfxplay(...)`, `function sfxstop(...)`, `function sfxpause(...)`, `function sfxresume(...)`. The `printh "vibrator"` / `"pico8goapi"` log channels are dead-letter and have no host consumer.
 - Carts that need device features MUST use `p8go.vibe`, `p8go.vibe_stop`, `p8go.ach_unlock`, `p8go.ach_progress`, `p8go.ipc_send`, exposed via the bundled p8go runtime block at the top of `__lua__`.
-- Do not hand-edit the embedded `p8go` runtime block in any cart. Re-run pico8ide's include resolver, or re-mirror from `projects/xwsdk/p8mod/src/p8go_runtime.lua`.
+- Do not hand-edit the embedded `p8go` runtime block in any cart. Re-run pico8ide's include resolver, or re-mirror from p8go_runtime.lua.
 - Use `scripts/export-p8mod.sh --lang <locale> <cart.p8mod>` for `.p8mod` release exports. The wrapper must invoke Pico8 IDE through the relative sibling path `../pico8ide/out/extension/p8modtool.js`, explicitly select its named `default` template for `.p8.png`, and write both `.p8` and `.p8.png` outputs. Do not reintroduce retired local wrappers or converter stacks such as `build_pico8cart.{sh,bat}`, `setup.*`, `requirements.txt`, `tools/pico8i18n`, `tools/customcart`, `tools/img2p8`, `deps/picotool`, or `deps/shrinko8`.
 - Use `npm run build` for the FCDB catalog batch. It reads the sibling FCDB `pico8pixelbomb.json` source manifest, exports every declared BCP-47 locale, stages tracked successful runtime carts under `release/fcdb/<game>.<locale>.p8.png`, and skips individual locale variants that Pico8 IDE cannot export while reporting them in the final summary.
 - Use `scripts/run-p8mod.sh <cart.p8mod>` for rapid authoring preview. It opens a dedicated Electron window, converts in renderer memory through shared `xwsdk/p8mod` WASM, and must not be described as release export.
